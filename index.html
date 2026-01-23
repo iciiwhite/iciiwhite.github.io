@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>XSocial</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #050505; --surf: #121212; --border: #2a2a2a; --red: #ff0033; --txt: #fff; --sec: #a0a0a0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+        body { background: var(--bg); color: var(--txt); padding-bottom: 80px; }
+        header { position: fixed; top: 0; width: 100%; height: 60px; background: rgba(5, 5, 5, 0.8); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 1000; }
+        .search-container { flex: 1; margin: 0 15px; max-width: 400px; position: relative; }
+        .search-container input { width: 100%; background: var(--surf); border: 1px solid var(--border); border-radius: 20px; padding: 8px 15px 8px 35px; color: white; outline: none; }
+        .search-container i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--sec); }
+        .nav-icons { display: flex; gap: 20px; font-size: 1.2rem; }
+        .nav-icons i { cursor: pointer; color: var(--sec); position: relative; }
+        .active-icon { color: var(--red) !important; }
+        main { max-width: 600px; margin: 70px auto 0; padding: 0 15px; }
+        .post-card { background: var(--surf); border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin-bottom: 15px; }
+        .post-text { font-size: 1rem; line-height: 1.4; margin-bottom: 10px; white-space: pre-wrap; }
+        .post-image { width: 100%; border-radius: 10px; border: 1px solid var(--border); margin-top: 10px; max-height: 400px; object-fit: cover; }
+        .fab { position: fixed; bottom: 30px; right: 30px; background: var(--red); width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; z-index: 100; }
+        .profile-header { display: none; padding-bottom: 20px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
+        .modal.active { display: flex; }
+        .modal-content { background: var(--bg); border: 1px solid var(--border); width: 100%; max-width: 500px; border-radius: 15px; padding: 20px; max-height: 90vh; overflow-y: auto; }
+        .comments-section { transition: all 0.3s ease; }
+        .unread-indicator { display: inline-block; width: 8px; height: 8px; background: var(--red); border-radius: 50%; margin-left: 5px; }
+        .user-pic { width: 50px; height: 50px; border-radius: 50%; background: #222; border: 1px solid var(--border); }
+        .user-pic-small { width: 40px; height: 40px; border-radius: 50%; background: #222; border: 1px solid var(--border); }
+        .follow-btn { background: white; color: black; border: none; padding: 6px 16px; border-radius: 20px; font-weight: 700; font-size: 0.8rem; cursor: pointer; }
+        .request-item { background: var(--surf); border: 1px solid var(--border); border-radius: 10px; padding: 15px; margin-bottom: 10px; }
+        .accept-btn { background: var(--red); color: white; border: none; padding: 5px 15px; border-radius: 15px; cursor: pointer; }
+        .decline-btn { background: transparent; color: var(--sec); border: 1px solid var(--border); padding: 5px 15px; border-radius: 15px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <header>
+        <div style="font-weight: 700; font-size: 1.4rem; cursor: pointer;" onclick="location.href='index.html'">X<span style="color: var(--red);">Social</span></div>
+        <div class="search-container">
+            <i class="fas fa-search"></i>
+            <input type="text" id="global-search" placeholder="OSINT User Lookup...">
+        </div>
+        <div class="nav-icons">
+            <i class="fas fa-envelope" onclick="location.href='chat.html'"></i>
+            <i class="fas fa-user" id="profile-link" onclick="location.href='settings.html'"></i>
+        </div>
+    </header>
+
+    <main>
+        <div id="profile-view" class="profile-header">
+            <div style="display:flex; align-items:center; gap:15px;">
+                <div id="p-avatar" class="user-pic"></div>
+                <div>
+                    <h2 id="p-username">@username</h2>
+                    <p id="p-name" style="color:var(--sec)">Display Name</p>
+                </div>
+            </div>
+            <button id="msg-req-btn" style="width:100%; margin-top:15px; padding:10px; border-radius:20px; background:transparent; border:1px solid var(--red); color:white; cursor: pointer; display: none;">Message Request</button>
+        </div>
+        <div id="feed"></div>
+    </main>
+
+    <div class="fab" onclick="openPostModal()"><i class="fas fa-plus"></i></div>
+
+    <div class="modal" id="post-modal">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="margin: 0;">Create Post</h3>
+                <i class="fas fa-times" style="cursor: pointer;" onclick="document.getElementById('post-modal').classList.remove('active')"></i>
+            </div>
+            <textarea id="post-input" style="width:100%; background:transparent; border:none; color:white; font-size:1.1rem; outline:none; min-height:100px; resize: none;" placeholder="What's happening?"></textarea>
+            <img id="post-preview" style="width:100%; border-radius:10px; display:none; margin-top:10px; max-height: 300px; object-fit: cover;">
+            <div style="display:flex; justify-content:space-between; margin-top:20px; align-items: center;">
+                <label style="color:var(--red); cursor:pointer; font-size: 1.2rem;">
+                    <i class="fas fa-image"></i>
+                    <input type="file" id="img-file" hidden accept="image/*">
+                </label>
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="document.getElementById('post-modal').classList.remove('active')" style="background:transparent; color:var(--sec); padding:8px 20px; border-radius:20px; border:1px solid var(--border); font-weight:700; cursor: pointer;">Cancel</button>
+                    <button onclick="submitPost()" style="background:white; color:black; padding:8px 20px; border-radius:20px; border:none; font-weight:700; cursor: pointer;">Post</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
