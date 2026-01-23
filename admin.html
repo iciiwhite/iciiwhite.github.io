@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | XSocial</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #050505; --surf: #121212; --border: #2a2a2a; --red: #ff0033; --blue: #1d9bf0; }
+        body { background: var(--bg); color: white; font-family: 'Outfit', sans-serif; margin: 0; }
+        header { padding: 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 15px; }
+        main { max-width: 800px; margin: 20px auto; padding: 0 15px; }
+        .admin-card { background: var(--surf); border: 1px solid var(--border); border-radius: 15px; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { text-align: left; color: #a0a0a0; font-size: 0.9rem; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+        td { padding: 15px 0; border-bottom: 1px solid #1a1a1a; vertical-align: middle; }
+        .user-info { display: flex; align-items: center; gap: 10px; }
+        .user-pic { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; background: #222; }
+        .verify-btn { padding: 6px 12px; border-radius: 20px; border: none; font-weight: 700; cursor: pointer; font-size: 0.8rem; }
+        .btn-unverified { background: #333; color: white; }
+        .btn-verified { background: var(--blue); color: white; }
+        .v-badge { color: var(--blue); margin-left: 5px; }
+        .loading { text-align: center; padding: 20px; color: #a0a0a0; }
+    </style>
+</head>
+<body>
+    <header>
+        <i class="fas fa-arrow-left" style="cursor:pointer" onclick="location.href='index.html'"></i>
+        <h2 style="margin:0">Admin Control Panel</h2>
+    </header>
+
+    <main>
+        <div class="admin-card">
+            <h3>Manage Users</h3>
+            <div id="admin-loader" class="loading">Fetching users...</div>
+            <table id="user-table" style="display:none">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Username</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="user-list">
+                    </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Use your existing config
+        const firebaseConfig = {
+            apiKey: "AIzaSyDKbsD-n_2pegTi6pCyh5fOIRkP0wsNhX0",
+            authDomain: "xsocial-14f3d.firebaseapp.com",
+            projectId: "xsocial-14f3d",
+            storageBucket: "xsocial-14f3d.firebasestorage.app",
+            messagingSenderId: "367367942169",
+            appId: "1:367367942169:web:c24a39eb2b7136ed4ffa88"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // Security check: Only let the admin in
+        auth.onAuthStateChanged(user => {
+            if (!user) {
+                window.location.href = 'login.html';
+            } else {
+                loadUsers();
+            }
+        });
+
+        function loadUsers() {
+            db.collection('users').orderBy('username', 'asc').onSnapshot(snap => {
+                const list = document.getElementById('user-list');
+                const loader = document.getElementById('admin-loader');
+                const table = document.getElementById('user-table');
+                
+                list.innerHTML = '';
+                snap.forEach(doc => {
+                    const u = doc.data();
+                    const isVerified = u.isVerified || false;
+                    
+                    list.innerHTML += `
+                        <tr>
+                            <td>
+                                <div class="user-info">
+                                    <img src="${u.profilePic || ''}" class="user-pic" onerror="this.src='https://via.placeholder.com/35'">
+                                    <span>${u.name || 'No Name'} ${isVerified ? '<i class="fas fa-check-circle v-badge"></i>' : ''}</span>
+                                </div>
+                            </td>
+                            <td style="color:#a0a0a0">@${u.username}</td>
+                            <td>
+                                <button class="verify-btn ${isVerified ? 'btn-verified' : 'btn-unverified'}" 
+                                        onclick="toggleVerification('${doc.id}', ${isVerified})">
+                                    ${isVerified ? 'Verified' : 'Verify'}
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                
+                loader.style.display = 'none';
+                table.style.display = 'table';
+            });
+        }
+
+        async function toggleVerification(userId, currentStatus) {
+            const newStatus = !currentStatus;
+            try {
+                // 1. Update the User document
+                await db.collection('users').doc(userId).update({
+                    isVerified: newStatus
+                });
+
+                // 2. IMPORTANT: Update all existing posts by this user 
+                // so the blue badge shows up on old posts too
+                const postsSnap = await db.collection('posts').where('uid', '==', userId).get();
+                const batch = db.batch();
+                postsSnap.forEach(postDoc => {
+                    batch.update(postDoc.ref, { isVerified: newStatus });
+                });
+                await batch.commit();
+
+                console.log("User verification updated!");
+            } catch (error) {
+                alert("Error updating user: " + error.message);
+            }
+        }
+    </script>
+</body>
+</html>
