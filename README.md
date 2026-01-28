@@ -11,3 +11,5 @@ Kung saan ko ibubuod ang aking trabaho. Pangkalahatang-ideya ng aking mga proyek
   "author": "BeduTeam"
 }
 ```
+
+![](logo.svg)
