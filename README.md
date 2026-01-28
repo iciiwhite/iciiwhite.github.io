@@ -3,3 +3,10 @@ Kung saan ko ibubuod ang aking trabaho. Pangkalahatang-ideya ng aking mga proyek
 ![](logo.png)
 
 # [Go test](https://iciiwhite.github.io)
+
+```json
+{
+  "version": "2.1",
+  "notes": "30/01/2026"
+}
+```
