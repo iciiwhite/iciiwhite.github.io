@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine | Exclusive Invitation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,800;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --lux-red: #ff0a33;
+            --lux-dark: #050000;
+            --lux-gold: #d4af37;
+        }
+        body { 
+            font-family: 'Lato', sans-serif; 
+            background-color: var(--lux-dark); 
+            color: white; 
+            overflow-x: hidden;
+            margin: 0;
+        }
+        .serif { font-family: 'Playfair Display', serif; }
+        
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 120%, #2a0005 0%, #000000 70%);
+        }
+
+        .glass-card {
+            background: rgba(20, 0, 5, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-top: 1px solid rgba(255, 10, 50, 0.15);
+            box-shadow: 0 40px 80px -12px rgba(0, 0, 0, 0.8);
+        }
+
+        .input-lux {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+        .input-lux:focus {
+            border-color: var(--lux-red);
+            box-shadow: 0 0 15px rgba(255, 10, 51, 0.2);
+            outline: none;
+        }
+
+        .btn-lux {
+            background: linear-gradient(135deg, #d6002a 0%, #99001e 100%);
+            color: white;
+            border: 1px solid #ff3355;
+            box-shadow: 0 10px 30px rgba(214, 0, 42, 0.3);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .btn-lux:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(214, 0, 42, 0.5);
+            filter: brightness(1.2);
+        }
+        .btn-lux:active {
+            transform: translateY(-1px);
+        }
+
+        .gold-text {
+            color: transparent;
+            background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        .fade-in-up { animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; transform: translateY(30px); }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+        .glow-text { text-shadow: 0 0 20px rgba(255, 10, 51, 0.5); }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <canvas id="bg-canvas"></canvas>
+
+    <main class="flex-grow flex items-center justify-center p-4 md:p-8 relative z-10">
+        
+        <!-- SECTION 1: IDENTITY VERIFICATION -->
+        <div id="view-onboard" class="max-w-md w-full glass-card rounded-[2rem] p-10 md:p-14 text-center fade-in-up">
+            <div class="mb-8 flex justify-center">
+                <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-red-600 to-black flex items-center justify-center shadow-lg shadow-red-900/50">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                </div>
+            </div>
+            <h1 class="serif text-4xl font-bold mb-3 tracking-wide text-white">Identity Required</h1>
+            <p class="text-slate-400 text-sm mb-8 font-light tracking-widest uppercase">For the Valentine Registry</p>
+            
+            <div class="space-y-4">
+                <input type="text" id="inp-name" placeholder="Enter your Full Name" class="input-lux w-full p-4 rounded-xl text-center placeholder-slate-500 font-medium">
+                <button onclick="handleLogin()" class="btn-lux w-full py-4 rounded-xl font-bold uppercase tracking-widest text-xs">Access System</button>
+            </div>
+        </div>
+
+        <!-- SECTION 2: USER DASHBOARD -->
+        <div id="view-dashboard" class="hidden w-full max-w-5xl fade-in-up">
+            
+            <!-- Navbar -->
+            <nav class="glass-card rounded-full px-8 py-4 mb-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.6)]"></div>
+                    <span id="nav-user" class="font-bold tracking-wide text-sm md:text-base">Welcome</span>
+                </div>
+                <div class="flex gap-2 bg-black/30 p-1 rounded-full">
+                    <button onclick="switchTab('create')" id="tab-create" class="px-6 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all bg-white/10 text-white">Generate</button>
+                    <button onclick="switchTab('list')" id="tab-list" class="px-6 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all text-slate-400 hover:text-white">My Valentines</button>
+                </div>
+            </nav>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <!-- Left Column: Main Action -->
+                <div id="panel-create" class="glass-card rounded-[2.5rem] p-10 md:p-14 flex flex-col justify-center min-h-[500px] relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-10 opacity-20 pointer-events-none">
+                        <svg class="w-64 h-64 text-red-600" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                    </div>
+                    
+                    <h2 class="serif text-5xl font-bold mb-6 leading-tight">Create Your <span class="text-red-500 glow-text">Signature</span> Invitation</h2>
+                    <p class="text-slate-300 mb-10 font-light leading-relaxed">Generate a secure, encrypted link designed to impress. Share this unique digital key with your chosen Valentine.</p>
+                    
+                    <button onclick="generateLink()" class="btn-lux py-5 px-8 rounded-2xl w-max font-bold uppercase tracking-widest text-sm mb-8 flex items-center gap-3">
+                        <span>Initialize Link</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </button>
+
+                    <div id="link-result" class="hidden bg-black/60 border border-white/10 rounded-xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 backdrop-blur-md">
+                        <code id="link-text" class="text-xs text-red-400 font-mono truncate max-w-[250px]">...</code>
+                        <button onclick="copyLink()" class="text-[10px] font-bold bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg uppercase tracking-widest transition-colors">Copy</button>
+                    </div>
+                </div>
+
+                <div id="panel-list" class="hidden glass-card rounded-[2.5rem] p-10 md:p-14 min-h-[500px]">
+                    <h2 class="serif text-4xl font-bold mb-2">Registry</h2>
+                    <p class="text-xs text-slate-500 uppercase tracking-widest mb-8">Confirmed Acceptances</p>
+                    <div id="list-container" class="space-y-3 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar">
+                        <!-- Items injected here -->
+                    </div>
+                </div>
+
+                <!-- Right Column: Quote & Decor -->
+                <div class="flex flex-col gap-8">
+                    <div class="glass-card rounded-[2.5rem] p-10 flex-grow flex flex-col justify-center items-center text-center">
+                        <div class="mb-6 text-red-500 opacity-80">
+                            <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21L14.017 18C14.017 16.8954 13.1216 16 12.017 16H11.983C10.8784 16 9.98298 16.8954 9.98298 18L9.98298 21H2V11L12 3L22 11V21H14.017ZM12 7.5L6 12.2V19H8V15.0001C8 13.8955 8.89543 13.0001 10 13.0001H14C15.1046 13.0001 16 13.8955 16 15.0001V19H18V12.2L12 7.5Z"></path></svg>
+                        </div>
+                        <p id="txt-quote" class="serif text-2xl md:text-3xl italic leading-tight mb-8">"Love is the only gold."</p>
+                        <button onclick="newQuote()" class="text-[10px] uppercase tracking-[0.3em] text-red-500 border-b border-red-500/30 hover:text-white hover:border-white transition-colors pb-1">Refresh Insight</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 3: RECIPIENT VIEW -->
+        <div id="view-recipient" class="hidden w-full max-w-4xl fade-in-up text-center">
+            <div class="glass-card rounded-[3rem] p-12 md:p-24 border-red-500/20 relative overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-b from-red-500/5 to-transparent pointer-events-none"></div>
+                
+                <p class="text-xs font-bold text-red-500 uppercase tracking-[0.4em] mb-8">Official Proposal</p>
+                <h1 class="serif text-5xl md:text-8xl font-bold mb-6 leading-tight text-white glow-text">Will you be<br>my <span class="italic text-red-500">Valentine?</span></h1>
+                <p id="req-subtitle" class="text-xl text-slate-300 font-light mb-16 max-w-2xl mx-auto">A request from <span class="text-white font-bold" id="req-sender">...</span></p>
+                
+                <div class="flex flex-col md:flex-row justify-center items-center gap-8 relative z-20">
+                    <button onclick="acceptVal()" class="btn-lux px-16 py-6 rounded-full text-xl font-bold shadow-[0_0_50px_rgba(255,10,51,0.4)] hover:shadow-[0_0_80px_rgba(255,10,51,0.6)]">Yes, I Accept</button>
+                    <button id="btn-no" onmouseenter="dodgeNo()" onclick="dodgeNo()" class="px-16 py-6 rounded-full text-lg font-bold text-slate-500 border border-white/10 hover:bg-white/5 transition-all">Decline</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="relative z-10 text-center p-6 text-[10px] text-white/20 uppercase tracking-widest">
+        Secured by Valentine Protocol v4.0
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC11Lc3_xc6SkA6hRqfT85Tc5Qixzu6PEc",
+            authDomain: "valentine-bd185.firebaseapp.com",
+            projectId: "valentine-bd185",
+            storageBucket: "valentine-bd185.firebasestorage.app",
+            messagingSenderId: "986927766292",
+            appId: "1:986927766292:web:ecffcd71bd346000ebc001"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        
+        let user = { name: '', id: '' };
+        const QUOTES = [
+            "You are the finest, loveliest, tenderest, and most beautiful person I have ever known.",
+            "Love is composed of a single soul inhabiting two bodies.",
+            "In all the world, there is no heart for me like yours.",
+            "I have found the one whom my soul loves.",
+            "If I know what love is, it is because of you.",
+            "Yours is the light by which my spirit's born.",
+            "To love and be loved is to feel the sun from both sides.",
+            "Whatever our souls are made of, his and mine are the same.",
+            "Grow old along with me! The best is yet to be.",
+            "You are my heart, my life, my one and only thought.",
+            "I love you right up to the moon—and back.",
+            "You pierce my soul. I am half agony, half hope.",
+            "I wish I had done everything on earth with you.",
+            "You are the poem I never knew how to write.",
+            "My love for you is a journey, starting at forever and ending at never."
+        ];
+
+        async function init() {
+            await signInAnonymously(auth);
+            const saved = localStorage.getItem('v_user');
+            if(saved) {
+                user = JSON.parse(saved);
+                checkRoute();
+            } else {
+                document.getElementById('view-onboard').classList.remove('hidden');
+            }
+        }
+
+        window.handleLogin = () => {
+            const name = document.getElementById('inp-name').value.trim();
+            if(!name) return;
+            user = { name, id: btoa(name + Date.now()).slice(0, 12) };
+            localStorage.setItem('v_user', JSON.stringify(user));
+            checkRoute();
+        };
+
+        function checkRoute() {
+            document.getElementById('view-onboard').classList.add('hidden');
+            const urlParams = new URLSearchParams(window.location.search);
+            const reqId = urlParams.get('id');
+            
+            if(reqId) {
+                loadRequest(reqId);
+            } else {
+                loadDashboard();
+            }
+        }
+
+        function loadDashboard() {
+            document.getElementById('view-dashboard').classList.remove('hidden');
+            document.getElementById('nav-user').innerText = user.name;
+            
+            const docRef = doc(db, 'artifacts', 'val_v2', 'users', user.id);
+            onSnapshot(docRef, (snap) => {
+                if(snap.exists()) {
+                    const data = snap.data();
+                    renderList(data.acceptances || []);
+                }
+            });
+        }
+
+        async function loadRequest(id) {
+            const docRef = doc(db, 'artifacts', 'val_v2', 'users', id);
+            const snap = await getDoc(docRef);
+            if(snap.exists()) {
+                document.getElementById('view-recipient').classList.remove('hidden');
+                document.getElementById('req-sender').innerText = snap.data().name;
+            }
+        }
+
+        window.generateLink = async () => {
+            const link = `${window.location.origin}${window.location.pathname}?id=${user.id}`;
+            await setDoc(doc(db, 'artifacts', 'val_v2', 'users', user.id), {
+                name: user.name,
+                created: new Date().toISOString()
+            }, { merge: true });
+            
+            document.getElementById('link-text').innerText = link;
+            document.getElementById('link-result').classList.remove('hidden');
+            document.getElementById('link-result').classList.add('flex');
+        };
+
+        window.acceptVal = async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const reqId = urlParams.get('id');
+            const docRef = doc(db, 'artifacts', 'val_v2', 'users', reqId);
+            
+            await updateDoc(docRef, {
+                acceptances: arrayUnion({ name: user.name, date: new Date().toISOString() })
+            });
+            
+            confetti({ particleCount: 300, spread: 150, origin: { y: 0.6 }, colors: ['#ff0000', '#d4af37'] });
+            document.getElementById('view-recipient').innerHTML = `
+                <div class="glass-card rounded-[3rem] p-20 fade-in-up">
+                    <h1 class="serif text-6xl text-white mb-6">Accepted.</h1>
+                    <p class="text-slate-400">The connection has been established securely.</p>
+                </div>
+            `;
+        };
+
+        window.copyLink = () => {
+            navigator.clipboard.writeText(document.getElementById('link-text').innerText);
+            alert("Link copied to secure clipboard.");
+        };
+
+        window.switchTab = (tab) => {
+            const isCreate = tab === 'create';
+            document.getElementById('panel-create').classList.toggle('hidden', !isCreate);
+            document.getElementById('panel-list').classList.toggle('hidden', isCreate);
+            
+            const btnCreate = document.getElementById('tab-create');
+            const btnList = document.getElementById('tab-list');
+            
+            btnCreate.className = isCreate ? "px-6 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all bg-white/10 text-white" : "px-6 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all text-slate-400 hover:text-white";
+            btnList.className = !isCreate ? "px-6 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all bg-white/10 text-white" : "px-6 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all text-slate-400 hover:text-white";
+        };
+
+        window.newQuote = () => {
+            const q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+            const el = document.getElementById('txt-quote');
+            el.style.opacity = 0;
+            setTimeout(() => { el.innerText = `"${q}"`; el.style.opacity = 1; }, 300);
+        };
+
+        window.dodgeNo = () => {
+            const btn = document.getElementById('btn-no');
+            const x = Math.random() * (window.innerWidth - 200);
+            const y = Math.random() * (window.innerHeight - 100);
+            btn.style.position = 'fixed';
+            btn.style.left = `${x}px`;
+            btn.style.top = `${y}px`;
+        };
+
+        function renderList(list) {
+            const container = document.getElementById('list-container');
+            if(!list.length) {
+                container.innerHTML = '<div class="text-center p-8 text-slate-500 italic">No acceptances yet.</div>';
+                return;
+            }
+            container.innerHTML = list.map(item => `
+                <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/5 hover:bg-white/10 transition-colors">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-red-800 to-black flex items-center justify-center text-xs font-bold border border-red-500/30">
+                            ${item.name.charAt(0)}
+                        </div>
+                        <span class="font-bold text-sm tracking-wide">${item.name}</span>
+                    </div>
+                    <span class="text-[10px] uppercase tracking-widest text-green-400">Confirmed</span>
+                </div>
+            `).join('');
+        }
+
+        init();
+
+        // PREMIUM CANVAS ANIMATION
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.init();
+            }
+            init() {
+                this.x = Math.random() * width;
+                this.y = height + Math.random() * 200;
+                this.size = Math.random() * 30 + 10; // Bigger, more visible
+                this.speed = Math.random() * 1 + 0.5;
+                this.opacity = Math.random() * 0.5 + 0.2; // Much higher opacity
+                this.wobble = Math.random() * Math.PI * 2;
+                this.wobbleSpeed = Math.random() * 0.02 + 0.01;
+                this.color = Math.random() > 0.5 ? '#ff0a33' : '#a30015';
+            }
+            update() {
+                this.y -= this.speed;
+                this.wobble += this.wobbleSpeed;
+                this.x += Math.sin(this.wobble) * 0.5;
+                if (this.y < -50) this.init();
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = this.color;
+                ctx.fillStyle = this.color;
+                
+                ctx.translate(this.x, this.y);
+                const s = this.size;
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                // Standard heart curve
+                ctx.bezierCurveTo(0, -s/2, -s, -s/2, -s, 0);
+                ctx.bezierCurveTo(-s, s/2, 0, s, 0, s*1.5);
+                ctx.bezierCurveTo(0, s, s, s/2, s, 0);
+                ctx.bezierCurveTo(s, -s/2, 0, -s/2, 0, 0);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < 50; i++) particles.push(new Particle());
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>
