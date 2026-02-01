@@ -1,1 +1,419 @@
-Errors 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Valentine's Day</title>
+    
+    <meta name="description" content="A unique, animated Valentine's experience with 200 love quotes and a journey of the heart.">
+    <meta name="keywords" content="Valentine, Love, Quotes, Romance, 3D Valentine, Love Art">
+    <meta name="author" content="Valentine Protocol">
+    <meta property="og:title" content="A Special Valentine's Wish Just For You">
+    <meta property="og:description" content="Open the gift to discover a universe of love quotes and the countdown to our special day.">
+    <meta property="og:image" content="valentine.png">
+    <meta property="og:url" content="https://iciiwhite.github.io/valentine.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="A Special Valentine's Wish">
+    <meta name="twitter:description" content="Experience the heartfelt Valentine's wish.">
+    <meta name="twitter:image" content="valentine.png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Great+Vibes&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --lux-red: #d6002a;
+            --lux-dark: #0a0002;
+            --lux-gold: #d4af37;
+        }
+        body { 
+            font-family: 'Lato', sans-serif; 
+            background-color: var(--lux-dark); 
+            color: white; 
+            overflow: hidden; 
+            margin: 0;
+        }
+        .serif { font-family: 'Cinzel', serif; }
+        .script { font-family: 'Great Vibes', cursive; }
+        
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: radial-gradient(circle at 50% 120%, #2a0005 0%, #000000 80%);
+        }
+
+        .glass-panel {
+            background: rgba(20, 0, 5, 0.4);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 1px solid rgba(214, 0, 42, 0.2);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.9);
+        }
+
+        .gift-container { perspective: 1200px; cursor: pointer; transition: all 1s; }
+        .gift-box {
+            width: 180px; height: 180px;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: rotateX(-20deg) rotateY(25deg);
+            animation: idleFloat 4s ease-in-out infinite;
+            transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes idleFloat { 0%, 100% { transform: rotateX(-20deg) rotateY(25deg) translateY(0); } 50% { transform: rotateX(-15deg) rotateY(35deg) translateY(-25px); } }
+        
+        .face { position: absolute; width: 180px; height: 180px; background: #99001e; border: 1px solid #ff1a40; }
+        .front { transform: translateZ(90px); }
+        .back { transform: translateZ(-90px) rotateY(180deg); }
+        .right { transform: rotateY(90deg) translateZ(90px); }
+        .left { transform: rotateY(-90deg) translateZ(90px); }
+        .top { 
+            transform: rotateX(90deg) translateZ(90px); 
+            background: #b30023; 
+            transform-origin: top;
+            transition: transform 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .bottom { transform: rotateX(-90deg) translateZ(90px); box-shadow: 0 0 100px rgba(0,0,0,1); }
+        
+        .ribbon-v { position: absolute; width: 40px; height: 100%; left: 70px; background: var(--lux-gold); box-shadow: inset 0 0 15px rgba(0,0,0,0.2); }
+        .ribbon-h { position: absolute; width: 100%; height: 40px; top: 70px; background: var(--lux-gold); box-shadow: inset 0 0 15px rgba(0,0,0,0.2); }
+
+        .gift-container.opening .top { transform: rotateX(90deg) translateZ(90px) rotateX(-110deg); }
+        .gift-container.opening .gift-box { transform: scale(1.5) rotateY(360deg) translateY(-100px); opacity: 0; }
+
+        .music-control {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 50;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.3;
+        }
+        .music-bars span {
+            display: inline-block;
+            width: 2px;
+            background: white;
+            margin: 0 1px;
+            animation: sound 1.2s infinite alternate;
+        }
+        @keyframes sound { 0% { height: 3px; } 100% { height: 15px; } }
+
+        .fade-out { animation: fadeOut 1.2s forwards; }
+        .fade-in { animation: fadeIn 2s forwards; }
+        @keyframes fadeOut { to { opacity: 0; transform: scale(0.8) translateY(-50px); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        #quote-text { transition: opacity 1.5s ease-in-out; }
+    </style>
+</head>
+<body>
+
+    <canvas id="bg-canvas"></canvas>
+    
+    <audio id="bg-music" loop>
+        <source src="https://cdn.pixabay.com/audio/2022/02/07/audio_13617d39ca.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="music-btn" class="music-control hidden">
+        <div class="music-bars">
+            <span style="animation-delay: 0.1s"></span>
+            <span style="animation-delay: 0.3s"></span>
+            <span style="animation-delay: 0.5s"></span>
+        </div>
+    </div>
+
+    <div id="view-gift" class="absolute inset-0 z-50 flex flex-col items-center justify-center">
+        <div class="gift-container" id="gift-main" onclick="openGift()">
+            <div class="gift-box">
+                <div class="face front"><div class="ribbon-v"></div></div>
+                <div class="face back"><div class="ribbon-v"></div></div>
+                <div class="face right"><div class="ribbon-h"></div></div>
+                <div class="face left"><div class="ribbon-h"></div></div>
+                <div class="face top"><div class="ribbon-v"></div><div class="ribbon-h"></div></div>
+                <div class="face bottom"></div>
+            </div>
+        </div>
+        <p class="mt-24 text-red-500 font-light tracking-[0.8em] text-[10px] uppercase animate-pulse">A Heartfelt Invitation</p>
+    </div>
+
+    <div id="view-main" class="relative z-10 w-full min-h-screen flex flex-col items-center justify-center hidden">
+        
+        <header class="text-center mb-12">
+            <h2 class="text-red-500 text-xs font-bold tracking-[0.6em] uppercase mb-6">Wishing you a lovely</h2>
+            <h1 class="serif text-5xl md:text-8xl text-white glow-text">Valentine's Day</h1>
+        </header>
+
+        <div class="glass-panel p-10 rounded-[2rem] mb-12 flex gap-6 md:gap-12 text-center">
+            <div>
+                <div id="d-days" class="text-4xl md:text-6xl font-bold serif text-white">00</div>
+                <div class="text-[9px] uppercase tracking-widest text-red-500 mt-2">Days</div>
+            </div>
+            <div>
+                <div id="d-hours" class="text-4xl md:text-6xl font-bold serif text-white">00</div>
+                <div class="text-[9px] uppercase tracking-widest text-red-500 mt-2">Hours</div>
+            </div>
+            <div>
+                <div id="d-mins" class="text-4xl md:text-6xl font-bold serif text-white">00</div>
+                <div class="text-[9px] uppercase tracking-widest text-red-500 mt-2">Mins</div>
+            </div>
+            <div>
+                <div id="d-secs" class="text-4xl md:text-6xl font-bold serif text-red-500">00</div>
+                <div class="text-[9px] uppercase tracking-widest text-red-500 mt-2">Secs</div>
+            </div>
+        </div>
+
+        <div class="max-w-3xl w-full px-8">
+            <div class="text-center">
+                <div class="text-4xl md:text-6xl text-red-500/40 script mb-6">Love Notes</div>
+                <div class="min-h-[160px] flex items-center justify-center">
+                    <p id="quote-text" class="serif text-xl md:text-3xl italic leading-relaxed text-slate-200 px-4">
+                        "Your journey into love begins now."
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const QUOTES = [
+            "Love looks not with the eyes, but with the mind.", "You are my sun, my moon, and all my stars.",
+            "If I know what love is, it is because of you.", "I swear I couldn't love you more than I do right now.",
+            "I saw that you were perfect, and so I loved you.", "You make me want to be a better man.",
+            "The best thing to hold onto in life is each other.", "I need you like a heart needs a beat.",
+            "I am who I am because of you.", "You are my heart, my life, my one and only thought.",
+            "My love for you is a journey, starting at forever and ending at never.", "Every love story is beautiful, but ours is my favorite.",
+            "I love you right up to the moon—and back.", "You pierce my soul. I am half agony, half hope.",
+            "I wish I had done everything on earth with you.", "You are the poem I never knew how to write.",
+            "Love is composed of a single soul inhabiting two bodies.", "To love and be loved is to feel the sun from both sides.",
+            "In all the world, there is no heart for me like yours.", "Yours is the light by which my spirit's born.",
+            "Whatever our souls are made of, his and mine are the same.", "Grow old along with me! The best is yet to be.",
+            "Love is a friendship set to music.", "You are my today and all of my tomorrows.",
+            "I love you more than I have ever found a way to say to you.", "You are the finest, loveliest, tenderest person I have ever known.",
+            "Life is the flower for which love is the honey.", "Love is the whole thing. We are only pieces.",
+            "I have found the one whom my soul loves.", "When I look at you, I can feel it. I look at you and I'm home.",
+            "My night has become a sunny dawn because of you.", "Loving you is the most natural thing I have ever done.",
+            "I never want to stop making memories with you.", "You are my greatest adventure.",
+            "I look at you and see the rest of my life in front of my eyes.", "Thank you for being the reason I smile.",
+            "Your love is all I need to feel complete.", "I will love you until the stars go out.",
+            "You are the missing piece to my puzzle.", "My heart is and always will be yours.",
+            "Being deeply loved by someone gives you strength.", "There is no remedy for love but to love more.",
+            "Love is the beauty of the soul.", "Where there is love there is life.",
+            "You are the only exception.", "I just want to be yours.",
+            "You are my favorite notification.", "I love you endlessly.",
+            "Forever is a long time, but I wouldn't mind spending it by your side.", "You are my blue crayon, the one I never have enough of.",
+            "Stolen kisses are always sweetest.", "Love is like the wind, you can't see it but you can feel it.",
+            "I love you more than coffee, but please don't make me prove it.", "You're the cheese to my macaroni.",
+            "Let's be weird and wonderful together.", "I love you with every beat of my heart.",
+            "You are my happy place.", "Distance means so little when someone means so much.",
+            "I fell in love with the way you touched me without using your hands.", "Your voice is my favorite sound.",
+            "I love you not only for what you are, but for what I am when I am with you.", "You are my soulmate.",
+            "Every moment with you is magic.", "I want to be the reason behind your smile.",
+            "My love for you grows stronger every day.", "You are my best friend and my love.",
+            "I choose you. And I'll choose you over and over and over.", "Love is not about how many days, months, or years you have been together.",
+            "It's about how much you love each other every single day.", "You are the dream I never want to wake up from.",
+            "Your smile is the key to my heart.", "I love you more than words can express.",
+            "You are my everything.", "I can't imagine my life without you.",
+            "Loving you is my favorite thing to do.", "You are the light in my darkness.",
+            "I am so lucky to have you.", "You make my world go round.",
+            "I love the way you look at me.", "You are my sunshine on a cloudy day.",
+            "I love you to infinity and beyond.", "You are the peanut butter to my jelly.",
+            "I love you more than pizza.", "You are my favorite distraction.",
+            "I love you more than yesterday, but less than tomorrow.", "You are the apple of my eye.",
+            "I love you more than all the stars in the sky.", "You are my rock.",
+            "I love you more than life itself.", "You are my angel.",
+            "I love you more than anything.", "You are my world.",
+            "I love you more than I can say.", "You are my heart.",
+            "I love you more than you know.", "You are my soul.",
+            "I love you more than words.", "You are my life.",
+            "I love you more than music.", "You are my love.",
+            "I love you more than movies.", "You are my darling.",
+            "I love you more than books.", "You are my sweetie.",
+            "I love you more than games.", "You are my honey.",
+            "I love you more than sleep.", "You are my baby.",
+            "I love you more than food.", "You are my dear.",
+            "I love you more than water.", "You are my beloved.",
+            "I love you more than air.", "You are my treasure.",
+            "I love you more than sun.", "You are my gem.",
+            "I love you more than moon.", "You are my jewel.",
+            "I love you more than rain.", "You are my diamond.",
+            "I love you more than snow.", "You are my pearl.",
+            "I love you more than wind.", "You are my gold.",
+            "I love you more than fire.", "You are my silver.",
+            "I love you more than earth.", "You are my bronze.",
+            "I love you more than sea.", "You are my platinum.",
+            "I love you more than sky.", "You are my everything.",
+            "I love you more than universe.", "You are my eternity.",
+            "I love you more than galaxy.", "You are my infinity.",
+            "I love you more than cosmos.", "You are my destiny.",
+            "I love you more than time.", "You are my fate.",
+            "I love you more than space.", "You are my fortune.",
+            "I love you more than gravity.", "You are my luck.",
+            "I love you more than light.", "You are my chance.",
+            "I love you more than dark.", "You are my hope.",
+            "I love you more than day.", "You are my wish.",
+            "I love you more than night.", "You are my dream.",
+            "I love you more than morning.", "You are my reality.",
+            "I love you more than evening.", "You are my fantasy.",
+            "I love you more than afternoon.", "You are my miracle.",
+            "I love you more than midnight.", "You are my blessing.",
+            "I love you more than noon.", "You are my gift.",
+            "I love you more than dawn.", "You are my present.",
+            "I love you more than dusk.", "You are my future.",
+            "I love you more than twilight.", "You are my past.",
+            "I love you more than sunrise.", "You are my history.",
+            "I love you more than sunset.", "You are my memory.",
+            "I love you more than spring.", "You are my story.",
+            "I love you more than summer.", "You are my legend.",
+            "I love you more than autumn.", "You are my myth.",
+            "I love you more than winter.", "You are my fairy tale.",
+            "I love you more than hot.", "You are my happy ending.",
+            "I love you more than cold.", "You are my happily ever after.",
+            "I love you more than warm.", "You are my once upon a time.",
+            "I love you more than cool.", "You are my true love.",
+            "I love you more than dry.", "You are my soul mate.",
+            "I love you more than wet.", "You are my life partner.",
+            "I love you more than high.", "You are my better half.",
+            "I love you more than low.", "You are my other half.",
+            "I love you more than fast.", "You are my partner in crime.",
+            "I love you more than slow.", "You are my sidekick.",
+            "I love you more than hard.", "You are my teammate.",
+            "I love you more than soft.", "You are my player 2.",
+            "I love you more than rough.", "You are my co-pilot.",
+            "I love you more than smooth.", "You are my wingman.",
+            "I love you more than loud.", "You are my companion.",
+            "I love you more than quiet.", "You are my friend.",
+            "I love you more than big.", "You are my bestie.",
+            "I love you more than small.", "You are my pal.",
+            "I love you more than long.", "You are my buddy.",
+            "I love you more than short.", "You are my mate.",
+            "I love you more than thick.", "You are my chum.",
+            "I love you more than thin.", "You are my amigo.",
+            "I love you more than wide.", "You are my confidant.",
+            "I love you more than narrow.", "You are my ally.",
+            "I love you more than deep.", "You are my supporter.",
+            "I love you more than shallow.", "You are my fan.",
+            "I love you more than heavy.", "You are my admirer.",
+            "I love you more than light.", "You are my lover.",
+            "I love you more than bright.", "You are my sweetheart.",
+            "I love you more than dim.", "You are my valentine."
+        ];
+
+        const music = document.getElementById('bg-music');
+        const giftMain = document.getElementById('gift-main');
+        
+        function openGift() {
+            giftMain.classList.add('opening');
+            
+            setTimeout(() => {
+                document.getElementById('view-gift').classList.add('fade-out');
+                setTimeout(() => {
+                    document.getElementById('view-gift').classList.add('hidden');
+                    const main = document.getElementById('view-main');
+                    main.classList.remove('hidden');
+                    main.classList.add('fade-in');
+                    document.getElementById('music-btn').classList.remove('hidden');
+                    startAutomaticQuotes();
+                }, 1000);
+            }, 1000);
+
+            music.volume = 0.3;
+            music.play();
+            confetti({ particleCount: 250, spread: 100, origin: { y: 0.6 }, colors: ['#d6002a', '#d4af37', '#ffffff'] });
+        }
+
+        function updateCountdown() {
+            const target = new Date("February 14, 2026 00:00:00").getTime();
+            const now = new Date().getTime();
+            const diff = target - now;
+
+            if (diff > 0) {
+                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+                document.getElementById('d-days').innerText = d.toString().padStart(2, '0');
+                document.getElementById('d-hours').innerText = h.toString().padStart(2, '0');
+                document.getElementById('d-mins').innerText = m.toString().padStart(2, '0');
+                document.getElementById('d-secs').innerText = s.toString().padStart(2, '0');
+            }
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        function startAutomaticQuotes() {
+            let index = 0;
+            const textEl = document.getElementById('quote-text');
+            
+            const showNext = () => {
+                textEl.style.opacity = 0;
+                setTimeout(() => {
+                    textEl.innerText = `"${QUOTES[index % QUOTES.length]}"`;
+                    textEl.style.opacity = 1;
+                    index++;
+                    setTimeout(showNext, 6000);
+                }, 1500);
+            };
+            showNext();
+        }
+
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height, particles = [];
+
+        function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() { this.init(); }
+            init() {
+                this.x = Math.random() * width;
+                this.y = height + Math.random() * 200;
+                this.size = Math.random() * 20 + 5;
+                this.speed = Math.random() * 0.8 + 0.3;
+                this.opacity = Math.random() * 0.4 + 0.1;
+                this.color = Math.random() > 0.5 ? '#d6002a' : '#5c0012';
+            }
+            update() {
+                this.y -= this.speed;
+                if (this.y < -50) this.init();
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                ctx.translate(this.x, this.y);
+                const s = this.size;
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.bezierCurveTo(0, -s/2, -s, -s/2, -s, 0);
+                ctx.bezierCurveTo(-s, s/2, 0, s, 0, s*1.5);
+                ctx.bezierCurveTo(0, s, s, s/2, s, 0);
+                ctx.bezierCurveTo(s, -s/2, 0, -s/2, 0, 0);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < 70; i++) particles.push(new Particle());
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>
