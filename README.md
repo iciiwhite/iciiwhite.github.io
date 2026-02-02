@@ -1,6 +1,6 @@
 # iciiwhite.github.io
 Kung saan ko ibubuod ang aking trabaho. Pangkalahatang-ideya ng aking mga proyekto sa Github 
-[![](logo.png)](uy.html)
+![](https://raw.githubusercontent.com/iciiwhite/iciiwhite.github.io/main/me.png)](iciiwhite.github.io)
 
 ### myGit Version Info 
 ```json
@@ -11,5 +11,3 @@ Kung saan ko ibubuod ang aking trabaho. Pangkalahatang-ideya ng aking mga proyek
   "author": "BeduTeam"
 }
 ```
-
-![](logo.svg)
