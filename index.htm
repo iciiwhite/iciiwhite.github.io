@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <title>Icii White</title>
+    <meta name="title" content="Icii White Portfolio">
+    <meta name="description" content="Portfolio of Icii White, an 18-year-old Full Stack Developer from Uganda crafting high-impact digital experiences.">
+    <meta name="keywords" content="Icii White, Mugenyi Bob Nathan, Developer Uganda, Full Stack Developer, Web Design, Software Engineer Uganda">
+    <meta name="author" content="Icii White">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="http://iciiwhite.lovestoblog.com">
+    <meta property="og:title" content="Icii White Portfolio">
+    <meta property="og:description" content="Self-taught developer from Uganda building the future of the digital era. View my latest projects.">
+    <meta property="og:image" content="me.png">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Icii White Portfolio">
+    <meta property="twitter:description" content="Building high-impact digital experiences from the heart of Uganda.">
+    <meta property="twitter:image" content="me.png">
+
+    <style>
+        :root {
+            --primary: #FCD249;
+            --bg: #0a0a0a;
+            --card-bg: #141414;
+            --text-main: #ffffff;
+            --text-dim: #a0a0a0;
+            --accent-gradient: linear-gradient(135deg, #FCD249 0%, #d4af37 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar {
+            max-width: 1300px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 800;
+            font-size: 1.1rem;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-circle {
+            width: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+        }
+
+        .mobile-toggle {
+            display: none;
+            cursor: pointer;
+            width: 24px;
+            height: 18px;
+            position: relative;
+            z-index: 1001;
+        }
+
+        .mobile-toggle span {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: var(--text-main);
+            transition: 0.3s;
+            border-radius: 2px;
+        }
+
+        .mobile-toggle span:nth-child(1) { top: 0; }
+        .mobile-toggle span:nth-child(2) { top: 8px; }
+        .mobile-toggle span:nth-child(3) { top: 16px; }
+
+        .mobile-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 6px); }
+        .mobile-toggle.active span:nth-child(2) { opacity: 0; }
+        .mobile-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(6px, -7px); }
+
+        section {
+            min-height: 100vh;
+            padding: 100px 20px 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        section.active {
+            display: flex;
+            flex-direction: column;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hero { justify-content: center; align-items: flex-start; }
+        
+        .badge {
+            display: inline-block;
+            padding: 6px 14px;
+            background: rgba(252, 210, 73, 0.1);
+            border: 1px solid rgba(252, 210, 73, 0.2);
+            border-radius: 100px;
+            color: var(--primary);
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            background: linear-gradient(to bottom, #fff 50%, #777 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            color: var(--text-dim);
+            max-width: 550px;
+            margin-bottom: 35px;
+        }
+
+        .cta-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: 0.3s;
+            cursor: pointer;
+            border: none;
+            text-align: center;
+            font-size: 0.9rem;
+            flex: 1;
+            min-width: 160px;
+            max-width: 200px;
+        }
+
+        .btn-primary { background: var(--accent-gradient); color: #000; }
+        .btn-outline { background: transparent; color: var(--text-main); border: 1px solid rgba(255, 255, 255, 0.15); }
+
+        .section-title { font-size: clamp(1.8rem, 5vw, 2.8rem); margin-bottom: 40px; font-weight: 800; }
+        .section-title span { color: var(--primary); }
+
+        .about-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; align-items: center; }
+        .profile-container { position: relative; width: 100%; max-width: 400px; margin: 0 auto; aspect-ratio: 1; }
+        .profile-frame { position: absolute; inset: 0; border: 5px solid var(--primary); border-radius: 20px; transform: rotate(-5deg); z-index: 0;}
+        .profile-image { position: relative; width: 100%; height: 100%; border-radius: 20px; background: #1a1a1a; overflow: hidden; z-index: 1; border: 5px solid #000000;
+            transition: all 1s;
+        }
+        .profile-image img { width: 100%; height: 100%; object-fit: cover; }
+        .profile-image:hover{
+            transform: rotate(-5deg);
+            transition: all 1s;
+        }
+        .stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 30px; }
+        .stat-card { background: var(--card-bg); padding: 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        .stat-card h4 { font-size: 1.5rem; color: var(--primary); margin-bottom: 2px; }
+        .stat-card p { font-size: 0.8rem; color: var(--text-dim); }
+
+        .projects-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+            gap: 20px; 
+            width: 100%;
+        }
+
+        .project-card { 
+            position: relative;
+            height: 400px;
+            background: var(--card-bg); 
+            border-radius: 20px; 
+            overflow: hidden; 
+            border: 1px solid rgba(255,255,255,0.05); 
+            transition: 0.4s; 
+        }
+
+        .project-img { 
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%; 
+            height: 100%;
+            z-index: 1;
+        }
+
+        .project-img img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover;
+            transition: 0.6s;
+        }
+
+        .project-card:hover .project-img img {
+            transform: scale(1.1);
+        }
+
+        .project-info { 
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 30px 20px 20px;
+            z-index: 2;
+            background: linear-gradient(to top, #000 0%, #000000cc 40%, transparent 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .project-tag { font-size: 0.65rem; color: var(--primary); text-transform: uppercase; font-weight: 700; margin-bottom: 8px; }
+        .project-info h4 { font-size: 1.25rem; color: white; margin-bottom: 5px; }
+        .project-info p { font-size: 0.85rem; color: #ccc; margin-bottom: 15px; line-height: 1.4; }
+        .project-link { text-decoration: none; color: var(--primary); font-weight: 700; font-size: 0.8rem; letter-spacing: 0.5px; }
+
+        .contact-container { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .contact-form { background: var(--card-bg); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 0.8rem; color: var(--text-dim); margin-bottom: 6px; }
+        .form-group input, .form-group textarea { width: 100%; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 10px; color: white; outline: none; transition: 0.3s; font-size: 0.95rem; }
+        .form-group input:focus, .form-group textarea:focus { border-color: var(--primary); }
+        
+        #status-msg { display: none; padding: 12px; border-radius: 10px; margin-bottom: 15px; text-align: center; background: rgba(252, 210, 73, 0.1); color: var(--primary); border: 1px solid var(--primary); font-size: 0.85rem; }
+
+        @media (max-width: 968px) {
+            .about-grid, .contact-container { grid-template-columns: 1fr; }
+            .nav-links { position: fixed; top: 70px; left: 0; width: 100%; height: 0; background: var(--bg); flex-direction: column; align-items: center; justify-content: center; overflow: hidden; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 999; }
+            .nav-links.open { height: calc(100vh - 70px); }
+            .nav-links li { margin: 15px 0; }
+            .nav-link { font-size: 1.2rem; }
+            .mobile-toggle { display: block; }
+            .hero { text-align: left; }
+            .cta-group .btn { max-width: 100%; }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 { font-size: 2.5rem; }
+            .projects-grid { grid-template-columns: 1fr; }
+            .project-card { height: 350px; }
+            .section-title { text-align: center; }
+            .stat-grid { grid-template-columns: 1fr; }
+        }
+
+        .blob { position: absolute; width: 40vw; height: 40vw; background: radial-gradient(circle, rgba(252, 210, 73, 0.08) 0%, transparent 70%); z-index: -1; filter: blur(60px); pointer-events: none; }
+        footer { padding: 40px 20px; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); color: var(--text-dim); font-size: 0.75rem; letter-spacing: 1px; }
+    </style>
+</head>
+<body>
+    <div class="blob" style="top: -10%; right: -10%;"></div>
+    <div class="blob" style="bottom: 10%; left: -10%;"></div>
+
+    <header class="header">
+        <nav class="navbar">
+            <a href="#home" class="logo" onclick="navigateTo('home')">
+                <img src="code.png" class="logo-circle">
+                ICII WHITE
+            </a>
+            <div class="mobile-toggle" id="mobile-toggle">
+                <span></span><span></span><span></span>
+            </div>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="#home" class="nav-link active" onclick="navigateTo('home')">Home</a></li>
+                <li><a href="#about" class="nav-link" onclick="navigateTo('about')">About</a></li>
+                <li><a href="#projects" class="nav-link" onclick="navigateTo('projects')">Portfolio</a></li>
+                <li><a href="#contact" class="nav-link" onclick="navigateTo('contact')">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="app">
+        <section id="home" class="hero active">
+            <span class="badge">Available for Work</span>
+            <h1>Digital Artisan <br> Building The <span style="color:var(--primary)">Future.</span></h1>
+            <p>I'm Mugenyi Bob Nathan (Icii White), an 18-year-old Full Stack Developer from Uganda crafting high-impact digital experiences through code and design.</p>
+            <div class="cta-group">
+                <a href="#projects" class="btn btn-primary" onclick="navigateTo('projects')">View My Work</a>
+                <a href="#contact" class="btn btn-outline" onclick="navigateTo('contact')">Let's Talk</a>
+            </div>
+        </section>
+
+        <section id="about">
+            <h2 class="section-title">The <span>Origin</span> Story</h2>
+            <div class="about-grid">
+                <div class="profile-container">
+                    <div class="profile-frame"></div>
+                    <div class="profile-image">
+                        <img src="me.png" alt="Icii White">
+                    </div>
+                </div>
+                <div class="about-text">
+                    <h3 style="font-size: 1.5rem; margin-bottom: 15px;">Design-Driven Engineering</h3>
+                    <p>Born into the digital era but grounded in technical composition, I am a self-taught developer who believes that software should be as beautiful as it is functional.</p>
+                    <p>Based in the heart of Uganda, I bridge the gap between creative design and robust architecture.</p>
+                    <div class="stat-grid">
+                        <div class="stat-card"><h4>18</h4><p>Years of age</p></div>
+                        <div class="stat-card"><h4>50+</h4><p>Projects Built</p></div>
+                        <div class="stat-card"><h4>Full</h4><p>Stack Prowess</p></div>
+                        <div class="stat-card"><h4>Unique</h4><p>Design Style</p></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects">
+            <h2 class="section-title">Featured <span>Projects</span></h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-img"><img src="myGit.png" alt="myGit"></div>
+                    <div class="project-info">
+                        <span class="project-tag">Mobile</span>
+                        <h4>myGit</h4>
+                        <p>Real time Github Client App for management of your Github Activity.</p>
+                        <a href="https://mygit-bedusec.github.io?app=android" class="project-link">VIEW PROJECT →</a>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-img"><img src="icons.png" alt="Vibe"></div>
+                    <div class="project-info">
+                        <span class="project-tag">Web</span>
+                        <h4>Icii Icons</h4>
+                        <p>Icon pack script for websites for embedding icons without svg.</p>
+                        <a href="https://iciiwhite.github.io/web-assets/icons/index.html" class="project-link">VIEW PROJECT →</a>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-img"><img src="ibrowser.png" alt="iBrowser"></div>
+                    <div class="project-info">
+                        <span class="project-tag">Mobile</span>
+                        <h4>iBrowser</h4>
+                        <p>Web browser app with advanced features.</p>
+                        <a href="https://iciiwhite.github.io/projects/index.html#ibrowser" class="project-link">VIEW PROJECT →</a>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-img"><img src="finance.png" alt="Malcom Finance"></div>
+                    <div class="project-info">
+                        <span class="project-tag">Mobile</span>
+                        <h4>Malcom Finance</h4>
+                        <p>Online working platform that allows users earn money from different activities.</p>
+                        <a href="https://malcomfinance.gt.tc/?ref=AABYGHUR" class="project-link">VIEW PROJECT →</a>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-img"><img src="games.png" alt="Icii Games"></div>
+                    <div class="project-info">
+                        <span class="project-tag">Mobile</span>
+                        <h4>Icii Games</h4>
+                        <p>Offline Games app for Android.</p>
+                        <a href="https://iciiwhite.github.io/projects/index.html#games" class="project-link">VIEW PROJECT →</a>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-img"><img src="ICU.png" alt="Hyper"></div>
+                    <div class="project-info">
+                        <span class="project-tag">System</span>
+                        <h4>I See You</h4>
+                        <p>Intelligence System That Performs Different Activities.</p>
+                        <a href="#contact" onclick="navigateTo('contact')" class="project-link">REQUEST DEMO  →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <h2 class="section-title">Let's <span>Connect</span></h2>
+            <div class="contact-container">
+                <div class="contact-text">
+                    <h3 style="margin-bottom:15px; font-size: 1.4rem;">Ready to build something legendary?</h3>
+                    <p>I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.</p>
+                    <div style="margin-top:25px;">
+                        <p style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-dim); margin-bottom: 5px;">Direct Email</p>
+                        <p style="color:var(--primary); font-weight:700; font-size: 1.1rem;">yesg26332@gmail.com</p>
+                    </div>
+                </div>
+                <form class="contact-form" action="https://formspree.io/f/xqelyoeg" method="POST">
+                    <div id="status-msg">Message sent successfully!</div>
+                    <div class="form-group"><label>Name</label><input type="text" name="name" required></div>
+                    <div class="form-group"><label>Email</label><input type="email" name="email" required></div>
+                    <div class="form-group"><label>Message</label><textarea name="message" rows="4" required></textarea></div>
+                    <button type="submit" class="btn btn-primary" style="width:100%; max-width: none;">Send Inquiry</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>&copy; 2026 Icii White | Your dreams matter.</footer>
+
+    <script>
+        function navigateTo(sectionId) {
+            document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            
+            const targetSection = document.getElementById(sectionId);
+            const targetLink = document.querySelector(`.nav-link[href="#${sectionId}"]`);
+            
+            if(targetSection) targetSection.classList.add('active');
+            if(targetLink) targetLink.classList.add('active');
+            
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            
+            document.getElementById('nav-links').classList.remove('open');
+            document.getElementById('mobile-toggle').classList.remove('active');
+        }
+
+        const mobileToggle = document.getElementById('mobile-toggle');
+        const navLinks = document.getElementById('nav-links');
+
+        mobileToggle.addEventListener('click', () => {
+            mobileToggle.classList.toggle('active');
+            navLinks.classList.toggle('open');
+        });
+
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('status') === 'success') {
+                navigateTo('contact');
+                document.getElementById('status-msg').style.display = 'block';
+            } else {
+                const hash = window.location.hash.substring(1);
+                if (hash) navigateTo(hash);
+            }
+        };
+    </script>
+</body>
+</html>
