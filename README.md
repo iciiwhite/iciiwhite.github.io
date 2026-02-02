@@ -1,6 +1,6 @@
 # iciiwhite.github.io
 Kung saan ko ibubuod ang aking trabaho. Pangkalahatang-ideya ng aking mga proyekto sa Github 
-![](https://raw.githubusercontent.com/iciiwhite/iciiwhite.github.io/main/me.png)](iciiwhite.github.io)
+[![](https://raw.githubusercontent.com/iciiwhite/iciiwhite.github.io/main/me.png)](iciiwhite.github.io)
 
 ### myGit Version Info 
 ```json
