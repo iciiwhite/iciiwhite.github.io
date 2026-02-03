@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Free OG Viewer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+</head>
+<body>
+    <h1>Open Graph Viewer</h1>
+    <input type="url" placeholder="https://example.com" id="url">
+    <button onclick="preview()">Preview</button>
+    <div id="result"></div>
+
+    <script>
+        async function preview() {
+            const url = document.getElementById('url').value;
+            const result = document.getElementById('result');
+            result.innerHTML = 'Loading...';
+            
+            try {
+                const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
+                const data = await response.json();
+                const html = data.contents;
+                
+                // Parse HTML
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // Extract OG data
+                const getMeta = (property) => 
+                    doc.querySelector(`meta[property="${property}"]`)?.content || 
+                    doc.querySelector(`meta[name="${property}"]`)?.content || '';
+                
+                const og = {
+                    title: getMeta('og:title') || doc.title,
+                    description: getMeta('og:description') || getMeta('description'),
+                    image: getMeta('og:image'),
+                    url: getMeta('og:url') || url
+                };
+                
+                // Display
+                result.innerHTML = `
+                    <div style="border:1px solid #ddd; padding:20px; max-width:600px; margin-top:20px;">
+                        ${og.image ? `<img src="${og.image}" style="max-width:100%; height:auto;">` : ''}
+                        <h3>${og.title}</h3>
+                        <p>${og.description}</p>
+                        <small>${og.url}</small>
+                    </div>
+                `;
+            } catch (error) {
+                result.innerHTML = `Error: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
