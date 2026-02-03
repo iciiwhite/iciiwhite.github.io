@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini AI Pro</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --panel-dark: #1e293b;
+            --accent: #3b82f6;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --user-msg: #334155;
+            --bot-msg: #1e293b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        header {
+            padding: 1rem 2rem;
+            background: var(--panel-dark);
+            border-bottom: 1px solid #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-dot {
+            height: 8px;
+            width: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        #chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 1rem;
+            border-radius: 12px;
+            line-height: 1.5;
+            font-size: 0.95rem;
+            word-wrap: break-word;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background: var(--user-msg);
+            border-bottom-right-radius: 2px;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background: var(--bot-msg);
+            border: 1px solid #334155;
+            border-bottom-left-radius: 2px;
+        }
+
+        .input-area {
+            padding: 1.5rem 2rem;
+            background: var(--panel-dark);
+            border-top: 1px solid #334155;
+        }
+
+        .input-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            gap: 1rem;
+            background: var(--bg-dark);
+            padding: 0.5rem;
+            border-radius: 12px;
+            border: 1px solid #334155;
+        }
+
+        input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 0.75rem;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #api-config {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--panel-dark);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid #334155;
+            z-index: 100;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+        }
+
+        .hidden { display: none; }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 99;
+        }
+    </style>
+</head>
+<body>
+
+<div id="setup-overlay" class="overlay"></div>
+<div id="api-config">
+    <h2 style="margin-bottom: 1rem;">API Configuration</h2>
+    <p style="color: var(--text-dim); font-size: 0.85rem; margin-bottom: 1.5rem;">Enter your Gemini API key to start chatting.</p>
+    <input type="password" id="api-key-input" placeholder="Paste API Key here..." style="width: 100%; border: 1px solid #334155; border-radius: 8px; margin-bottom: 1rem;">
+    <button id="save-api" style="width: 100%;">Connect Agent</button>
+</div>
+
+<header>
+    <div style="font-weight: 700; letter-spacing: -0.5px; font-size: 1.2rem;">GEMINI <span style="color: var(--accent)">PRO</span></div>
+    <div style="font-size: 0.85rem; color: var(--text-dim)">
+        <span class="status-dot"></span>System Active
+    </div>
+</header>
+
+<main id="chat-container"></main>
+
+<div class="input-area">
+    <div class="input-wrapper">
+        <input type="text" id="user-input" placeholder="Ask anything..." autocomplete="off">
+        <button id="send-btn">Send</button>
+    </div>
+</div>
+
+<script>
+    const chatContainer = document.getElementById('chat-container');
+    const userInput = document.getElementById('user-input');
+    const sendBtn = document.getElementById('send-btn');
+    const apiKeyInput = document.getElementById('api-key-input');
+    const saveBtn = document.getElementById('save-api');
+    const configModal = document.getElementById('api-config');
+    const overlay = document.getElementById('setup-overlay');
+
+    let GEMINI_API_KEY = '';
+
+    saveBtn.onclick = () => {
+        if (apiKeyInput.value.trim()) {
+            GEMINI_API_KEY = apiKeyInput.value.trim();
+            configModal.classList.add('hidden');
+            overlay.classList.add('hidden');
+        }
+    };
+
+    function addMessage(text, isUser) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+        msgDiv.textContent = text;
+        chatContainer.appendChild(msgDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    async function callGemini(prompt) {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+        
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }]
+            })
+        });
+
+        if (!response.ok) throw new Error('API Request Failed');
+        
+        const data = await response.json();
+        return data.candidates[0].content.parts[0].text;
+    }
+
+    async function handleSend() {
+        const text = userInput.value.trim();
+        if (!text || !GEMINI_API_KEY) return;
+
+        userInput.value = '';
+        sendBtn.disabled = true;
+        addMessage(text, true);
+
+        try {
+            const aiResponse = await callGemini(text);
+            addMessage(aiResponse, false);
+        } catch (error) {
+            addMessage("Error: Please check your API key or connection.", false);
+        } finally {
+            sendBtn.disabled = false;
+        }
+    }
+
+    sendBtn.onclick = handleSend;
+    userInput.onkeypress = (e) => { if (e.key === 'Enter') handleSend(); };
+</script>
+
+</body>
+</html>
