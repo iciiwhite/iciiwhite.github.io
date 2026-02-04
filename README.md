@@ -14,7 +14,7 @@ Kung saan ko ibubuod ang aking trabaho. Pangkalahatang-ideya ng aking mga proyek
 [![My Project](https://img.shields.io/badge/PHP_Compiler-FF6B6B?style=for-the-badge&logo=php&logoColor=white)](https://iciiwhite.github.io/tools/php-compiler)
 
 
-[![My Project](https://img.shields.io/badge/HTML_Compiler-404040?style=for-the-badge&logo=html&logoColor=white)
+[![My Project](https://img.shields.io/badge/HTML_Compiler-404040?style=for-the-badge&logo=html&logoColor=white)](https://iciiwhite.github.io/tools/html-compiler.html)
 
 
 
