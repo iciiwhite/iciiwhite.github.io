@@ -5,7 +5,7 @@ Kung saan ko ibubuod ang aking trabaho. Pangkalahatang-ideya ng aking mga proyek
 
 [![My Project](https://img.shields.io/badge/Open_Graph_Viewer-42445A?style=for-the-badge&logo=github&logoColor=white)](https://iciiwhite.github.io/og)
 
-[![My Project](https://img.shields.io/badge/Insta_Save-FF6B6B?style=for-the-badge&logo=instagram&logoColor=white)](https://iciiwhite.github.io/tools/instasave.html)
+[![My Project](https://img.shields.io/badge/Insta_Save-B045C2?style=for-the-badge&logo=instagram&logoColor=white)](https://iciiwhite.github.io/tools/instasave.html)
 
 
 
