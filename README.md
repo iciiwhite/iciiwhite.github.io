@@ -7,7 +7,7 @@ Kung saan ko ibubuod ang aking trabaho. Pangkalahatang-ideya ng aking mga proyek
 
 [![My Project](https://img.shields.io/badge/Insta_Save-B045C2?style=for-the-badge&logo=instagram&logoColor=white)](https://iciiwhite.github.io/tools/instasave.html)
 
-[![My Project](https://img.shields.io/badge/Logic_Shielder-FF6B6B?style=for-the-badge&logo=javascript&logoColor=white)
+[![My Project](https://img.shields.io/badge/Logic_Shielder-080E52?style=for-the-badge&logo=javascript&logoColor=white)
 
 
 
