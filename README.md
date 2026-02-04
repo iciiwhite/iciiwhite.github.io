@@ -5,7 +5,7 @@ Kung saan ko ibubuod ang aking trabaho. Pangkalahatang-ideya ng aking mga proyek
 
 [![My Project](https://img.shields.io/badge/Open_Graph_Viewer-42445A?style=for-the-badge&logo=github&logoColor=white)](https://iciiwhite.github.io/og)
 
-[![My Project](https://img.shields.io/badge/Insta_Save-B045C2?style=for-the-badge&logo=instagram&logoColor=white)](https://iciiwhite.github.io/tools/instasave.html)
+[![My Project](https://img.shields.io/badge/Insta_Save-B045C2?style=for-the-badge&logo=instagram&logoColor=white)](https://iciiwhite.github.io/tools/instasave)
 
 [![My Project](https://img.shields.io/badge/Logic_Shielder-080E52?style=for-the-badge&logo=javascript&logoColor=white)](https://iciiwhite.github.io/tools/logic-shielder)
 
@@ -14,7 +14,7 @@ Kung saan ko ibubuod ang aking trabaho. Pangkalahatang-ideya ng aking mga proyek
 [![My Project](https://img.shields.io/badge/PHP_Compiler-FF6B6B?style=for-the-badge&logo=php&logoColor=white)](https://iciiwhite.github.io/tools/php-compiler)
 
 
-[![My Project](https://img.shields.io/badge/HTML_Compiler-404040?style=for-the-badge&logo=html&logoColor=white)](https://iciiwhite.github.io/tools/html-compiler.html)
+[![My Project](https://img.shields.io/badge/HTML_Compiler-404040?style=for-the-badge&logo=html&logoColor=white)](https://iciiwhite.github.io/tools/html-compiler)
 
 
 
