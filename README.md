@@ -1,7 +1,7 @@
 # iciiwhite.github.io
 Kung saan ko ibubuod ang aking trabaho. Pangkalahatang-ideya ng aking mga proyekto sa Github 
 
-[![Portfolio](https://img.shields.io/badge/Portfolio-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://iciiwhite.github.io)
+[![My Project](https://img.shields.io/badge/My_Portfolio-FF6B6B?style=for-the-badge&logo=github&logoColor=white)](https://iciiwhite.github.io)
 
 ### myGit Version Info 
 ```json
