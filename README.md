@@ -3,7 +3,7 @@ Kung saan ko ibubuod ang aking trabaho. Pangkalahatang-ideya ng aking mga proyek
 
 [![My Project](https://img.shields.io/badge/My_Portfolio-FF6B6B?style=for-the-badge&logo=github&logoColor=white)](https://iciiwhite.github.io)
 
-[![My Project](https://img.shields.io/badge/Open_Graph_Viewer-000000?style=for-the-badge&logo=github&logoColor=white)](https://iciiwhite.github.io/og)
+[![My Project](https://img.shields.io/badge/Open_Graph_Viewer-42445A?style=for-the-badge&logo=github&logoColor=white)](https://iciiwhite.github.io/og)
 
 ### myGit Version Info 
 ```json
