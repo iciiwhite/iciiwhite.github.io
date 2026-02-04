@@ -9,6 +9,8 @@ Kung saan ko ibubuod ang aking trabaho. Pangkalahatang-ideya ng aking mga proyek
 
 [![My Project](https://img.shields.io/badge/Logic_Shielder-080E52?style=for-the-badge&logo=javascript&logoColor=white)](https://iciiwhite.github.io/tools/logic-shielder)
 
+[![My Project](https://img.shields.io/badge/CSS_Loaders-000000?style=for-the-badge&logo=css&logoColor=yellow)](https://iciiwhite.github.io/web-assets/loaders)
+
 
 
 
