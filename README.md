@@ -1,4 +1,4 @@
-[![img](1.gif)](https://iciiwhite.github.io)
+[![img](aw1.gif)](https://iciiwhite.github.io)
 Kung saan ko ibubuod ang aking trabaho. Pangkalahatang-ideya ng aking mga proyekto sa Github 
 
 [![My Project](https://img.shields.io/badge/My_Portfolio-FF6B6B?style=for-the-badge&logo=github&logoColor=white)](https://iciiwhite.github.io)
