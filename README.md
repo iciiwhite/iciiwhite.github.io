@@ -18,6 +18,7 @@ Kung saan ko ibubuod ang aking trabaho. Pangkalahatang-ideya ng aking mga proyek
 
 
 [![My Project](https://img.shields.io/badge/HTML_Compiler-404040?style=for-the-badge&logo=html5&logoColor=white)](https://iciiwhite.github.io/tools/html-compiler)
+[![My Project](https://img.shields.io/badge/Zenith_Color_Picker-000?style=for-the-badge&logo=css5&logoColor=white)](https://iciiwhite.github.io/tools/zenith)
 
 
 
