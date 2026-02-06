@@ -8,7 +8,7 @@ Kung saan ko ibubuod ang aking trabaho. Pangkalahatang-ideya ng aking mga proyek
 
 [![My Project](https://img.shields.io/badge/Open_Graph_Viewer-42445A?style=for-the-badge&logo=github&logoColor=white)](https://iciiwhite.github.io/og)
 
-[![My Project](https://img.shields.io/badge/myGit_Website-B045C2?style=for-the-badge&logo=github&logoColor=white)](https://iciiwhite.github.io/myGit)
+[![My Project](https://img.shields.io/badge/myGit_Website-B045C2?style=for-the-badge&logo=github&logoColor=white)](https://iciiwhite.github.io/mygit)
 
 [![My Project](https://img.shields.io/badge/Logic_Shielder-080E52?style=for-the-badge&logo=javascript&logoColor=white)](https://iciiwhite.github.io/tools/logic-shielder)
 
