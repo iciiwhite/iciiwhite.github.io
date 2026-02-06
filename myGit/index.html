@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>myGit Website - Professional GitHub Client</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { background-color: #f8f9fa; font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+        .sidebar { min-height: 100vh; background: white; border-right: 1px solid #e5e7eb; transition: all 0.3s; }
+        .card-custom { border-radius: 1rem; border: 1px solid #e5e7eb; transition: transform 0.2s, border-color 0.2s; cursor: pointer; }
+        .card-custom:hover { border-color: #3b82f6; transform: translateY(-2px); }
+        .glass-header { backdrop-filter: blur(8px); background: rgba(255, 255, 255, 0.8); border-bottom: 1px solid #e5e7eb; }
+        .btn-github { background-color: #1f2937; color: white; border-radius: 0.75rem; font-weight: 600; padding: 0.75rem 1.5rem; }
+        .btn-github:hover { background-color: #111827; color: white; }
+        #app-content { display: none; }
+        .loader { border: 3px solid #f3f3f3; border-top: 3px solid #3b82f6; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <!-- Login Screen -->
+    <div id="login-screen" class="min-vh-100 d-flex align-items-center justify-content-center p-3">
+        <div class="card shadow-lg border-0 p-4 w-100" style="max-width: 450px; border-radius: 2rem;">
+            <div class="text-center mb-4">
+                <div class="bg-dark d-inline-flex p-3 rounded-4 mb-3">
+                    <i data-lucide="github" class="text-white" style="width: 32px; height: 32px;"></i>
+                </div>
+                <h2 class="fw-bold">myGit Website</h2>
+                <p class="text-muted">Enter your Personal Access Token (PAT)</p>
+            </div>
+
+            <div class="mb-3">
+                <label class="small fw-bold text-uppercase text-muted mb-2 d-block">GitHub PAT</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-0"><i data-lucide="key" class="text-muted" size="18"></i></span>
+                    <input type="text" id="pat-input" class="form-control bg-light border-0 py-3" placeholder="ghp_paste_token_here" autocomplete="off">
+                </div>
+                <div id="error-msg" class="text-danger small mt-2 d-none">Invalid Token. Please try again.</div>
+            </div>
+
+            <button onclick="handleLogin()" id="login-btn" class="btn btn-github w-100 py-3 d-flex align-items-center justify-content-center gap-2">
+                <span>Sign in to myGit</span>
+                <i data-lucide="arrow-right" size="18"></i>
+            </button>
+            
+            <p class="text-center text-muted small mt-4" style="font-size: 11px;">
+                PASTE YOUR TOKEN ABOVE. WE DO NOT STORE YOUR DATA.
+            </p>
+        </div>
+    </div>
+
+    <!-- Main App UI -->
+    <div id="app-content" class="d-flex overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="sidebar d-none d-lg-flex flex-column" style="width: 280px;">
+            <div class="p-4 d-flex align-items-center gap-3">
+                <div class="bg-dark p-2 rounded-3 text-white">
+                    <i data-lucide="github" size="20"></i>
+                </div>
+                <span class="fw-bold h5 mb-0">myGit</span>
+            </div>
+
+            <nav class="flex-grow-1 px-3">
+                <a href="#" class="nav-link active p-3 rounded-3 text-primary fw-bold bg-primary bg-opacity-10 mb-1 d-flex gap-3">
+                    <i data-lucide="layout"></i> Dashboard
+                </a>
+                <a href="#" class="nav-link p-3 rounded-3 text-muted mb-1 d-flex gap-3 hover:bg-light">
+                    <i data-lucide="star"></i> Starred
+                </a>
+                <a href="#" class="nav-link p-3 rounded-3 text-muted mb-1 d-flex gap-3 hover:bg-light">
+                    <i data-lucide="users"></i> Following
+                </a>
+                <a href="#" class="nav-link p-3 rounded-3 text-muted mb-1 d-flex gap-3 hover:bg-light">
+                    <i data-lucide="settings"></i> Settings
+                </a>
+            </nav>
+
+            <div class="p-3 border-top">
+                <div class="d-flex align-items-center gap-3 bg-light p-3 rounded-4">
+                    <img id="user-avatar" src="" class="rounded-circle" style="width: 40px; height: 40px; border: 2px solid white;">
+                    <div class="flex-grow-1 overflow-hidden">
+                        <div id="user-name" class="fw-bold text-truncate small">User</div>
+                        <div id="user-login" class="text-muted overflow-hidden text-truncate" style="font-size: 10px;">@login</div>
+                    </div>
+                    <button onclick="logout()" class="btn btn-link p-0 text-muted hover:text-danger">
+                        <i data-lucide="log-out" size="18"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="flex-grow-1 d-flex flex-column vh-100 overflow-hidden">
+            <header class="glass-header py-3 px-4 d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-3">
+                    <button id="back-btn" onclick="showRepoList()" class="btn btn-light d-none"><i data-lucide="chevron-left"></i></button>
+                    <h2 id="view-title" class="h5 fw-bold mb-0">Repositories</h2>
+                </div>
+                <div class="d-flex gap-2">
+                    <button onclick="createRepo()" class="btn btn-dark btn-sm rounded-3 px-3 fw-bold d-flex align-items-center gap-2">
+                        <i data-lucide="plus" size="16"></i> New Repo
+                    </button>
+                </div>
+            </header>
+
+            <div id="content-area" class="flex-grow-1 overflow-auto p-4">
+                <!-- Repository Grid -->
+                <div id="repo-grid" class="row g-4"></div>
+                
+                <!-- File Explorer (Hidden initially) -->
+                <div id="file-explorer" class="d-none">
+                    <div class="d-flex gap-2 mb-4">
+                        <button class="btn btn-outline-dark btn-sm rounded-3 px-3"><i data-lucide="file-plus" size="14"></i> New File</button>
+                        <button class="btn btn-outline-dark btn-sm rounded-3 px-3"><i data-lucide="folder-plus" size="14"></i> New Folder</button>
+                        <button class="btn btn-primary btn-sm rounded-3 px-3"><i data-lucide="upload" size="14"></i> Upload</button>
+                    </div>
+                    <div class="card border-0 shadow-sm rounded-4">
+                        <div class="list-group list-group-flush" id="file-list"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let PAT = '';
+        let currentUser = null;
+        let selectedRepo = null;
+
+        // Initialize Icons
+        lucide.createIcons();
+
+        async function handleLogin() {
+            const input = document.getElementById('pat-input');
+            const btn = document.getElementById('login-btn');
+            const error = document.getElementById('error-msg');
+            
+            PAT = input.value.trim();
+            if(!PAT) return;
+
+            btn.disabled = true;
+            btn.innerHTML = `<span class="loader"></span> Validating...`;
+            error.classList.add('d-none');
+
+            try {
+                const response = await fetch('https://api.github.com/user', {
+                    headers: { 'Authorization': `token ${PAT}` }
+                });
+
+                if (!response.ok) throw new Error('Auth Failed');
+
+                currentUser = await response.json();
+                
+                // Transition UI
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('app-content').classList.add('d-flex');
+                
+                // Set User Info
+                document.getElementById('user-avatar').src = currentUser.avatar_url;
+                document.getElementById('user-name').innerText = currentUser.name || currentUser.login;
+                document.getElementById('user-login').innerText = `@${currentUser.login}`;
+
+                fetchRepos();
+            } catch (err) {
+                error.classList.remove('d-none');
+                btn.disabled = false;
+                btn.innerHTML = `<span>Sign in to myGit</span><i data-lucide="arrow-right" size="18"></i>`;
+                lucide.createIcons();
+            }
+        }
+
+        async function fetchRepos() {
+            const grid = document.getElementById('repo-grid');
+            grid.innerHTML = '<div class="text-center py-5"><span class="loader"></span><p class="text-muted mt-2">Fetching your repositories...</p></div>';
+
+            try {
+                const response = await fetch('https://api.github.com/user/repos?sort=updated&per_page=100', {
+                    headers: { 'Authorization': `token ${PAT}` }
+                });
+                const repos = await response.json();
+                
+                grid.innerHTML = '';
+                repos.forEach(repo => {
+                    const col = document.createElement('div');
+                    col.className = 'col-12 col-md-6 col-xl-4';
+                    col.innerHTML = `
+                        <div class="card card-custom h-100 p-4" onclick="viewRepo('${repo.name}')">
+                            <div class="d-flex justify-content-between mb-2">
+                                <div class="d-flex align-items-center gap-2 fw-bold text-dark">
+                                    <i data-lucide="book-open" class="text-primary" size="18"></i>
+                                    <span class="text-truncate">${repo.name}</span>
+                                </div>
+                                ${repo.private ? '<span class="badge bg-light text-dark border">Private</span>' : ''}
+                            </div>
+                            <p class="small text-muted mb-4 text-truncate-2" style="height: 40px;">${repo.description || 'No description provided.'}</p>
+                            <div class="mt-auto d-flex justify-content-between align-items-center small text-muted fw-bold">
+                                <div class="d-flex gap-3">
+                                    <span class="d-flex align-items-center gap-1"><i data-lucide="star" size="14" class="text-warning"></i> ${repo.stargazers_count}</span>
+                                    <span class="d-flex align-items-center gap-1"><i data-lucide="git-fork" size="14"></i> ${repo.forks_count}</span>
+                                </div>
+                                <span class="d-flex align-items-center gap-2">
+                                    <span style="width:8px; height:8px; border-radius:50%; background:#3b82f6;"></span>
+                                    ${repo.language || 'Text'}
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                    grid.appendChild(col);
+                });
+                lucide.createIcons();
+            } catch (err) {
+                grid.innerHTML = '<div class="alert alert-danger">Error loading repositories.</div>';
+            }
+        }
+
+        async function viewRepo(repoName) {
+            selectedRepo = repoName;
+            document.getElementById('repo-grid').classList.add('d-none');
+            document.getElementById('file-explorer').classList.remove('d-none');
+            document.getElementById('back-btn').classList.remove('d-none');
+            document.getElementById('view-title').innerText = repoName;
+
+            fetchContents('');
+        }
+
+        async function fetchContents(path) {
+            const list = document.getElementById('file-list');
+            list.innerHTML = '<div class="p-5 text-center"><span class="loader"></span></div>';
+
+            try {
+                const response = await fetch(`https://api.github.com/repos/${currentUser.login}/${selectedRepo}/contents/${path}`, {
+                    headers: { 'Authorization': `token ${PAT}` }
+                });
+                const items = await response.json();
+                
+                list.innerHTML = '';
+                items.forEach(item => {
+                    const el = document.createElement('div');
+                    el.className = 'list-group-item list-group-item-action d-flex align-items-center justify-content-between border-0 py-3 px-4';
+                    el.innerHTML = `
+                        <div class="d-flex align-items-center gap-3">
+                            <i data-lucide="${item.type === 'dir' ? 'folder' : 'file'}" class="${item.type === 'dir' ? 'text-primary' : 'text-muted'}" size="18"></i>
+                            <span class="fw-medium">${item.name}</span>
+                        </div>
+                        <span class="text-muted small">${item.type}</span>
+                    `;
+                    list.appendChild(el);
+                });
+                lucide.createIcons();
+            } catch (err) {
+                list.innerHTML = '<div class="p-4 text-danger">Error loading contents.</div>';
+            }
+        }
+
+        function showRepoList() {
+            document.getElementById('repo-grid').classList.remove('d-none');
+            document.getElementById('file-explorer').classList.add('d-none');
+            document.getElementById('back-btn').classList.add('d-none');
+            document.getElementById('view-title').innerText = 'Repositories';
+            selectedRepo = null;
+        }
+
+        async function createRepo() {
+            const name = prompt("Enter new repository name:");
+            if (!name) return;
+
+            try {
+                const response = await fetch('https://api.github.com/user/repos', {
+                    method: 'POST',
+                    headers: { 
+                        'Authorization': `token ${PAT}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name, private: false })
+                });
+                if (response.ok) fetchRepos();
+                else alert("Failed to create repository. Check if it already exists.");
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function logout() {
+            location.reload();
+        }
+    </script>
+</body>
+</html>
