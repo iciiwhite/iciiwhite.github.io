@@ -25,7 +25,7 @@ Kung saan ko ibubuod ang aking trabaho. Pangkalahatang-ideya ng aking mga proyek
 ### myGit Version Info 
 ```json
 {
-  "version": "2.2",
+  "version": "2.3",
   "notes": "30/01/2026"
   "name": "myGit"
   "author": "BeduTeam"
