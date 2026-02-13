@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevLib Downloader</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        /* Custom Animation for the button */
+        @keyframes gradient-xy {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        .animate-gradient {
+            background-size: 200% 200%;
+            animation: gradient-xy 3s ease infinite;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 min-h-screen flex items-center justify-center p-4">
+
+    <div class="bg-slate-800 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden border border-slate-700 relative">
+        
+        <div class="h-2 w-full bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600"></div>
+
+        <div class="p-8">
+            <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500 mb-2">
+                Library Downloader
+            </h1>
+            <p class="text-slate-400 mb-8 text-sm">
+                Enter the raw URL of a CSS, JS, or HTML library to download it directly instead of viewing the code.
+            </p>
+
+            <div class="mb-5">
+                <label class="block text-slate-300 text-sm font-semibold mb-2" for="fileUrl">Resource URL</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                        </svg>
+                    </div>
+                    <input 
+                        type="url" 
+                        id="fileUrl" 
+                        placeholder="https://cdn.jsdelivr.net/npm/vue/dist/vue.js" 
+                        class="w-full bg-slate-900 text-white border border-slate-600 rounded-lg py-3 pl-10 pr-3 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all placeholder-slate-600"
+                    >
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <label class="block text-slate-300 text-sm font-semibold mb-2" for="fileName">Save As (Optional)</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                    </div>
+                    <input 
+                        type="text" 
+                        id="fileName" 
+                        placeholder="my-library.js" 
+                        class="w-full bg-slate-900 text-white border border-slate-600 rounded-lg py-3 pl-10 pr-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all placeholder-slate-600"
+                    >
+                </div>
+            </div>
+
+            <button 
+                id="downloadBtn"
+                onclick="downloadFile()"
+                class="w-full text-white font-bold py-3 px-4 rounded-lg shadow-lg transform transition hover:scale-[1.02] active:scale-95 animate-gradient bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600"
+            >
+                Start Download
+            </button>
+
+            <div id="status" class="mt-4 text-center text-sm font-medium min-h-[20px]"></div>
+        </div>
+
+        <div class="bg-slate-900/50 p-4 border-t border-slate-700 text-center">
+            <p class="text-xs text-slate-500">Built for developers using Passion & JS</p>
+        </div>
+    </div>
+
+    <script>
+        async function downloadFile() {
+            const urlInput = document.getElementById('fileUrl');
+            const nameInput = document.getElementById('fileName');
+            const btn = document.getElementById('downloadBtn');
+            const status = document.getElementById('status');
+            
+            const url = urlInput.value.trim();
+            let fileName = nameInput.value.trim();
+
+            if (!url) {
+                showStatus('Please enter a valid URL', 'text-red-400');
+                return;
+            }
+
+            // UI Loading State
+            btn.disabled = true;
+            btn.innerHTML = `
+                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Fetching...
+            `;
+            showStatus('Connecting to resource...', 'text-cyan-400');
+
+            try {
+                // 1. Fetch the resource
+                // Note: This relies on the server enabling CORS (Access-Control-Allow-Origin)
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP Error: ${response.status}`);
+                }
+
+                // 2. Extract filename if not provided
+                if (!fileName) {
+                    // Try to get from URL path
+                    const urlParts = url.split('/');
+                    fileName = urlParts[urlParts.length - 1];
+                    // Remove any query params like ?v=1.0
+                    fileName = fileName.split('?')[0];
+                    if(!fileName) fileName = 'downloaded-file.txt'; 
+                }
+
+                // 3. Convert to Blob
+                const blob = await response.blob();
+                
+                // 4. Create Object URL
+                const blobUrl = window.URL.createObjectURL(blob);
+
+                // 5. Create hidden link and click it
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.setAttribute('download', fileName);
+                document.body.appendChild(link);
+                link.click();
+
+                // 6. Cleanup
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(blobUrl);
+
+                showStatus('Download successful!', 'text-green-400');
+
+            } catch (error) {
+                console.error(error);
+                if (error.message.includes('Failed to fetch')) {
+                    showStatus('Error: CORS blocked. This site likely does not allow direct external downloads.', 'text-red-400');
+                } else {
+                    showStatus(`Error: ${error.message}`, 'text-red-400');
+                }
+            } finally {
+                // Reset Button
+                btn.disabled = false;
+                btn.innerText = 'Start Download';
+            }
+        }
+
+        function showStatus(msg, colorClass) {
+            const status = document.getElementById('status');
+            status.className = `mt-4 text-center text-sm font-medium ${colorClass}`;
+            status.innerText = msg;
+        }
+    </script>
+</body>
+</html>
