@@ -13,6 +13,7 @@ Kung saan ko ibubuod ang aking trabaho. Pangkalahatang-ideya ng aking mga proyek
 ### Kotlin Lessons Sources 
 
 [Google’s KMP Codelabs](https://developer.android.com/courses/pathways/kotlin-multiplatform)
+[Kotlin Koans](https://play.kotlinlang.org/koans/overview)
 
 
 
