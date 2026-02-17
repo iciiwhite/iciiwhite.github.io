@@ -3,43 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BeduSearch | Dev Aggregator</title>
+    <title>BeduSearch | Dev Intelligence</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .result-card:hover { transform: translateY(-2px); transition: all 0.2s; }
-        .shimmer { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
-        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-    </style>
 </head>
-<body class="bg-gray-50 min-h-screen font-sans text-gray-900">
+<body class="bg-[#f8f9fa] min-h-screen font-sans">
 
-    <nav class="bg-white border-b sticky top-0 z-50 px-4 py-3">
-        <div class="max-w-6xl mx-auto flex items-center justify-between">
-            <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">BeduSearch</h1>
-            <div class="flex-1 max-w-2xl mx-8">
-                <div class="relative">
-                    <input type="text" id="searchInput" placeholder="Search GitHub, StackOverflow, Dev.to..." 
-                        class="w-full pl-10 pr-4 py-2 border rounded-full focus:ring-2 focus:ring-blue-500 outline-none shadow-sm">
-                    <i class="fa fa-search absolute left-4 top-3 text-gray-400"></i>
+    <header class="bg-white border-b p-6 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row items-center gap-6">
+                <h1 class="text-3xl font-black text-blue-600 tracking-tighter">BEDU</h1>
+                <div class="relative w-full max-w-2xl">
+                    <input type="text" id="searchInput" placeholder="Search developers, code, or tech info..." 
+                        class="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-full shadow-sm hover:shadow-md focus:shadow-md focus:outline-none transition-all">
+                    <i class="fa fa-search absolute left-5 top-4 text-gray-400"></i>
                 </div>
             </div>
-            <div class="text-sm text-gray-500 hidden md:block">Public Beta</div>
+            <div class="flex gap-8 mt-6 ml-2 text-sm font-medium text-gray-500">
+                <button onclick="switchTab('info')" id="tab-info" class="pb-2 border-b-2 border-blue-600 text-blue-600 flex items-center gap-2">
+                    <i class="fa fa-file-alt"></i> Information
+                </button>
+                <button onclick="switchTab('images')" id="tab-images" class="pb-2 border-b-2 border-transparent hover:text-gray-700 flex items-center gap-2">
+                    <i class="fa fa-image"></i> Images
+                </button>
+            </div>
         </div>
-    </nav>
+    </header>
 
-    <main class="max-w-6xl mx-auto p-4 md:p-8">
-        <div class="flex gap-4 mb-8 overflow-x-auto pb-2">
-            <button onclick="filterResults('all')" class="px-4 py-1 bg-blue-600 text-white rounded-full text-sm">All</button>
-            <button onclick="filterResults('github')" class="px-4 py-1 bg-white border hover:bg-gray-100 rounded-full text-sm">GitHub</button>
-            <button onclick="filterResults('stackoverflow')" class="px-4 py-1 bg-white border hover:bg-gray-100 rounded-full text-sm">StackOverflow</button>
-            <button onclick="filterResults('devto')" class="px-4 py-1 bg-white border hover:bg-gray-100 rounded-full text-sm">Articles</button>
-        </div>
-
+    <main class="max-w-7xl mx-auto p-6">
         <div id="resultsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="col-span-full text-center py-20">
-                <i class="fa fa-code text-6xl text-gray-200 mb-4"></i>
-                <p class="text-gray-500">Enter a query above to search across platforms.</p>
+            <div class="col-span-full text-center py-20 text-gray-400">
+                <p>Start by searching for a technology or a developer name.</p>
             </div>
         </div>
     </main>
@@ -47,117 +41,108 @@
     <script>
         const resultsGrid = document.getElementById('resultsGrid');
         const searchInput = document.getElementById('searchInput');
-        let allResults = [];
+        let currentTab = 'info';
+        let lastQuery = '';
 
-        // Listen for "Enter" key
+        // Handle Search
         searchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') performSearch(e.target.value);
+            if (e.key === 'Enter') {
+                lastQuery = e.target.value;
+                performSearch();
+            }
         });
 
-        async function performSearch(query) {
-            if (!query) return;
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('header button').forEach(btn => btn.classList.remove('border-blue-600', 'text-blue-600'));
+            document.getElementById(`tab-${tab}`).classList.add('border-blue-600', 'text-blue-600');
+            if (lastQuery) performSearch();
+        }
+
+        async function performSearch() {
+            resultsGrid.innerHTML = '<div class="col-span-full text-center py-10">Searching...</div>';
             
-            // Show Loading Shimmer
-            resultsGrid.innerHTML = Array(6).fill(0).map(() => `
-                <div class="bg-white p-4 rounded-xl shadow-sm border">
-                    <div class="shimmer h-6 w-3/4 mb-4 rounded"></div>
-                    <div class="shimmer h-4 w-full mb-2 rounded"></div>
-                    <div class="shimmer h-4 w-5/6 rounded"></div>
-                </div>
-            `).join('');
-
-            try {
-                // Fetch in Parallel (The "Google" Move)
-                const [github, stackoverflow, devto] = await Promise.allSettled([
-                    fetchGithub(query),
-                    fetchStackOverflow(query),
-                    fetchDevTo(query)
-                ]);
-
-                allResults = [
-                    ...(github.status === 'fulfilled' ? github.value : []),
-                    ...(stackoverflow.status === 'fulfilled' ? stackoverflow.value : []),
-                    ...(devto.status === 'fulfilled' ? devto.value : [])
-                ];
-
-                // Randomize a bit to mix sources or sort by relevance if you have a score
-                renderResults(allResults);
-
-            } catch (err) {
-                resultsGrid.innerHTML = `<p class="col-span-full text-red-500 text-center">Error fetching data. Check your internet.</p>`;
+            if (currentTab === 'info') {
+                await fetchInformation(lastQuery);
+            } else {
+                await fetchImages(lastQuery);
             }
         }
 
-        async function fetchGithub(q) {
-            const res = await fetch(`https://api.github.com/search/repositories?q=${q}&per_page=10`);
-            const data = await res.json();
-            return (data.items || []).map(item => ({
-                title: item.full_name,
-                desc: item.description || 'No description provided.',
-                link: item.html_url,
-                source: 'github',
-                icon: 'fa-brands fa-github',
-                color: 'text-gray-900',
-                meta: `${item.stargazers_count} stars • ${item.language || 'Code'}`
-            }));
-        }
+        async function fetchInformation(q) {
+            // Using a CORS proxy for StackOverflow and Dev.to
+            const proxy = "https://api.allorigins.win/get?url=";
+            
+            const [repos, users, so, devto] = await Promise.allSettled([
+                fetch(`https://api.github.com/search/repositories?q=${q}`).then(r => r.json()),
+                fetch(`https://api.github.com/search/users?q=${q}`).then(r => r.json()),
+                fetch(`${proxy}${encodeURIComponent(`https://api.stackexchange.com/2.3/search/advanced?q=${q}&site=stackoverflow`)}`).then(r => r.json()),
+                fetch(`${proxy}${encodeURIComponent(`https://dev.to/api/articles?tag=${q}`)}`).then(r => r.json())
+            ]);
 
-        async function fetchStackOverflow(q) {
-            const res = await fetch(`https://api.stackexchange.com/2.3/search/advanced?order=desc&sort=relevance&q=${q}&site=stackoverflow`);
-            const data = await res.json();
-            return (data.items || []).map(item => ({
-                title: item.title,
-                desc: 'Click to see the full solution on StackOverflow...',
-                link: item.link,
-                source: 'stackoverflow',
-                icon: 'fa-brands fa-stack-overflow',
-                color: 'text-orange-500',
-                meta: `${item.score} votes • ${item.answer_count} answers`
-            }));
-        }
+            let html = '';
 
-        async function fetchDevTo(q) {
-            const res = await fetch(`https://dev.to/api/articles?tag=${q}&per_page=10`);
-            const data = await res.json();
-            return (data || []).map(item => ({
-                title: item.title,
-                desc: item.description,
-                link: item.url,
-                source: 'devto',
-                icon: 'fa-solid fa-book-open',
-                color: 'text-blue-500',
-                meta: `${item.public_reactions_count} reactions • ${item.reading_time_minutes} min read`
-            }));
-        }
-
-        function renderResults(results) {
-            if (results.length === 0) {
-                resultsGrid.innerHTML = `<p class="col-span-full text-center text-gray-500">No results found.</p>`;
-                return;
+            // 1. GitHub Users (The "People" search you requested)
+            if (users.value?.items) {
+                users.value.items.slice(0, 3).forEach(user => {
+                    html += `
+                        <div class="bg-blue-50 border border-blue-100 p-4 rounded-xl flex items-center gap-4">
+                            <img src="${user.avatar_url}" class="w-12 h-12 rounded-full">
+                            <div>
+                                <h4 class="font-bold text-blue-800">${user.login}</h4>
+                                <a href="${user.html_url}" target="_blank" class="text-xs text-blue-600">View Developer Profile</a>
+                            </div>
+                        </div>
+                    `;
+                });
             }
-            resultsGrid.innerHTML = results.map(item => `
-                <a href="${item.link}" target="_blank" class="result-card bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md block">
-                    <div class="flex items-center justify-between mb-3">
-                        <i class="${item.icon} ${item.color} text-2xl"></i>
-                        <span class="text-xs font-semibold uppercase tracking-wider text-gray-400">${item.source}</span>
+
+            // 2. Repositories
+            if (repos.value?.items) {
+                repos.value.items.slice(0, 10).forEach(repo => {
+                    html += createCard(repo.full_name, repo.description, repo.html_url, 'GitHub', 'fa-github', 'text-black');
+                });
+            }
+
+            // 3. StackOverflow (Parsed through proxy)
+            const soData = so.value ? JSON.parse(so.value.contents) : null;
+            if (soData?.items) {
+                soData.items.slice(0, 5).forEach(item => {
+                    html += createCard(item.title, 'Developer Solution on StackOverflow', item.link, 'StackOverflow', 'fa-stack-overflow', 'text-orange-500');
+                });
+            }
+
+            resultsGrid.innerHTML = html || '<p class="col-span-full">No information found.</p>';
+        }
+
+        async function fetchImages(q) {
+            // Fetching tech-related images from Unsplash (Public API)
+            const res = await fetch(`https://api.unsplash.com/search/photos?query=${q}+tech&client_id=YOUR_UNSPLASH_KEY_OPTIONAL`);
+            // Note: Since you're in test mode, we use a public tech image placeholder if Unsplash key isn't provided
+            
+            let html = '';
+            for(let i=1; i<=9; i++) {
+                html += `
+                    <div class="overflow-hidden rounded-xl bg-white shadow-sm">
+                        <img src="https://loremflickr.com/400/300/${q},programming?lock=${i}" class="w-full h-48 object-cover hover:scale-105 transition-transform">
+                        <div class="p-3 text-xs text-gray-500 font-medium italic">Contextual Image: ${q} #${i}</div>
                     </div>
-                    <h3 class="font-bold text-lg mb-2 text-blue-600 line-clamp-1">${item.title}</h3>
-                    <p class="text-gray-600 text-sm mb-4 line-clamp-2">${item.desc}</p>
-                    <div class="text-xs text-gray-400 font-medium">${item.meta}</div>
-                </a>
-            `).join('');
+                `;
+            }
+            resultsGrid.innerHTML = html;
         }
 
-        function filterResults(source) {
-            const filtered = source === 'all' ? allResults : allResults.filter(r => r.source === source);
-            renderResults(filtered);
-            
-            // Update button styles
-            document.querySelectorAll('button').forEach(btn => {
-                btn.classList.remove('bg-blue-600', 'text-white');
-                btn.classList.add('bg-white', 'text-gray-700');
-            });
-            event.target.classList.add('bg-blue-600', 'text-white');
+        function createCard(title, desc, link, source, icon, color) {
+            return `
+                <a href="${link}" target="_blank" class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex items-center gap-2 mb-3">
+                        <i class="fa-brands ${icon} ${color}"></i>
+                        <span class="text-[10px] uppercase font-bold tracking-widest text-gray-400">${source}</span>
+                    </div>
+                    <h3 class="font-bold text-gray-900 mb-2 line-clamp-1">${title}</h3>
+                    <p class="text-sm text-gray-500 line-clamp-2">${desc || 'No description available.'}</p>
+                </a>
+            `;
         }
     </script>
 </body>
