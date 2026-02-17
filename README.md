@@ -16,6 +16,15 @@ Kung saan ko ibubuod ang aking trabaho. Pangkalahatang-ideya ng aking mga proyek
 [Kotlin Koans](https://play.kotlinlang.org/koans/overview)
 
 
+## The Industry Legends 
+
+
+
+
+
+
+
+
 
 
 
