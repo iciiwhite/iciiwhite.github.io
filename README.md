@@ -12,7 +12,7 @@ Kung saan ko ibubuod ang aking trabaho. Pangkalahatang-ideya ng aking mga proyek
 
 ### Kotlin Lessons Sources 
 
-[Android Devs](https://developer.android.com/courses/pathways/kotlin-multiplatform)
+[Google’s KMP Codelabs](https://developer.android.com/courses/pathways/kotlin-multiplatform)
 
 
 
