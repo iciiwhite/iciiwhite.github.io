@@ -28,7 +28,7 @@ Kung saan ko ibubuod ang aking trabaho. Pangkalahatang-ideya ng aking mga proyek
 
 
 
-
+> When Stuck, you can hangout with sother Kotlin Devs on **[Kotlin Slack](https://www.google.com/search?q=https://kotlinlang.org/community/slack.html)**
 
 
 
