@@ -10,5 +10,15 @@ Kung saan ko ibubuod ang aking trabaho. Pangkalahatang-ideya ng aking mga proyek
 | Bonus |Go (Golang) | If you ever want to build your own backends/servers. |
 
 
+### Kotlin Lessons Sources 
+
+[Android Devs](https://developer.android.com/courses/pathways/kotlin-multiplatform)
+
+
+
+
+
+
+
 
 
