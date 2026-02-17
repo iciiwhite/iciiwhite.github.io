@@ -14,7 +14,7 @@ Kung saan ko ibubuod ang aking trabaho. Pangkalahatang-ideya ng aking mga proyek
 
 [Google’s KMP Codelabs](https://developer.android.com/courses/pathways/kotlin-multiplatform)
 [Kotlin Koans](https://play.kotlinlang.org/koans/overview)
-
+[Public KMP Samples](https://www.google.com/search?q=https://github.com/JetBrains/kotlin-multiplatform-samples)
 
 ## The Industry Legends 
 
