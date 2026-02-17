@@ -19,7 +19,7 @@ Kung saan ko ibubuod ang aking trabaho. Pangkalahatang-ideya ng aking mga proyek
 ## The Industry Legends 
 
 
-
+[Philipp Lackner (YouTube)](https://www.youtube.com/@PhilippLackner)
 
 
 
