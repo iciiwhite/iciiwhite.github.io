@@ -1,33 +1,12 @@
-
-
-
-
 Kung saan ko ibubuod ang aking trabaho. Pangkalahatang-ideya ng aking mga proyekto sa Github 
 
-[![My Project](https://img.shields.io/badge/My_Portfolio-FF6B6B?style=for-the-badge&logo=github&logoColor=white)](https://iciiwhite.github.io)
-
-[![My Project](https://img.shields.io/badge/Open_Graph_Viewer-42445A?style=for-the-badge&logo=github&logoColor=white)](https://iciiwhite.github.io/og)
-
-[![My Project](https://img.shields.io/badge/myGit_Website-B045C2?style=for-the-badge&logo=github&logoColor=white)](https://iciiwhite.github.io/mygit)
-
-[![My Project](https://img.shields.io/badge/Logic_Shielder-080E52?style=for-the-badge&logo=javascript&logoColor=white)](https://iciiwhite.github.io/tools/logic-shielder)
-
-[![My Project](https://img.shields.io/badge/CSS_Loaders-000000?style=for-the-badge&logo=css&logoColor=yellow)](https://iciiwhite.github.io/web-assets/loaders)
-
-[![My Project](https://img.shields.io/badge/PHP_Compiler-FF6B6B?style=for-the-badge&logo=php&logoColor=white)](https://iciiwhite.github.io/tools/php-compiler)
-
-
-[![My Project](https://img.shields.io/badge/HTML_Compiler-404040?style=for-the-badge&logo=html5&logoColor=white)](https://iciiwhite.github.io/tools/html-compiler)
-[![My Project](https://img.shields.io/badge/Zenith_Color_Picker-000?style=for-the-badge&logo=css&logoColor=white)](https://iciiwhite.github.io/tools/zenith)
+|  Priority  | Tech  |  Why?  |
+|------------|-------|--------|
+| Must Know | Kotlin | It’s your bread and butter for Android and Cross-platform. |
+| Must Know | Jetpack Compose | It’s the "5-star" UI tool. It makes XML look like a typewriter.|
+| Should Know | Swift | Just enough to build the UI for the iOS side of your KMP apps. |
+| Bonus |Go (Golang) | If you ever want to build your own backends/servers. |
 
 
 
-### myGit Version Info 
-```json
-{
-  "version": "2.3",
-  "notes": "30/01/2026"
-  "name": "myGit"
-  "author": "BeduTeam"
-}
-```
+
