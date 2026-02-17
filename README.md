@@ -21,7 +21,7 @@ Kung saan ko ibubuod ang aking trabaho. Pangkalahatang-ideya ng aking mga proyek
 
 [Philipp Lackner (YouTube)](https://www.youtube.com/@PhilippLackner)
 
-
+[Jake Wharton’s Blog](https://jakewharton.com/blog/)
 
 
 
