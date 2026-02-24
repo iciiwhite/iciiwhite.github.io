@@ -3,46 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dev Notebook</title>
+    <title>DevVault</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16/oceanic-next.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <style>
-        .cm-editor { height: 75vh; font-size: 15px; border-radius: 4px; }
-        .hidden { display: none !important; }
+        body { background-color: #0c0c0e; color: #e4e4e7; scroll-behavior: smooth; }
+        .code-block { background: #18181b !important; border: 1px solid #27272a; border-radius: 8px; }
+        .input-bar { background: rgba(9, 9, 11, 0.95); backdrop-filter: blur(10px); border-top: 1px solid #27272a; }
+        pre code { font-family: 'Fira Code', 'JetBrains Mono', monospace !important; font-size: 13px !important; }
+        #feed { padding-bottom: 320px; }
+        .custom-input { background: #09090b; border: 1px solid #27272a; transition: all 0.2s; }
+        .custom-input:focus { border-color: #3b82f6; outline: none; box-shadow: 0 0 0 1px #3b82f6; }
     </style>
 </head>
-<body class="bg-black text-white font-sans">
+<body>
 
-    <div id="login-screen" class="fixed inset-0 bg-black flex items-center justify-center z-50">
-        <div class="bg-zinc-900 p-10 rounded-lg border border-zinc-800 w-96">
-            <h2 class="text-xl font-bold mb-6">Authenticate</h2>
-            <input type="email" id="email" placeholder="Email" class="w-full p-2 mb-4 bg-zinc-800 border border-zinc-700 rounded outline-none focus:border-blue-500">
-            <input type="password" id="password" placeholder="Password" class="w-full p-2 mb-6 bg-zinc-800 border border-zinc-700 rounded outline-none focus:border-blue-500">
-            <button id="login-btn" class="w-full bg-white text-black py-2 rounded font-bold hover:bg-zinc-200 transition">Unlock</button>
-            <p id="error-msg" class="text-red-500 mt-4 text-xs"></p>
+    <div id="login-screen" class="fixed inset-0 bg-black flex items-center justify-center z-[100]">
+        <div class="bg-zinc-900 p-8 rounded-2xl border border-zinc-800 w-full max-w-sm shadow-2xl">
+            <h2 class="text-xl font-bold mb-6 text-white tracking-tight">Root Access Required</h2>
+            <input type="email" id="email" placeholder="Email" class="w-full p-3 mb-4 custom-input rounded-lg text-sm">
+            <input type="password" id="password" placeholder="Password" class="w-full p-3 mb-6 custom-input rounded-lg text-sm">
+            <button id="login-btn" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-500 active:scale-95 transition">Authorize</button>
+            <p id="error-msg" class="text-red-400 mt-4 text-[10px] text-center uppercase tracking-widest"></p>
         </div>
     </div>
 
-    <div id="app" class="hidden p-6 max-w-6xl mx-auto">
-        <header class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-black tracking-tighter">NOTE_DB</h1>
-            <div class="flex gap-4">
-                <button id="pdf-btn" class="bg-zinc-800 px-4 py-1 rounded text-sm hover:bg-zinc-700 border border-zinc-600">Export PDF</button>
-                <button id="logout-btn" class="bg-red-900/20 text-red-500 px-4 py-1 rounded text-sm border border-red-900/50">Logout</button>
-            </div>
+    <div id="app" class="hidden min-h-screen">
+        <header class="p-6 border-b border-zinc-800 flex justify-between items-center bg-zinc-950/50">
+            <h1 class="font-black text-xl tracking-tighter italic">DEV<span class="text-blue-500">_NOTES</span></h1>
+            <button id="logout-btn" class="text-xs text-zinc-500 hover:text-white uppercase tracking-widest">Disconnect</button>
         </header>
-        
-        <div class="mb-2 flex justify-between items-center">
-            <span id="status" class="text-[10px] uppercase tracking-widest text-zinc-500">Standby</span>
-        </div>
-        <div id="editor-container" class="border border-zinc-800 rounded bg-[#1e1e1e]"></div>
+
+        <main id="feed" class="max-w-4xl mx-auto p-6 space-y-12"></main>
+
+        <footer class="fixed bottom-0 left-0 w-full input-bar">
+            <div class="max-w-4xl mx-auto p-6">
+                <div class="flex flex-col gap-4">
+                    <textarea id="code-input" placeholder="// Paste code here..." class="w-full h-32 p-4 custom-input rounded-lg font-mono text-xs resize-none"></textarea>
+                    
+                    <div class="flex flex-col md:flex-row gap-4">
+                        <textarea id="expl-input" placeholder="Explain what this does..." class="flex-1 p-3 custom-input rounded-lg text-sm resize-none h-12 md:h-auto"></textarea>
+                        
+                        <div class="flex gap-2">
+                            <select id="lang-select" class="custom-input p-2 rounded-lg text-xs font-bold uppercase">
+                                <option value="python">Python</option>
+                                <option value="cpp">C++</option>
+                                <option value="c">C</option>
+                                <option value="csharp">C#</option>
+                                <option value="xml">XML</option>
+                                <option value="javascript">JavaScript</option>
+                                <option value="java">Java</option>
+                                <option value="sql">SQL</option>
+                            </select>
+                            <button id="post-btn" class="bg-white text-black px-8 py-2 rounded-lg font-black hover:bg-blue-500 hover:text-white transition uppercase text-xs">Post</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
-        import { createEditor } from "https://esm.sh/codemirror-editor-bundle@1.1.0";
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyA8txKtjKZlwtNq7_u5c0no3sN845FBHps",
@@ -56,67 +81,72 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        let editor;
 
         const loginScreen = document.getElementById('login-screen');
-        const mainApp = document.getElementById('app');
-        const status = document.getElementById('status');
+        const appScreen = document.getElementById('app');
+        const feed = document.getElementById('feed');
 
         document.getElementById('login-btn').onclick = async () => {
             try {
                 await signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('password').value);
             } catch (e) {
-                document.getElementById('error-msg').innerText = "Invalid Credentials";
+                document.getElementById('error-msg').innerText = "Auth Failed";
             }
         };
 
         document.getElementById('logout-btn').onclick = () => signOut(auth);
 
-        onAuthStateChanged(auth, async (user) => {
+        onAuthStateChanged(auth, (user) => {
             if (user && user.email === "mail.iciiwhite@gmail.com") {
                 loginScreen.classList.add('hidden');
-                mainApp.classList.remove('hidden');
-                loadData();
+                appScreen.classList.remove('hidden');
+                syncFeed();
             } else {
                 loginScreen.classList.remove('hidden');
-                mainApp.classList.add('hidden');
+                appScreen.classList.add('hidden');
             }
         });
 
-        async function loadData() {
-            const docSnap = await getDoc(doc(db, "content", "notebook"));
-            const content = docSnap.exists() ? docSnap.data().text : "";
-            
-            if (!editor) {
-                editor = createEditor({
-                    parent: document.getElementById('editor-container'),
-                    value: content,
-                    onChange: (val) => {
-                        status.innerText = "Syncing...";
-                        clearTimeout(window.saveTimer);
-                        window.saveTimer = setTimeout(() => save(val), 800);
-                    }
+        function syncFeed() {
+            const q = query(collection(db, "notes"), orderBy("ts", "desc"));
+            onSnapshot(q, (snap) => {
+                feed.innerHTML = '';
+                snap.forEach((doc) => {
+                    const data = doc.data();
+                    const el = document.createElement('div');
+                    el.className = 'space-y-3 slide-up';
+                    el.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <span class="text-[10px] font-black bg-white text-black px-2 py-0.5 rounded uppercase">${data.lang}</span>
+                            <div class="h-[1px] flex-1 bg-zinc-800"></div>
+                        </div>
+                        <pre class="code-block p-4 overflow-x-auto"><code class="language-${data.lang}">${escape(data.code)}</code></pre>
+                        <p class="text-zinc-400 text-sm font-medium pl-2 border-l border-blue-500/50">${data.expl}</p>
+                    `;
+                    feed.appendChild(el);
                 });
-            }
+                document.querySelectorAll('pre code').forEach(hljs.highlightElement);
+            });
         }
 
-        async function save(text) {
-            try {
-                await setDoc(doc(db, "content", "notebook"), { text, lastUpdate: new Date() });
-                status.innerText = "Cloud Synced";
-            } catch (e) {
-                status.innerText = "Sync Error";
-            }
-        }
+        document.getElementById('post-btn').onclick = async () => {
+            const code = document.getElementById('code-input').value;
+            const expl = document.getElementById('expl-input').value;
+            const lang = document.getElementById('lang-select').value;
+            if(!code || !expl) return;
 
-        document.getElementById('pdf-btn').onclick = () => {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            const text = editor.state.doc.toString();
-            const splitText = doc.splitTextToSize(text, 180);
-            doc.text(splitText, 10, 10);
-            doc.save("notebook_export.pdf");
+            await addDoc(collection(db, "notes"), {
+                code, expl, lang, ts: new Date()
+            });
+
+            document.getElementById('code-input').value = '';
+            document.getElementById('expl-input').value = '';
+            window.scrollTo(0,0);
         };
+
+        function escape(html) {
+            return html.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
     </script>
 </body>
 </html>
