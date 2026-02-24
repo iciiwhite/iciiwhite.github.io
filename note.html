@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev Notebook</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        .cm-editor { height: 75vh; font-size: 15px; border-radius: 4px; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body class="bg-black text-white font-sans">
+
+    <div id="login-screen" class="fixed inset-0 bg-black flex items-center justify-center z-50">
+        <div class="bg-zinc-900 p-10 rounded-lg border border-zinc-800 w-96">
+            <h2 class="text-xl font-bold mb-6">Authenticate</h2>
+            <input type="email" id="email" placeholder="Email" class="w-full p-2 mb-4 bg-zinc-800 border border-zinc-700 rounded outline-none focus:border-blue-500">
+            <input type="password" id="password" placeholder="Password" class="w-full p-2 mb-6 bg-zinc-800 border border-zinc-700 rounded outline-none focus:border-blue-500">
+            <button id="login-btn" class="w-full bg-white text-black py-2 rounded font-bold hover:bg-zinc-200 transition">Unlock</button>
+            <p id="error-msg" class="text-red-500 mt-4 text-xs"></p>
+        </div>
+    </div>
+
+    <div id="app" class="hidden p-6 max-w-6xl mx-auto">
+        <header class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-black tracking-tighter">NOTE_DB</h1>
+            <div class="flex gap-4">
+                <button id="pdf-btn" class="bg-zinc-800 px-4 py-1 rounded text-sm hover:bg-zinc-700 border border-zinc-600">Export PDF</button>
+                <button id="logout-btn" class="bg-red-900/20 text-red-500 px-4 py-1 rounded text-sm border border-red-900/50">Logout</button>
+            </div>
+        </header>
+        
+        <div class="mb-2 flex justify-between items-center">
+            <span id="status" class="text-[10px] uppercase tracking-widest text-zinc-500">Standby</span>
+        </div>
+        <div id="editor-container" class="border border-zinc-800 rounded bg-[#1e1e1e]"></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+        import { createEditor } from "https://esm.sh/codemirror-editor-bundle@1.1.0";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA8txKtjKZlwtNq7_u5c0no3sN845FBHps",
+            authDomain: "note-533db.firebaseapp.com",
+            projectId: "note-533db",
+            storageBucket: "note-533db.firebasestorage.app",
+            messagingSenderId: "431837021498",
+            appId: "1:431837021498:web:3023f8c1b1a906362ebc03"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        let editor;
+
+        const loginScreen = document.getElementById('login-screen');
+        const mainApp = document.getElementById('app');
+        const status = document.getElementById('status');
+
+        document.getElementById('login-btn').onclick = async () => {
+            try {
+                await signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('password').value);
+            } catch (e) {
+                document.getElementById('error-msg').innerText = "Invalid Credentials";
+            }
+        };
+
+        document.getElementById('logout-btn').onclick = () => signOut(auth);
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user && user.email === "mail.iciiwhite@gmail.com") {
+                loginScreen.classList.add('hidden');
+                mainApp.classList.remove('hidden');
+                loadData();
+            } else {
+                loginScreen.classList.remove('hidden');
+                mainApp.classList.add('hidden');
+            }
+        });
+
+        async function loadData() {
+            const docSnap = await getDoc(doc(db, "content", "notebook"));
+            const content = docSnap.exists() ? docSnap.data().text : "";
+            
+            if (!editor) {
+                editor = createEditor({
+                    parent: document.getElementById('editor-container'),
+                    value: content,
+                    onChange: (val) => {
+                        status.innerText = "Syncing...";
+                        clearTimeout(window.saveTimer);
+                        window.saveTimer = setTimeout(() => save(val), 800);
+                    }
+                });
+            }
+        }
+
+        async function save(text) {
+            try {
+                await setDoc(doc(db, "content", "notebook"), { text, lastUpdate: new Date() });
+                status.innerText = "Cloud Synced";
+            } catch (e) {
+                status.innerText = "Sync Error";
+            }
+        }
+
+        document.getElementById('pdf-btn').onclick = () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const text = editor.state.doc.toString();
+            const splitText = doc.splitTextToSize(text, 180);
+            doc.text(splitText, 10, 10);
+            doc.save("notebook_export.pdf");
+        };
+    </script>
+</body>
+</html>
