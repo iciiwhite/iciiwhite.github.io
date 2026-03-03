@@ -1,0 +1,18 @@
+{
+  "apps": [
+    {
+      "name": "GitHub File Manager",
+      "icon": "https://iciiwhite.github.io/icons/github-file-manager.png",
+      "description": "Manage your GitHub repositories from your device.",
+      "author": "iciiwhite",
+      "downloadUrl": "https://github.com/iciiwhite/github-file-manager/releases/latest/download/app.apk"
+    },
+    {
+      "name": "Sample App",
+      "icon": "https://iciiwhite.github.io/icons/sample.png",
+      "description": "A sample app description.",
+      "author": "iciiwhite",
+      "downloadUrl": "https://example.com/sample.apk"
+    }
+  ]
+}
