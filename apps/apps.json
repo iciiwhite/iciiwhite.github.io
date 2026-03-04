@@ -3,9 +3,9 @@
     {
       "name": "myGit",
       "icon": "https://mygit-bedusec.github.io/favicon.png",
-      "description": "Manage your GitHub repositories from your device.",
-      "author": "iciiwhite",
-      "downloadUrl": "https://github.com/iciiwhite/github-file-manager/releases/latest/download/app.apk"
+      "description": "Manage your GitHub activity from your android device.",
+      "author": "BeduSec",
+      "downloadUrl": "https://mygit-bedusec.github.io?app=android"
     },
     {
       "name": "Sample App",
