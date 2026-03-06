@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Download myGit.zip</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2em; }
+        .info { background: #f5f5f5; padding: 1em; border-radius: 5px; margin-bottom: 1em; }
+        label { display: inline-block; width: 80px; }
+        input[type="text"] { width: 300px; padding: 5px; margin-bottom: 10px; }
+        button { padding: 10px 20px; font-size: 16px; }
+        #status { margin-top: 10px; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <h1>Download myGit.zip from private repo</h1>
+    <div class="info">
+        <p><strong>Owner:</strong> iciiwhite</p>
+        <p><strong>Repository:</strong> my-secrets</p>
+        <p><strong>Branch:</strong> main</p>
+        <p><strong>File:</strong> myGit.zip</p>
+    </div>
+    <label for="token">Token:</label>
+    <input type="text" id="token" placeholder="Paste your GitHub personal access token here">
+    <br>
+    <button id="downloadBtn">Download myGit.zip</button>
+    <div id="status"></div>
+    <script>
+        document.getElementById('downloadBtn').addEventListener('click', async function() {
+            const token = document.getElementById('token').value.trim();
+            const statusDiv = document.getElementById('status');
+            if (!token) {
+                statusDiv.textContent = 'Please enter your token.';
+                return;
+            }
+            statusDiv.textContent = 'Downloading...';
+            const owner = 'iciiwhite';
+            const repo = 'my-secrets';
+            const branch = 'main';
+            const path = 'myGit.zip';
+            const url = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${path}`;
+            try {
+                const response = await fetch(url, {
+                    headers: { 'Authorization': `token ${token}` }
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                const blob = await response.blob();
+                const downloadUrl = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = downloadUrl;
+                a.download = 'myGit.zip';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(downloadUrl);
+                statusDiv.textContent = 'Download complete!';
+            } catch (error) {
+                statusDiv.textContent = `Error: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>
