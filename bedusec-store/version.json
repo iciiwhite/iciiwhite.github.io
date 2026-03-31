@@ -1,10 +1,10 @@
 {
 
-  "version": "1.0",
+  "version": "1.1",
 
-  "versionCode": 1,
+  "versionCode": 2,
 
-  "downloadUrl": "https://github.com/gh-updates/bedusecstore/releases/download/bedusec-store/app.apk",
+  "downloadUrl": "https://github.com/gh-updates/bedusecstore/releases/download/bedusec-store-v1.1/app.apk",
 
   "releaseNotes": "Fixed bugs and improved performance"
 
