@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RED TEAM LESSONS | Icii White</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        redteam: {
+          100: '#fee2e2',
+          400: '#f87171',
+          500: '#ef4444',
+          600: '#dc2626',
+          700: '#b91c1c',
+          900: '#7f1d1d',
+        }
+      }
+    }
+  }
+}
+</script>
+<script>
+if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    document.documentElement.classList.add('dark');
+} else {
+    document.documentElement.classList.remove('dark');
+}
+</script>
+<style>
+html { scroll-behavior: smooth; }
+</style>
+</head>
+<body class="bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 transition-colors duration-300 font-sans antialiased">
+
+<nav class="fixed w-full z-50 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <div class="flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-redteam-600"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span class="font-bold text-xl tracking-tight uppercase">Red Team Lessons</span>
+      </div>
+      <div class="hidden md:flex items-center space-x-8">
+        <a href="#about" class="hover:text-redteam-600 dark:hover:text-redteam-500 font-medium transition-colors">About</a>
+        <a href="#curriculum" class="hover:text-redteam-600 dark:hover:text-redteam-500 font-medium transition-colors">Curriculum</a>
+        <a href="#contact" class="hover:text-redteam-600 dark:hover:text-redteam-500 font-medium transition-colors">Contact</a>
+        <button id="theme-toggle" class="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors" aria-label="Toggle Dark Mode">
+          <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+      </div>
+      <div class="md:hidden flex items-center gap-4">
+        <button id="theme-toggle-mobile" class="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors" aria-label="Toggle Dark Mode">
+          <svg id="theme-toggle-dark-icon-mobile" class="hidden w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg id="theme-toggle-light-icon-mobile" class="hidden w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+        <button id="mobile-menu-button" class="p-2 text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white focus:outline-none" aria-label="Open Menu">
+          <svg id="menu-open-icon" class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          <svg id="menu-close-icon" class="hidden w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800">
+    <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+      <a href="#about" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-zinc-50 dark:hover:bg-zinc-900">About</a>
+      <a href="#curriculum" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-zinc-50 dark:hover:bg-zinc-900">Curriculum</a>
+      <a href="#contact" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-zinc-50 dark:hover:bg-zinc-900">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <section id="about" class="pt-32 pb-20 lg:pt-48 lg:pb-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex flex-col items-center text-center">
+    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-redteam-100 dark:bg-redteam-900/30 text-redteam-700 dark:text-redteam-400 text-sm font-semibold mb-8">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      Enrollment Open for Next Cohort
+    </div>
+    <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6">
+      Think Like an <span class="text-redteam-600 dark:text-redteam-500">Adversary</span>.
+    </h1>
+    <p class="max-w-2xl text-lg md:text-xl text-zinc-600 dark:text-zinc-400 mb-10 leading-relaxed">
+      Learn Offensive Security with Icii White. Master advanced red teaming, vulnerability exploitation, and enterprise infrastructure attacks in a realistic, hands-on environment.
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+      <a href="#curriculum" class="px-8 py-4 bg-redteam-600 hover:bg-redteam-700 text-white font-bold rounded-lg transition-colors flex items-center justify-center gap-2">
+        Explore Curriculum
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+      <a href="#contact" class="px-8 py-4 bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-900 dark:text-white font-bold rounded-lg transition-colors flex items-center justify-center">
+        Contact Instructor
+      </a>
+    </div>
+  </section>
+
+  <section id="curriculum" class="py-24 bg-zinc-50 dark:bg-zinc-900/50 border-y border-zinc-200 dark:border-zinc-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">Core Modules</h2>
+        <p class="text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto text-lg">Comprehensive training structured for aspiring and active offensive security professionals.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <div class="bg-white dark:bg-zinc-950 p-8 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-800 hover:border-redteam-500/50 transition-colors">
+          <div class="w-12 h-12 bg-redteam-100 dark:bg-redteam-900/30 rounded-xl flex items-center justify-center mb-6 text-redteam-600 dark:text-redteam-500">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Initial Access & OSINT</h3>
+          <p class="text-zinc-600 dark:text-zinc-400 leading-relaxed">Master external reconnaissance, tailored social engineering, and weaponization to gain a crucial first foothold in a target network.</p>
+        </div>
+
+        <div class="bg-white dark:bg-zinc-950 p-8 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-800 hover:border-redteam-500/50 transition-colors">
+          <div class="w-12 h-12 bg-redteam-100 dark:bg-redteam-900/30 rounded-xl flex items-center justify-center mb-6 text-redteam-600 dark:text-redteam-500">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Privilege Escalation</h3>
+          <p class="text-zinc-600 dark:text-zinc-400 leading-relaxed">Identify and exploit misconfigurations, kernel flaws, and vulnerable services across both Windows and Linux environments.</p>
+        </div>
+
+        <div class="bg-white dark:bg-zinc-950 p-8 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-800 hover:border-redteam-500/50 transition-colors">
+          <div class="w-12 h-12 bg-redteam-100 dark:bg-redteam-900/30 rounded-xl flex items-center justify-center mb-6 text-redteam-600 dark:text-redteam-500">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Active Directory</h3>
+          <p class="text-zinc-600 dark:text-zinc-400 leading-relaxed">Navigate complex corporate domains, perform evasive lateral movement, and ultimately compromise the core Domain Controller.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="py-24">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl font-bold mb-6">Ready to breach the perimeter?</h2>
+      <p class="text-zinc-600 dark:text-zinc-400 mb-8 text-lg">Join the private communication channel to inquire about prerequisites, schedules, and enrollment for the upcoming sessions.</p>
+      <a href="mailto:info@example.com" class="inline-flex items-center gap-2 px-8 py-4 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 font-bold rounded-lg transition-colors hover:bg-zinc-800 dark:hover:bg-zinc-100">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Secure Comms
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer class="bg-white dark:bg-zinc-950 py-12 border-t border-zinc-200 dark:border-zinc-800 text-center">
+  <div class="flex items-center justify-center gap-2 mb-6">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-redteam-600"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    <span class="font-bold text-xl tracking-tight uppercase">Red Team Lessons</span>
+  </div>
+  <p class="text-zinc-500 dark:text-zinc-500 text-sm">
+    &copy; 2026 Icii White. All rights reserved. For educational purposes only.
+  </p>
+</footer>
+
+<script>
+  const themeToggleBtn = document.getElementById('theme-toggle');
+  const themeToggleBtnMobile = document.getElementById('theme-toggle-mobile');
+  
+  const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+  const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+  const themeToggleDarkIconMobile = document.getElementById('theme-toggle-dark-icon-mobile');
+  const themeToggleLightIconMobile = document.getElementById('theme-toggle-light-icon-mobile');
+
+  function updateIcons() {
+    if (document.documentElement.classList.contains('dark')) {
+      themeToggleLightIcon.classList.remove('hidden');
+      themeToggleDarkIcon.classList.add('hidden');
+      themeToggleLightIconMobile.classList.remove('hidden');
+      themeToggleDarkIconMobile.classList.add('hidden');
+    } else {
+      themeToggleLightIcon.classList.add('hidden');
+      themeToggleDarkIcon.classList.remove('hidden');
+      themeToggleLightIconMobile.classList.add('hidden');
+      themeToggleDarkIconMobile.classList.remove('hidden');
+    }
+  }
+
+  updateIcons();
+
+  function toggleTheme() {
+    if (document.documentElement.classList.contains('dark')) {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('color-theme', 'light');
+    } else {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('color-theme', 'dark');
+    }
+    updateIcons();
+  }
+
+  themeToggleBtn.addEventListener('click', toggleTheme);
+  themeToggleBtnMobile.addEventListener('click', toggleTheme);
+
+  const mobileMenuButton = document.getElementById('mobile-menu-button');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const menuOpenIcon = document.getElementById('menu-open-icon');
+  const menuCloseIcon = document.getElementById('menu-close-icon');
+
+  mobileMenuButton.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+    menuOpenIcon.classList.toggle('hidden');
+    menuCloseIcon.classList.toggle('hidden');
+  });
+</script>
+</body>
+</html>
