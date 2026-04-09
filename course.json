@@ -1,0 +1,114 @@
+{
+  "courses": [
+    {
+      "id": 1,
+      "title": "Full‑Stack Web Development Bootcamp",
+      "description": "Master HTML, CSS, JavaScript, React, Node.js, and MongoDB. Build real‑world applications.",
+      "category": "web",
+      "iconKey": "web",
+      "duration": "48 hours",
+      "rating": 4.9,
+      "bannerImage": "https://placekitten.com/800/400?image=1",
+      "free": true
+    },
+    {
+      "id": 2,
+      "title": "Mobile App Development with Flutter",
+      "description": "Build cross‑platform iOS/Android apps using Dart, Flutter widgets, Firebase, and state management.",
+      "category": "mobile",
+      "iconKey": "mobile",
+      "duration": "40 hours",
+      "rating": 4.8,
+      "bannerImage": "https://placekitten.com/800/400?image=2",
+      "free": true
+    },
+    {
+      "id": 3,
+      "title": "Cybersecurity Fundamentals",
+      "description": "Learn network security, cryptography, ethical hacking basics, and threat analysis.",
+      "category": "cybersecurity",
+      "iconKey": "security",
+      "duration": "35 hours",
+      "rating": 4.7,
+      "bannerImage": "https://placekitten.com/800/400?image=3",
+      "free": true
+    },
+    {
+      "id": 4,
+      "title": "Graphic Design for Developers",
+      "description": "Master Figma, Canva, color theory, typography, and UI/UX principles.",
+      "category": "graphics",
+      "iconKey": "graphics",
+      "duration": "25 hours",
+      "rating": 4.6,
+      "bannerImage": "https://placekitten.com/800/400?image=4",
+      "free": true
+    },
+    {
+      "id": 5,
+      "title": "React Native Mastery",
+      "description": "Build production‑ready mobile apps with React Native, navigation, and native modules.",
+      "category": "mobile",
+      "iconKey": "mobile",
+      "duration": "38 hours",
+      "rating": 4.9,
+      "bannerImage": "https://placekitten.com/800/400?image=5",
+      "free": true
+    },
+    {
+      "id": 6,
+      "title": "Penetration Testing (Ethical Hacking)",
+      "description": "Hands‑on labs for network scanning, exploitation, and report writing.",
+      "category": "cybersecurity",
+      "iconKey": "security",
+      "duration": "50 hours",
+      "rating": 4.9,
+      "bannerImage": "https://placekitten.com/800/400?image=6",
+      "free": true
+    },
+    {
+      "id": 7,
+      "title": "Modern CSS & Tailwind",
+      "description": "Deep dive into Flexbox, Grid, animations, and utility‑first CSS with Tailwind.",
+      "category": "web",
+      "iconKey": "web",
+      "duration": "22 hours",
+      "rating": 4.8,
+      "bannerImage": "https://placekitten.com/800/400?image=7",
+      "free": true
+    },
+    {
+      "id": 8,
+      "title": "Adobe Photoshop for Web",
+      "description": "Design web assets, mockups, and graphics with industry‑standard tools.",
+      "category": "graphics",
+      "iconKey": "graphics",
+      "duration": "20 hours",
+      "rating": 4.5,
+      "bannerImage": "https://placekitten.com/800/400?image=8",
+      "free": true
+    },
+    {
+      "id": 9,
+      "title": "Backend APIs with Node.js",
+      "description": "RESTful API design, authentication, database integration, and deployment.",
+      "category": "web",
+      "iconKey": "web",
+      "duration": "30 hours",
+      "rating": 4.7,
+      "bannerImage": "https://placekitten.com/800/400?image=9",
+      "free": true
+    },
+    {
+      "id": 10,
+      "title": "Kotlin for Android",
+      "description": "From zero to Play Store – Android development with Kotlin, Jetpack Compose, and Coroutines.",
+      "category": "mobile",
+      "iconKey": "mobile",
+      "duration": "45 hours",
+      "rating": 4.9,
+      "bannerImage": "https://placekitten.com/800/400?image=10",
+      "free": true
+    }
+  ]
+}
