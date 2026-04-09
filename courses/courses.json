@@ -8,7 +8,7 @@
       "iconKey": "web",
       "duration": "48 hours",
       "rating": 4.9,
-      "bannerImage": "https://placekitten.com/800/400?image=1",
+      "bannerImage": "background.jpg",
       "free": true
     },
     {
@@ -19,7 +19,7 @@
       "iconKey": "mobile",
       "duration": "40 hours",
       "rating": 4.8,
-      "bannerImage": "https://placekitten.com/800/400?image=2",
+      "bannerImage": "background.jpg",
       "free": true
     },
     {
@@ -30,7 +30,7 @@
       "iconKey": "security",
       "duration": "35 hours",
       "rating": 4.7,
-      "bannerImage": "https://placekitten.com/800/400?image=3",
+      "bannerImage": "background.jpg",
       "free": true
     },
     {
