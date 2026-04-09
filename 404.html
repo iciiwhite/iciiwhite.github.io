@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 - Page Not Found</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+@keyframes float {
+0% { transform: translateY(0px); }
+50% { transform: translateY(-15px); }
+100% { transform: translateY(0px); }
+}
+.animate-float {
+animation: float 5s ease-in-out infinite;
+}
+</style>
+</head>
+<body class="min-h-screen bg-slate-950 flex items-center justify-center p-4 font-sans selection:bg-indigo-500 selection:text-white">
+<div class="max-w-4xl w-full">
+<div class="bg-slate-900/60 backdrop-blur-2xl border border-slate-800 rounded-[2rem] p-8 md:p-16 shadow-2xl text-center relative overflow-hidden">
+<div class="absolute top-[-20%] left-[-10%] w-72 h-72 bg-indigo-600 rounded-full mix-blend-screen filter blur-[80px] opacity-30 animate-pulse"></div>
+<div class="absolute bottom-[-20%] right-[-10%] w-72 h-72 bg-fuchsia-600 rounded-full mix-blend-screen filter blur-[80px] opacity-30 animate-pulse" style="animation-delay: 2s;"></div>
+<div class="relative z-10 flex flex-col items-center">
+<h1 class="text-8xl md:text-[150px] font-black text-white tracking-tighter leading-none mb-4">
+4<span class="text-transparent bg-clip-text bg-gradient-to-br from-indigo-400 to-fuchsia-500">0</span>4
+</h1>
+<h2 class="text-3xl md:text-4xl font-bold text-slate-100 mb-6 tracking-tight">
+Looks like you're lost in space.
+</h2>
+<p class="text-slate-400 text-lg md:text-xl mb-12 max-w-2xl mx-auto leading-relaxed">
+The page you are looking for has vanished, changed its trajectory, or is temporarily inaccessible. Let's get you back to familiar territory.
+</p>
+<div class="flex items-center justify-center w-full sm:w-auto">
+<button onclick="history.back()" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-indigo-600 to-fuchsia-600 hover:from-indigo-500 hover:to-fuchsia-500 text-white font-semibold rounded-2xl transition-all duration-300 shadow-lg shadow-indigo-500/25 flex items-center justify-center gap-3 group focus:ring-4 focus:ring-indigo-500/50 outline-none cursor-pointer">
+<i class="bi bi-arrow-left text-lg transition-transform group-hover:-translate-x-1"></i>
+Go Back
+</button>
+</div>
+</div>
+</div>
+<div class="text-center mt-10 text-slate-500 text-sm font-medium">
+&copy; <script>document.write(new Date().getFullYear())</script> ECFSEC. All rights reserved.
+</div>
+</div>
+</body>
+</html>
