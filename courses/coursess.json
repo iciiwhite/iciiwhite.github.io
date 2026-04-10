@@ -1,0 +1,148 @@
+{
+  "courses": [
+    {
+      "id": 1,
+      "title": "Full‑Stack Web Development Bootcamp",
+      "description": "Master HTML, CSS, JavaScript, React, Node.js, and MongoDB. Build real‑world applications from scratch.",
+      "category": "web",
+      "iconKey": "web",
+      "duration": "48 hours",
+      "rating": 4.9,
+      "bannerImage": "https://images.pexels.com/photos/270404/pexels-photo-270404.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "courseUrl": "courses/web-fullstack.html",
+      "free": true
+    },
+    {
+      "id": 2,
+      "title": "Mobile App Development with Flutter",
+      "description": "Build cross‑platform iOS/Android apps using Dart, Flutter widgets, Firebase, and state management.",
+      "category": "mobile",
+      "iconKey": "mobile",
+      "duration": "40 hours",
+      "rating": 4.8,
+      "bannerImage": "https://images.pexels.com/photos/267350/pexels-photo-267350.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "courseUrl": "courses/flutter-mastery.html",
+      "free": true
+    },
+    {
+      "id": 3,
+      "title": "Cybersecurity Fundamentals",
+      "description": "Learn network security, cryptography, ethical hacking basics, and threat analysis.",
+      "category": "cybersecurity",
+      "iconKey": "security",
+      "duration": "35 hours",
+      "rating": 4.7,
+      "bannerImage": "https://images.pexels.com/photos/5380642/pexels-photo-5380642.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "courseUrl": "courses/cybersecurity-fundamentals.html",
+      "free": true
+    },
+    {
+      "id": 4,
+      "title": "Graphic Design for Developers",
+      "description": "Master Figma, Canva, color theory, typography, and UI/UX principles.",
+      "category": "graphics",
+      "iconKey": "graphics",
+      "duration": "25 hours",
+      "rating": 4.6,
+      "bannerImage": "https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "courseUrl": "courses/graphic-design.html",
+      "free": true
+    },
+    {
+      "id": 5,
+      "title": "React Native Mastery",
+      "description": "Build production‑ready mobile apps with React Native, navigation, and native modules.",
+      "category": "mobile",
+      "iconKey": "mobile",
+      "duration": "38 hours",
+      "rating": 4.9,
+      "bannerImage": "https://images.pexels.com/photos/230544/pexels-photo-230544.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "courseUrl": "courses/react-native.html",
+      "free": true
+    },
+    {
+      "id": 6,
+      "title": "Penetration Testing (Ethical Hacking)",
+      "description": "Hands‑on labs for network scanning, exploitation, and report writing.",
+      "category": "cybersecurity",
+      "iconKey": "security",
+      "duration": "50 hours",
+      "rating": 4.9,
+      "bannerImage": "https://images.pexels.com/photos/5380619/pexels-photo-5380619.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "courseUrl": "courses/pentesting.html",
+      "free": true
+    },
+    {
+      "id": 7,
+      "title": "Modern CSS & Tailwind",
+      "description": "Deep dive into Flexbox, Grid, animations, and utility‑first CSS with Tailwind.",
+      "category": "web",
+      "iconKey": "web",
+      "duration": "22 hours",
+      "rating": 4.8,
+      "bannerImage": "https://images.pexels.com/photos/11035471/pexels-photo-11035471.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "courseUrl": "courses/modern-css.html",
+      "free": true
+    },
+    {
+      "id": 8,
+      "title": "Adobe Photoshop for Web",
+      "description": "Design web assets, mockups, and graphics with industry‑standard tools.",
+      "category": "graphics",
+      "iconKey": "graphics",
+      "duration": "20 hours",
+      "rating": 4.5,
+      "bannerImage": "https://images.pexels.com/photos/257904/pexels-photo-257904.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "courseUrl": "courses/photoshop-web.html",
+      "free": true
+    },
+    {
+      "id": 9,
+      "title": "Backend APIs with Node.js",
+      "description": "RESTful API design, authentication, database integration, and deployment.",
+      "category": "web",
+      "iconKey": "web",
+      "duration": "30 hours",
+      "rating": 4.7,
+      "bannerImage": "https://images.pexels.com/photos/1181675/pexels-photo-1181675.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "courseUrl": "courses/nodejs-api.html",
+      "free": true
+    },
+    {
+      "id": 10,
+      "title": "Kotlin for Android",
+      "description": "From zero to Play Store – Android development with Kotlin, Jetpack Compose, and Coroutines.",
+      "category": "mobile",
+      "iconKey": "mobile",
+      "duration": "45 hours",
+      "rating": 4.9,
+      "bannerImage": "https://images.pexels.com/photos/270360/pexels-photo-270360.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "courseUrl": "courses/kotlin-android.html",
+      "free": true
+    },
+    {
+      "id": 11,
+      "title": "SOC Analyst Blue Team",
+      "description": "Monitor, detect, and respond to threats using SIEM (Splunk/ELK), IDS/IPS, and incident response.",
+      "category": "cybersecurity",
+      "iconKey": "security",
+      "duration": "42 hours",
+      "rating": 4.8,
+      "bannerImage": "https://images.pexels.com/photos/5380646/pexels-photo-5380646.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "courseUrl": "courses/soc-analyst.html",
+      "free": true
+    },
+    {
+      "id": 12,
+      "title": "3D Design with Blender",
+      "description": "Create 3D models, animations, and renders for games and visual effects.",
+      "category": "graphics",
+      "iconKey": "graphics",
+      "duration": "35 hours",
+      "rating": 4.7,
+      "bannerImage": "https://images.pexels.com/photos/1191712/pexels-photo-1191712.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "courseUrl": "courses/blender-3d.html",
+      "free": true
+    }
+  ]
+}
