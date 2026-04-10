@@ -2,8 +2,7 @@
   "courses": [
     {
       "id": 1,
-      "title": "*Bypassing Windows Defender with PowerShell: A Red Team Deep Dive*
-",
+      "title": "Bypassing Windows Defender with PowerShell: A Red Team Deep Dive",
       "description": "Master HTML, CSS, JavaScript, React, Node.js, and MongoDB. Build real‑world applications from scratch.",
       "category": "web",
       "iconKey": "web",
