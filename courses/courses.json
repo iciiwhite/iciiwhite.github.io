@@ -1,0 +1,16 @@
+{
+  "courses": [
+    {
+      "id": 1,
+      "title": "*Bypassing Windows Defender with PowerShell: A Red Team Deep Dive*
+",
+      "description": "Master HTML, CSS, JavaScript, React, Node.js, and MongoDB. Build real‑world applications from scratch.",
+      "category": "web",
+      "iconKey": "web",
+      "duration": "48 hours",
+      "rating": 4.9,
+      "bannerImage": "https://images.pexels.com/photos/270404/pexels-photo-270404.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "courseUrl": "courses/web-fullstack.html",
+      "free": true
+    } 
+  ]
