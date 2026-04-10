@@ -3,7 +3,7 @@
     {
       "id": 1,
       "title": "Bypassing Windows Defender with PowerShell: A Red Team Deep Dive",
-      "description": "Master HTML, CSS, JavaScript, React, Node.js, and MongoDB. Build real‑world applications from scratch.",
+      "description": "Learn how attackers use PowerShell to evade AMSI and Windows Defender. This guide covers obfuscation techniques, reflection loading, and real‑world tradecraft used in penetration testing engagements.",
       "category": "web",
       "iconKey": "web",
       "duration": "48 hours",
