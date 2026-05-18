@@ -2,14 +2,17 @@
   "courses": [
     {
       "id": 1,
-      "title": "Bypassing Windows Defender with PowerShell: A Red Team Deep Dive",
-      "description": "Learn how attackers use PowerShell to evade AMSI and Windows Defender. This guide covers obfuscation techniques, reflection loading, and real‑world tradecraft used in penetration testing engagements.",
-      "category": "web",
-      "iconKey": "web",
-      "duration": "48 hours",
+      "title": "How to get started as a graphic designer",
+      "description": "Master HTML, CSS, JavaScript, React, Node.js, and MongoDB. Build real‑world applications from scratch.",
+      "category": "graphics",
+      "iconKey": "graphics",
+      "duration": "30 Minutes",
       "rating": 4.9,
-      "bannerImage": "https://images.pexels.com/photos/270404/pexels-photo-270404.jpeg?auto=compress&cs=tinysrgb&w=800",
-      "courseUrl": "https://whatsapp.com/channel/0029VbCLby159Pwb7lZSIW0J/154",
+      "bannerImage": "https://yesimadesigner.com/wp-content/uploads/2025/08/blog_cover-e1754059235711-768x504.jpg",
+      "courseUrl": "https://yesimadesigner.com/8-simple-tips-on-how-to-get-started-as-a-graphic-designer/",
       "free": true
-    } 
+    }
+  
   ]
+  
+  )
