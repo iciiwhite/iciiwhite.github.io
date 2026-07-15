@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Jim | Kigembe Bright Williams</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Outfit', 'sans-serif'] },
+                    colors: {
+                        brand: { 50: '#f6f6f6', 900: '#111111', 950: '#0a0a0a' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Outfit', sans-serif; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .light .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        .liquid-blob {
+            position: absolute;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            box-shadow: inset 20px 20px 60px #000000, inset -20px -20px 60px #333333, 0 15px 35px rgba(0,0,0,0.5);
+            animation: morph 12s ease-in-out infinite both alternate;
+            z-index: -1;
+            filter: drop-shadow(0 0 30px rgba(0,0,0,0.8));
+        }
+        .light .liquid-blob {
+            background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);
+            box-shadow: inset 20px 20px 60px #0a0a0a, inset -20px -20px 60px #4d4d4d, 0 15px 35px rgba(0,0,0,0.3);
+            filter: drop-shadow(0 0 30px rgba(0,0,0,0.4));
+        }
+        @keyframes morph {
+            0% { border-radius: 40% 60% 70% 30% / 40% 40% 60% 50%; transform: rotate(0deg) scale(1); }
+            34% { border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%; transform: rotate(45deg) scale(1.05); }
+            67% { border-radius: 100% 60% 60% 100% / 100% 100% 60% 60%; transform: rotate(-15deg) scale(0.95); }
+            100% { border-radius: 40% 60% 70% 30% / 40% 40% 60% 50%; transform: rotate(0deg) scale(1); }
+        }
+        .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+    </style>
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+</head>
+<body class="bg-brand-50 dark:bg-brand-950 text-gray-900 dark:text-gray-100 transition-colors duration-500 overflow-x-hidden min-h-screen flex flex-col relative antialiased">
+
+    <div class="fixed top-[10%] left-[50%] w-[600px] h-[600px] -translate-x-1/2 rounded-full liquid-blob opacity-80 dark:opacity-100 pointer-events-none blur-[2px]"></div>
+    <div class="fixed top-[40%] right-[-10%] w-[400px] h-[400px] rounded-full liquid-blob opacity-60 dark:opacity-80 pointer-events-none blur-[4px]" style="animation-delay: -4s; animation-duration: 15s;"></div>
+    <div class="fixed bottom-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full liquid-blob opacity-70 dark:opacity-90 pointer-events-none blur-[3px]" style="animation-delay: -8s; animation-duration: 10s;"></div>
+
+    <nav class="fixed w-full z-50 transition-all duration-300" id="navbar">
+        <div class="glass-panel mx-4 lg:mx-8 mt-4 rounded-2xl px-6 py-4 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2 group">
+                <div class="w-10 h-10 rounded-full bg-brand-900 dark:bg-white flex items-center justify-center text-white dark:text-brand-900 font-bold text-xl group-hover:scale-105 transition-transform">
+                    B
+                </div>
+                <span class="font-bold text-xl tracking-tight">Black Jim</span>
+            </a>
+
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+                <a href="index.html" class="text-brand-900 dark:text-white hover:opacity-70 transition-opacity">Home</a>
+                <a href="profile.html" class="hover:opacity-70 transition-opacity">About Me</a>
+                <a href="tunes.html" class="hover:opacity-70 transition-opacity">Music</a>
+                <a href="blog.html" class="hover:opacity-70 transition-opacity">Blog</a>
+                <a href="book.html" class="px-5 py-2.5 rounded-full bg-brand-900 dark:bg-white text-white dark:text-brand-900 hover:scale-105 transition-transform">Bookings</a>
+                
+                <button id="themeToggleBtn" class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+                    <svg id="sunIcon" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"></path></svg>
+                    <svg id="moonIcon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"></path></svg>
+                </button>
+            </div>
+
+            <div class="flex items-center gap-4 md:hidden">
+                <button id="mobileThemeToggleBtn" class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+                    <svg class="w-5 h-5 hidden dark:block mobileSunIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"></path></svg>
+                    <svg class="w-5 h-5 block dark:hidden mobileMoonIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"></path></svg>
+                </button>
+                <button id="mobileMenuBtn" class="p-2 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobileMenu" class="hidden absolute top-24 left-4 right-4 glass-panel rounded-2xl p-6 flex-col gap-4 text-center">
+            <a href="index.html" class="block py-2 text-brand-900 dark:text-white font-medium">Home</a>
+            <a href="profile.html" class="block py-2 font-medium">About Me</a>
+            <a href="tunes.html" class="block py-2 font-medium">Music</a>
+            <a href="blog.html" class="block py-2 font-medium">Blog</a>
+            <a href="book.html" class="block mt-2 py-3 rounded-xl bg-brand-900 dark:bg-white text-white dark:text-brand-900 font-medium">Bookings</a>
+        </div>
+    </nav>
+
+    <main class="flex-grow flex flex-col items-center justify-center pt-32 pb-20 px-6 z-10 relative">
+        <div class="max-w-5xl mx-auto w-full flex flex-col items-center text-center mt-12 md:mt-24 fade-in">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel mb-8">
+                <svg class="w-4 h-4 text-brand-900 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                <span class="text-sm font-medium tracking-wide uppercase">Kigembe Bright Williams</span>
+            </div>
+
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6 leading-tight">
+                The Deep Resonance <br class="hidden md:block" /> 
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-gray-600 to-gray-900 dark:from-gray-300 dark:to-white">of Faith & Soul</span>
+            </h1>
+
+            <p class="text-lg md:text-xl max-w-2xl text-gray-600 dark:text-gray-300 mb-12 leading-relaxed">
+                I am Black Jim. A heavy baritone gospel artist from Wakiso, Uganda. 
+                From the chemistry classroom to the carpenter's workbench, and ultimately to the microphone, 
+                sharing a timeless message of grace through song.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+                <a href="tunes.html" class="w-full sm:w-auto px-8 py-4 rounded-full bg-brand-900 dark:bg-white text-white dark:text-brand-900 font-semibold flex items-center justify-center gap-2 hover:scale-105 transition-transform shadow-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
+                    Listen to Music
+                </a>
+                <a href="profile.html" class="w-full sm:w-auto px-8 py-4 rounded-full glass-panel font-semibold flex items-center justify-center gap-2 hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                    Read My Story
+                </a>
+            </div>
+        </div>
+
+        <div class="max-w-6xl mx-auto w-full mt-32 grid grid-cols-1 md:grid-cols-3 gap-6 fade-in">
+            <div class="glass-panel p-8 rounded-3xl hover:-translate-y-2 transition-transform duration-300">
+                <div class="w-12 h-12 rounded-2xl bg-black/5 dark:bg-white/10 flex items-center justify-center mb-6">
+                    <svg class="w-6 h-6 text-brand-900 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"></path></svg>
+                </div>
+                <h3 class="text-xl font-bold mb-3">The Heavy Baritone</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                    A deep, resonant voice echoing the classic style of Jim Reeves, crafted specifically for the uplifting messages of the Gospel.
+                </p>
+            </div>
+
+            <div class="glass-panel p-8 rounded-3xl hover:-translate-y-2 transition-transform duration-300">
+                <div class="w-12 h-12 rounded-2xl bg-black/5 dark:bg-white/10 flex items-center justify-center mb-6">
+                    <svg class="w-6 h-6 text-brand-900 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.148 2.148A12.061 12.061 0 0116.5 7.605"></path></svg>
+                </div>
+                <h3 class="text-xl font-bold mb-3">The Educator</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                    A retired secondary school Chemistry teacher, applying the same precision and dedication from the laboratory to musical composition.
+                </p>
+            </div>
+
+            <div class="glass-panel p-8 rounded-3xl hover:-translate-y-2 transition-transform duration-300">
+                <div class="w-12 h-12 rounded-2xl bg-black/5 dark:bg-white/10 flex items-center justify-center mb-6">
+                    <svg class="w-6 h-6 text-brand-900 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z"></path></svg>
+                </div>
+                <h3 class="text-xl font-bold mb-3">The Craftsman</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                    Now finding peace in carpentry from home in Wakiso, shaping wood with the same patience used to shape melodies and raise grandchildren.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="w-full mt-auto py-8 text-center border-t border-black/5 dark:border-white/5 z-10 glass-panel">
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+            &copy; <span id="year"></span> Kigembe Bright Williams (Black Jim). All rights reserved.
+        </p>
+    </footer>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const mobileThemeToggleBtn = document.getElementById('mobileThemeToggleBtn');
+        const htmlElement = document.documentElement;
+
+        function toggleTheme() {
+            if (htmlElement.classList.contains('dark')) {
+                htmlElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                htmlElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        themeToggleBtn.addEventListener('click', toggleTheme);
+        mobileThemeToggleBtn.addEventListener('click', toggleTheme);
+
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            mobileMenu.classList.toggle('flex');
+        });
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 20) {
+                nav.classList.add('opacity-95');
+            } else {
+                nav.classList.remove('opacity-95');
+            }
+        });
+    </script>
+</body>
+</html>
