@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Issue Creator</title>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js">
+    </script>
+    <style>
+        :root {
+            --bg: #f8f9fb;
+            --card-bg: #ffffff;
+            --card-border: #e8ecf1;
+            --text: #1a1d23;
+            --text-secondary: #5f6672;
+            --text-muted: #949ba7;
+            --accent: #5b5fef;
+            --accent-hover: #4a4edb;
+            --accent-light: #eef0ff;
+            --danger: #e5484d;
+            --danger-hover: #d63c40;
+            --danger-light: #fef0f0;
+            --success: #30a46c;
+            --success-light: #eefbf4;
+            --warning: #f5a623;
+            --warning-light: #fef9ee;
+            --input-bg: #f9fafb;
+            --input-border: #dde1e7;
+            --input-focus: #5b5fef;
+            --input-focus-ring: rgba(91, 95, 239, 0.15);
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+            --radius-sm: 8px;
+            --radius: 12px;
+            --radius-lg: 16px;
+            --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, Oxygen, Ubuntu, sans-serif;
+            --font-mono: 'SF Mono', 'Fira Code', 'Fira Mono', 'JetBrains Mono', Consolas, monospace;
+            --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 32px 16px 64px;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-image: radial-gradient(ellipse at 50% 0%, rgba(91, 95, 239, 0.04) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(91, 95, 239, 0.02) 0%, transparent 50%);
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 720px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 0 4px;
+        }
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-sm);
+            background: var(--text);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-sm);
+        }
+        .header-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+        .header-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        .header-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            letter-spacing: 0.01em;
+        }
+
+        .pat-badge {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 14px;
+            border-radius: 24px;
+            background: var(--success-light);
+            color: var(--success);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all var(--transition);
+            white-space: nowrap;
+            letter-spacing: 0.01em;
+        }
+        .pat-badge:hover {
+            border-color: var(--success);
+            box-shadow: var(--shadow-sm);
+        }
+        .pat-badge.configured {
+            background: var(--accent-light);
+            color: var(--accent);
+        }
+        .pat-badge.configured:hover {
+            border-color: var(--accent);
+        }
+        .pat-badge svg {
+            width: 15px;
+            height: 15px;
+            flex-shrink: 0;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition);
+        }
+        .card:hover {
+            box-shadow: var(--shadow-md);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .card-header-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: var(--radius-sm);
+            background: var(--accent-light);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .card-header-icon svg {
+            width: 17px;
+            height: 17px;
+        }
+        .card-header-text h3 {
+            font-size: 0.95rem;
+            font-weight: 650;
+            letter-spacing: -0.01em;
+        }
+        .card-header-text p {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+        .form-label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            letter-spacing: 0.01em;
+        }
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 0.9rem;
+            font-family: var(--font);
+            border: 1.5px solid var(--input-border);
+            border-radius: var(--radius-sm);
+            background: var(--input-bg);
+            color: var(--text);
+            transition: all var(--transition);
+            outline: none;
+            letter-spacing: 0.01em;
+        }
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            border-color: var(--input-focus);
+            box-shadow: 0 0 0 3px var(--input-focus-ring);
+            background: #fff;
+        }
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: var(--text-muted);
+            opacity: 0.7;
+        }
+        .form-textarea {
+            resize: vertical;
+            min-height: 160px;
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            line-height: 1.6;
+            tab-size: 2;
+        }
+
+        .form-textarea.markdown-preview {
+            font-family: var(--font);
+            font-size: 0.88rem;
+            line-height: 1.7;
+            background: #fff;
+            cursor: default;
+            user-select: text;
+            white-space: pre-wrap;
+            overflow-y: auto;
+            min-height: 160px;
+            padding: 14px 16px;
+        }
+
+        .form-textarea.markdown-preview h1,
+        .form-textarea.markdown-preview h2,
+        .form-textarea.markdown-preview h3 {
+            margin-top: 14px;
+            margin-bottom: 6px;
+            font-weight: 650;
+            letter-spacing: -0.01em;
+        }
+        .form-textarea.markdown-preview h1 {
+            font-size: 1.3rem;
+        }
+        .form-textarea.markdown-preview h2 {
+            font-size: 1.1rem;
+        }
+        .form-textarea.markdown-preview h3 {
+            font-size: 0.95rem;
+        }
+        .form-textarea.markdown-preview p {
+            margin-bottom: 8px;
+        }
+        .form-textarea.markdown-preview code {
+            background: #f1f3f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-family: var(--font-mono);
+        }
+        .form-textarea.markdown-preview pre {
+            background: #f1f3f5;
+            padding: 12px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 8px 0;
+        }
+        .form-textarea.markdown-preview pre code {
+            background: none;
+            padding: 0;
+        }
+        .form-textarea.markdown-preview ul,
+        .form-textarea.markdown-preview ol {
+            margin: 6px 0;
+            padding-left: 22px;
+        }
+        .form-textarea.markdown-preview li {
+            margin-bottom: 3px;
+        }
+        .form-textarea.markdown-preview blockquote {
+            border-left: 3px solid var(--accent);
+            padding-left: 12px;
+            color: var(--text-secondary);
+            margin: 8px 0;
+        }
+        .form-textarea.markdown-preview a {
+            color: var(--accent);
+        }
+        .form-textarea.markdown-preview hr {
+            border: none;
+            border-top: 1px solid var(--card-border);
+            margin: 16px 0;
+        }
+
+        .toggle-tabs {
+            display: flex;
+            border: 1.5px solid var(--input-border);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            background: var(--input-bg);
+        }
+        .toggle-tab {
+            flex: 1;
+            padding: 8px 14px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            letter-spacing: 0.01em;
+        }
+        .toggle-tab.active {
+            background: #fff;
+            color: var(--accent);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            z-index: 1;
+            border-radius: 6px;
+            margin: 2px;
+        }
+        .toggle-tab svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 11px 22px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            font-family: var(--font);
+            border-radius: var(--radius-sm);
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition);
+            letter-spacing: 0.01em;
+            white-space: nowrap;
+        }
+        .btn:active {
+            transform: scale(0.97);
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(91, 95, 239, 0.3);
+        }
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            box-shadow: 0 4px 16px rgba(91, 95, 239, 0.4);
+            transform: translateY(-1px);
+        }
+        .btn-primary:disabled {
+            background: #c5c7d0;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-secondary {
+            background: var(--input-bg);
+            color: var(--text-secondary);
+            border: 1.5px solid var(--input-border);
+        }
+        .btn-secondary:hover {
+            background: #fff;
+            border-color: var(--text-muted);
+            color: var(--text);
+        }
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
+            padding: 8px 14px;
+        }
+        .btn-ghost:hover {
+            background: var(--input-bg);
+            color: var(--text);
+        }
+        .btn-sm {
+            padding: 7px 14px;
+            font-size: 0.78rem;
+            border-radius: 6px;
+        }
+        .btn-full {
+            width: 100%;
+            justify-content: center;
+        }
+        .btn .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        .btn-secondary .spinner {
+            border-color: rgba(0, 0, 0, 0.15);
+            border-top-color: var(--text-secondary);
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            pointer-events: none;
+            max-width: 420px;
+            width: calc(100% - 40px);
+        }
+        .toast {
+            pointer-events: auto;
+            padding: 14px 18px;
+            border-radius: var(--radius-sm);
+            font-size: 0.84rem;
+            font-weight: 550;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: var(--shadow-lg);
+            animation: slideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            letter-spacing: 0.01em;
+            border: 1px solid transparent;
+        }
+        .toast.success {
+            background: #fff;
+            border-color: #b7ebd0;
+            color: #1a5c3a;
+        }
+        .toast.error {
+            background: #fff;
+            border-color: #f5c6cb;
+            color: #7a1f24;
+        }
+        .toast.info {
+            background: #fff;
+            border-color: #c5d0f0;
+            color: #2d357a;
+        }
+        .toast-icon {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+        }
+        .toast.success .toast-icon {
+            color: var(--success);
+        }
+        .toast.error .toast-icon {
+            color: var(--danger);
+        }
+        .toast.info .toast-icon {
+            color: var(--accent);
+        }
+        .toast-close {
+            margin-left: auto;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: inherit;
+            opacity: 0.5;
+            padding: 2px;
+            transition: opacity var(--transition);
+            flex-shrink: 0;
+        }
+        .toast-close:hover {
+            opacity: 1;
+        }
+        .toast-close svg {
+            width: 15px;
+            height: 15px;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(40px) translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0) translateY(0);
+            }
+        }
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+        }
+        .toast.removing {
+            animation: fadeOut 0.3s ease forwards;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+        .text-muted {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        .search-wrapper {
+            position: relative;
+        }
+        .search-input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+        .search-input-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+        .search-input {
+            padding-left: 42px;
+        }
+        .search-dropdown {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            z-index: 100;
+            max-height: 360px;
+            overflow-y: auto;
+            display: none;
+            flex-direction: column;
+        }
+        .search-dropdown.open {
+            display: flex;
+        }
+        .skeleton-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--card-border);
+        }
+        .skeleton-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        .skeleton-line {
+            flex: 1;
+            height: 14px;
+            border-radius: 6px;
+            background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+        .repo-result-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--card-border);
+            transition: background var(--transition);
+        }
+        .repo-result-item:last-child {
+            border-bottom: none;
+        }
+        .repo-result-item:hover {
+            background: var(--accent-light);
+        }
+        .custom-checkbox {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .custom-checkbox svg {
+            width: 18px;
+            height: 18px;
+        }
+        .repo-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+            background: var(--input-bg);
+        }
+        .repo-name {
+            flex: 1;
+            font-size: 0.88rem;
+            font-weight: 550;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .search-dropdown-footer {
+            padding: 12px 16px;
+            border-top: 1px solid var(--card-border);
+            display: flex;
+            justify-content: flex-end;
+        }
+        .selected-repo-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            background: var(--accent-light);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-top: 8px;
+            width: fit-content;
+        }
+        .selected-repo-badge img {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+        }
+        .selected-repo-badge .remove-btn {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            opacity: 0.7;
+            transition: opacity var(--transition);
+        }
+        .selected-repo-badge .remove-btn:hover {
+            opacity: 1;
+        }
+        .selected-repo-badge .remove-btn svg {
+            width: 15px;
+            height: 15px;
+        }
+
+        @media (max-width: 640px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            .header {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .card {
+                padding: 18px;
+            }
+            .btn-full {
+                width: 100%;
+            }
+            .toast-container {
+                top: 10px;
+                right: 10px;
+                left: 10px;
+                max-width: none;
+                width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <div class="header-brand">
+                <div class="header-icon">
+                    <i data-lucide="github"></i>
+                </div>
+                <div>
+                    <div class="header-title">Issue Creator</div>
+                    <div class="header-subtitle">GitHub API</div>
+                </div>
+            </div>
+            <div class="pat-badge" id="patBadge" title="Click to update PAT">
+                <i data-lucide="key"></i>
+                <span id="patBadgeText">Set PAT</span>
+            </div>
+        </div>
+
+        <div class="card hidden" id="patCard">
+            <div class="card-header">
+                <div class="card-header-icon">
+                    <i data-lucide="key"></i>
+                </div>
+                <div class="card-header-text">
+                    <h3>Personal Access Token</h3>
+                    <p>Required to authenticate with the GitHub API</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="patInput">GitHub PAT</label>
+                <input type="password" class="form-input" id="patInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+            </div>
+            <div style="display:flex;gap:10px;margin-top:4px;">
+                <button class="btn btn-primary btn-sm" id="patSaveBtn">
+                    <i data-lucide="check"></i> Save Token
+                </button>
+                <button class="btn btn-ghost btn-sm" id="patClearBtn">
+                    <i data-lucide="trash-2"></i> Clear
+                </button>
+            </div>
+        </div>
+
+        <div class="card" id="repoCard">
+            <div class="card-header">
+                <div class="card-header-icon">
+                    <i data-lucide="book-open"></i>
+                </div>
+                <div class="card-header-text">
+                    <h3>Repository</h3>
+                    <p>Search and select a repository</p>
+                </div>
+            </div>
+            <div class="search-wrapper">
+                <div class="search-input-icon">
+                    <i data-lucide="search"></i>
+                </div>
+                <input type="text" class="form-input search-input" id="repoSearchInput" placeholder="Search repositories..." autocomplete="off">
+                <div class="search-dropdown" id="searchDropdown">
+                    <div id="skeletonContainer" class="hidden">
+                        <div class="skeleton-item"><div class="skeleton-avatar"></div><div class="skeleton-line"></div></div>
+                        <div class="skeleton-item"><div class="skeleton-avatar"></div><div class="skeleton-line"></div></div>
+                        <div class="skeleton-item"><div class="skeleton-avatar"></div><div class="skeleton-line"></div></div>
+                    </div>
+                    <div id="resultsContainer"></div>
+                    <div class="search-dropdown-footer">
+                        <button class="btn btn-primary btn-sm" id="selectRepoBtn" disabled>
+                            <i data-lucide="check"></i> Select
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="selected-repo-badge hidden" id="selectedRepoBadge">
+                <img id="selectedRepoAvatar" src="" alt="">
+                <span id="selectedRepoFullName"></span>
+                <div class="remove-btn" id="clearSelectedRepo">
+                    <i data-lucide="x"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" id="issueCard">
+            <div class="card-header">
+                <div class="card-header-icon">
+                    <i data-lucide="alert-circle"></i>
+                </div>
+                <div class="card-header-text">
+                    <h3>Issue Details</h3>
+                    <p>Fill in the information for the new issue</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="issueTitle">Title *</label>
+                <input type="text" class="form-input" id="issueTitle" placeholder="Brief summary of the issue">
+            </div>
+            <div class="form-group">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                    <label class="form-label" style="margin-bottom:0;">Description (Markdown)</label>
+                    <div class="toggle-tabs" id="markdownTabs">
+                        <button class="toggle-tab active" data-tab="write">
+                            <i data-lucide="edit"></i> Write
+                        </button>
+                        <button class="toggle-tab" data-tab="preview">
+                            <i data-lucide="eye"></i> Preview
+                        </button>
+                    </div>
+                </div>
+                <textarea class="form-textarea" id="issueBody" placeholder="## Expected Behavior&#10;&#10;...&#10;&#10;## Actual Behavior&#10;&#10;...&#10;&#10;## Steps to Reproduce&#10;&#10;1. ..."></textarea>
+                <div class="form-textarea markdown-preview hidden" id="markdownPreview"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" for="labelsInput">Labels</label>
+                    <input type="text" class="form-input" id="labelsInput" placeholder="bug, enhancement (comma-separated)">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="assigneesInput">Assignees</label>
+                    <input type="text" class="form-input" id="assigneesInput" placeholder="username1, username2">
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                    <label class="form-label" style="margin-bottom:0;">Milestone</label>
+                    <button class="btn btn-ghost btn-sm" id="fetchMilestonesBtn">
+                        <i data-lucide="refresh-cw"></i> Load Milestones
+                    </button>
+                </div>
+                <select class="form-select" id="milestoneDropdown">
+                    <option value="">No milestone</option>
+                </select>
+            </div>
+        </div>
+
+        <button class="btn btn-primary btn-full" id="createIssueBtn" style="padding:14px 28px;font-size:0.95rem;border-radius:var(--radius);">
+            <i data-lucide="plus-circle"></i> Create Issue
+        </button>
+
+        <div style="text-align:center;padding:8px;">
+            <span class="text-muted">Issues are created via the GitHub REST API</span>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        (function() {
+            const STORAGE_KEY = 'gh_issue_creator_pat';
+
+            const $ = (sel) => document.querySelector(sel);
+            const $$ = (sel) => document.querySelectorAll(sel);
+
+            const patBadge = $('#patBadge');
+            const patBadgeText = $('#patBadgeText');
+            const patCard = $('#patCard');
+            const patInput = $('#patInput');
+            const patSaveBtn = $('#patSaveBtn');
+            const patClearBtn = $('#patClearBtn');
+            const repoSearchInput = $('#repoSearchInput');
+            const searchDropdown = $('#searchDropdown');
+            const skeletonContainer = $('#skeletonContainer');
+            const resultsContainer = $('#resultsContainer');
+            const selectRepoBtn = $('#selectRepoBtn');
+            const selectedRepoBadge = $('#selectedRepoBadge');
+            const selectedRepoAvatar = $('#selectedRepoAvatar');
+            const selectedRepoFullName = $('#selectedRepoFullName');
+            const clearSelectedRepoBtn = $('#clearSelectedRepo');
+            const issueTitle = $('#issueTitle');
+            const issueBody = $('#issueBody');
+            const markdownPreview = $('#markdownPreview');
+            const markdownTabs = $('#markdownTabs');
+            const labelsInput = $('#labelsInput');
+            const assigneesInput = $('#assigneesInput');
+            const milestoneDropdown = $('#milestoneDropdown');
+            const fetchMilestonesBtn = $('#fetchMilestonesBtn');
+            const createIssueBtn = $('#createIssueBtn');
+            const toastContainer = $('#toastContainer');
+
+            let currentPAT = '';
+            let selectedRepo = null;
+            let searchResults = [];
+            let selectedIndex = -1;
+            let debounceTimer = null;
+            let loading = false;
+
+            function getPAT() {
+                return localStorage.getItem(STORAGE_KEY) || '';
+            }
+
+            function savePAT(token) {
+                localStorage.setItem(STORAGE_KEY, token.trim());
+            }
+
+            function clearPAT() {
+                localStorage.removeItem(STORAGE_KEY);
+            }
+
+            function updatePATUI() {
+                const pat = getPAT();
+                currentPAT = pat;
+                if (pat) {
+                    patBadge.classList.add('configured');
+                    patBadgeText.textContent = 'PAT Configured';
+                    patInput.value = pat;
+                } else {
+                    patBadge.classList.remove('configured');
+                    patBadgeText.textContent = 'Set PAT';
+                    patInput.value = '';
+                }
+            }
+
+            function showToast(message, type = 'info', duration = 4000) {
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                let iconName = 'info';
+                if (type === 'success') iconName = 'check-circle';
+                if (type === 'error') iconName = 'alert-circle';
+                if (type === 'info') iconName = 'info';
+                toast.innerHTML = `
+                    <span class="toast-icon"><i data-lucide="${iconName}"></i></span>
+                    <span>${message}</span>
+                    <button class="toast-close"><i data-lucide="x"></i></button>
+                `;
+                toastContainer.appendChild(toast);
+                lucide.createIcons();
+                const closeBtn = toast.querySelector('.toast-close');
+                closeBtn.addEventListener('click', () => removeToast(toast));
+                if (duration > 0) {
+                    setTimeout(() => removeToast(toast), duration);
+                }
+            }
+
+            function removeToast(toast) {
+                if (toast.classList.contains('removing')) return;
+                toast.classList.add('removing');
+                setTimeout(() => {
+                    if (toast.parentNode) toast.parentNode.removeChild(toast);
+                }, 300);
+            }
+
+            function renderSelectedRepo() {
+                if (selectedRepo) {
+                    selectedRepoBadge.classList.remove('hidden');
+                    selectedRepoAvatar.src = selectedRepo.owner.avatar_url;
+                    selectedRepoFullName.textContent = selectedRepo.full_name;
+                } else {
+                    selectedRepoBadge.classList.add('hidden');
+                }
+            }
+
+            function clearSearchResults() {
+                resultsContainer.innerHTML = '';
+                searchResults = [];
+                selectedIndex = -1;
+                selectRepoBtn.disabled = true;
+                skeletonContainer.classList.add('hidden');
+            }
+
+            function renderSearchResults() {
+                resultsContainer.innerHTML = '';
+                searchResults.forEach((repo, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'repo-result-item';
+                    item.dataset.index = index;
+                    const isSelected = index === selectedIndex;
+                    item.innerHTML = `
+                        <div class="custom-checkbox">
+                            ${isSelected ? '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6" fill="currentColor" stroke="none"/></svg>' : '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg>'}
+                        </div>
+                        <img class="repo-avatar" src="${repo.owner.avatar_url}" alt="${repo.owner.login}">
+                        <span class="repo-name">${repo.name}</span>
+                    `;
+                    item.addEventListener('click', () => {
+                        selectedIndex = index;
+                        renderSearchResults();
+                        selectRepoBtn.disabled = false;
+                    });
+                    resultsContainer.appendChild(item);
+                });
+                selectRepoBtn.disabled = selectedIndex === -1;
+            }
+
+            function showSkeleton() {
+                skeletonContainer.classList.remove('hidden');
+                resultsContainer.innerHTML = '';
+                searchResults = [];
+                selectedIndex = -1;
+                selectRepoBtn.disabled = true;
+            }
+
+            function hideSkeleton() {
+                skeletonContainer.classList.add('hidden');
+            }
+
+            async function searchRepositories(query) {
+                const pat = getPAT();
+                if (!pat) {
+                    showToast('Please set your PAT first.', 'error');
+                    patCard.classList.remove('hidden');
+                    return;
+                }
+                loading = true;
+                showSkeleton();
+                searchDropdown.classList.add('open');
+                try {
+                    const res = await fetch(`https://api.github.com/search/repositories?q=${encodeURIComponent(query)}&per_page=20`, {
+                        headers: {
+                            'Authorization': `token ${pat}`,
+                            'Accept': 'application/vnd.github+json',
+                        },
+                    });
+                    if (!res.ok) {
+                        const errData = await res.json().catch(() => ({}));
+                        throw new Error(errData.message || `HTTP ${res.status}`);
+                    }
+                    const data = await res.json();
+                    searchResults = data.items.map(item => ({
+                        full_name: item.full_name,
+                        name: item.name,
+                        owner: {
+                            login: item.owner.login,
+                            avatar_url: item.owner.avatar_url,
+                        },
+                    }));
+                    selectedIndex = -1;
+                    renderSearchResults();
+                } catch (err) {
+                    showToast(`Search failed: ${err.message}`, 'error');
+                    searchResults = [];
+                    renderSearchResults();
+                } finally {
+                    loading = false;
+                    hideSkeleton();
+                }
+            }
+
+            repoSearchInput.addEventListener('input', () => {
+                const query = repoSearchInput.value.trim();
+                clearTimeout(debounceTimer);
+                if (query.length === 0) {
+                    searchDropdown.classList.remove('open');
+                    clearSearchResults();
+                    return;
+                }
+                debounceTimer = setTimeout(() => {
+                    searchRepositories(query);
+                }, 300);
+            });
+
+            repoSearchInput.addEventListener('focus', () => {
+                if (searchResults.length > 0 || loading) {
+                    searchDropdown.classList.add('open');
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.search-wrapper')) {
+                    searchDropdown.classList.remove('open');
+                }
+            });
+
+            selectRepoBtn.addEventListener('click', () => {
+                if (selectedIndex >= 0 && selectedIndex < searchResults.length) {
+                    selectedRepo = searchResults[selectedIndex];
+                    renderSelectedRepo();
+                    searchDropdown.classList.remove('open');
+                    repoSearchInput.value = '';
+                    clearSearchResults();
+                }
+            });
+
+            clearSelectedRepoBtn.addEventListener('click', () => {
+                selectedRepo = null;
+                renderSelectedRepo();
+            });
+
+            patBadge.addEventListener('click', () => {
+                patCard.classList.toggle('hidden');
+                if (!patCard.classList.contains('hidden')) {
+                    patInput.value = getPAT();
+                    patInput.focus();
+                }
+            });
+
+            patSaveBtn.addEventListener('click', () => {
+                const token = patInput.value.trim();
+                if (!token) {
+                    showToast('Please enter a valid PAT.', 'error');
+                    return;
+                }
+                savePAT(token);
+                updatePATUI();
+                patCard.classList.add('hidden');
+                showToast('PAT saved successfully.', 'success');
+            });
+
+            patClearBtn.addEventListener('click', () => {
+                clearPAT();
+                updatePATUI();
+                patInput.value = '';
+                showToast('PAT cleared.', 'info');
+            });
+
+            fetchMilestonesBtn.addEventListener('click', async () => {
+                const pat = getPAT();
+                if (!pat) {
+                    showToast('Please set your PAT first.', 'error');
+                    patCard.classList.remove('hidden');
+                    return;
+                }
+                if (!selectedRepo) {
+                    showToast('Please select a repository first.', 'error');
+                    return;
+                }
+                const [owner, repo] = selectedRepo.full_name.split('/');
+                fetchMilestonesBtn.disabled = true;
+                fetchMilestonesBtn.innerHTML = '<span class="spinner" style="width:12px;height:12px;border-width:2px;border-color:rgba(0,0,0,0.15);border-top-color:#5f6672;"></span> Loading...';
+                try {
+                    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/milestones?state=open&per_page=50`, {
+                        headers: {
+                            'Authorization': `token ${pat}`,
+                            'Accept': 'application/vnd.github+json',
+                        },
+                    });
+                    if (!res.ok) {
+                        const errData = await res.json().catch(() => ({}));
+                        throw new Error(errData.message || `HTTP ${res.status}`);
+                    }
+                    const milestones = await res.json();
+                    milestoneDropdown.innerHTML = '<option value="">No milestone</option>';
+                    milestones.forEach(ms => {
+                        const opt = document.createElement('option');
+                        opt.value = ms.number;
+                        opt.textContent = ms.title;
+                        milestoneDropdown.appendChild(opt);
+                    });
+                    showToast(`Loaded ${milestones.length} milestone(s).`, 'success');
+                } catch (err) {
+                    showToast(`Failed to fetch milestones: ${err.message}`, 'error');
+                } finally {
+                    fetchMilestonesBtn.disabled = false;
+                    fetchMilestonesBtn.innerHTML = '<i data-lucide="refresh-cw"></i> Load Milestones';
+                    lucide.createIcons();
+                }
+            });
+
+            markdownTabs.querySelectorAll('.toggle-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    markdownTabs.querySelectorAll('.toggle-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    const mode = tab.dataset.tab;
+                    if (mode === 'preview') {
+                        const mdText = issueBody.value;
+                        let html = '';
+                        try {
+                            if (typeof marked !== 'undefined' && marked.parse) {
+                                html = marked.parse(mdText);
+                            } else {
+                                html = mdText.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
+                            }
+                        } catch (e) {
+                            html = mdText.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
+                        }
+                        markdownPreview.innerHTML = html;
+                        markdownPreview.classList.remove('hidden');
+                        issueBody.classList.add('hidden');
+                    } else {
+                        markdownPreview.classList.add('hidden');
+                        issueBody.classList.remove('hidden');
+                    }
+                });
+            });
+
+            createIssueBtn.addEventListener('click', async () => {
+                const pat = getPAT();
+                if (!pat) {
+                    showToast('Please set your PAT first.', 'error');
+                    patCard.classList.remove('hidden');
+                    return;
+                }
+                if (!selectedRepo) {
+                    showToast('Please select a repository first.', 'error');
+                    return;
+                }
+                const [owner, repo] = selectedRepo.full_name.split('/');
+                const title = issueTitle.value.trim();
+                if (!title) {
+                    showToast('Please enter an issue title.', 'error');
+                    issueTitle.focus();
+                    return;
+                }
+                const body = issueBody.value;
+                const labelsRaw = labelsInput.value.trim();
+                const labels = labelsRaw ? labelsRaw.split(',').map(l => l.trim()).filter(l => l) : [];
+                const assigneesRaw = assigneesInput.value.trim();
+                const assignees = assigneesRaw ? assigneesRaw.split(',').map(a => a.trim()).filter(a => a) : [];
+                const milestone = milestoneDropdown.value;
+                const payload = {
+                    title: title,
+                    body: body,
+                };
+                if (labels.length > 0) payload.labels = labels;
+                if (assignees.length > 0) payload.assignees = assignees;
+                if (milestone) payload.milestone = parseInt(milestone);
+
+                createIssueBtn.disabled = true;
+                createIssueBtn.innerHTML = '<span class="spinner"></span> Creating issue...';
+
+                try {
+                    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/issues`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `token ${pat}`,
+                            'Accept': 'application/vnd.github+json',
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(payload),
+                    });
+                    const data = await res.json();
+                    if (!res.ok) {
+                        throw new Error(data.message || `HTTP ${res.status}`);
+                    }
+                    showToast(`Issue #${data.number} created: "${data.title}"`, 'success', 6000);
+                    if (data.html_url) {
+                        showToast(`View issue: <a href="${data.html_url}" target="_blank" style="color:inherit;font-weight:600;">${data.html_url}</a>`, 'success', 8000);
+                    }
+                    issueTitle.value = '';
+                    issueBody.value = '';
+                    labelsInput.value = '';
+                    assigneesInput.value = '';
+                    milestoneDropdown.value = '';
+                    markdownPreview.classList.add('hidden');
+                    issueBody.classList.remove('hidden');
+                    markdownTabs.querySelectorAll('.toggle-tab').forEach(t => t.classList.remove('active'));
+                    const writeTab = markdownTabs.querySelector('[data-tab="write"]');
+                    if (writeTab) writeTab.classList.add('active');
+                } catch (err) {
+                    showToast(`Failed to create issue: ${err.message}`, 'error', 6000);
+                } finally {
+                    createIssueBtn.disabled = false;
+                    createIssueBtn.innerHTML = '<i data-lucide="plus-circle"></i> Create Issue';
+                    lucide.createIcons();
+                }
+            });
+
+            function init() {
+                updatePATUI();
+                const pat = getPAT();
+                if (!pat) {
+                    patCard.classList.remove('hidden');
+                }
+                lucide.createIcons();
+            }
+
+            init();
+        })();
+    </script>
+</body>
+</html>
