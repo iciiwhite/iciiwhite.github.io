@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Icii Digital | Premium App Development</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #03050a;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .glass-nav {
+            background: rgba(3, 5, 10, 0.5);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+        }
+
+        .glass-hover:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transform: translateY(-5px);
+        }
+
+        .liquid-bg {
+            filter: url(#liquid-glass) blur(30px);
+            opacity: 0.6;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        .animate-blob {
+            animation: blob 15s infinite alternate ease-in-out;
+        }
+        .animation-delay-2000 { animation-delay: 2s; }
+        .animation-delay-4000 { animation-delay: 4s; }
+    </style>
+</head>
+<body class="antialiased selection:bg-white selection:text-black">
+
+    <svg class="fixed w-0 h-0 pointer-events-none">
+        <filter id="liquid-glass">
+            <feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="3" result="noise">
+                <animate attributeName="baseFrequency" values="0.01;0.015;0.01" dur="20s" repeatCount="indefinite" />
+            </feTurbulence>
+            <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 25 -10" in="noise" result="coloredNoise" />
+            <feDisplacementMap in="SourceGraphic" in2="coloredNoise" scale="40" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+    </svg>
+
+    <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none flex justify-center items-center">
+        <div class="liquid-bg absolute inset-0 w-full h-full flex justify-center items-center">
+            <div class="absolute w-[60vw] h-[60vw] bg-indigo-900 rounded-full mix-blend-screen animate-blob top-10 left-10"></div>
+            <div class="absolute w-[50vw] h-[50vw] bg-slate-800 rounded-full mix-blend-screen animate-blob animation-delay-2000 top-40 right-20"></div>
+            <div class="absolute w-[70vw] h-[70vw] bg-zinc-900 rounded-full mix-blend-screen animate-blob animation-delay-4000 bottom-10 left-1/4"></div>
+        </div>
+    </div>
+
+    <nav class="fixed top-0 w-full z-50 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="flex items-center gap-2 text-white group">
+                <i data-lucide="code-2" class="w-8 h-8 group-hover:text-gray-300 transition-colors"></i>
+                <span class="text-xl font-bold tracking-widest uppercase">Icii Digital</span>
+            </a>
+            
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#services" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">Services</a>
+                <a href="#work" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">Work</a>
+                <a href="#clients" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">Clients</a>
+                <a href="#contact" class="px-5 py-2.5 rounded-full bg-white text-black text-sm font-semibold hover:bg-gray-200 transition-all">Contact Us</a>
+            </div>
+
+            <button id="mobile-menu-btn" class="md:hidden text-white focus:outline-none">
+                <i data-lucide="menu" class="w-7 h-7" id="menu-icon"></i>
+                <i data-lucide="x" class="w-7 h-7 hidden" id="close-icon"></i>
+            </button>
+        </div>
+        
+        <div id="mobile-menu" class="hidden md:hidden glass border-t border-white/10 absolute w-full left-0 top-full flex-col p-6 gap-6">
+            <a href="#services" class="text-lg font-medium text-gray-300 hover:text-white">Services</a>
+            <a href="#work" class="text-lg font-medium text-gray-300 hover:text-white">Work</a>
+            <a href="#clients" class="text-lg font-medium text-gray-300 hover:text-white">Clients</a>
+            <a href="#contact" class="px-6 py-3 rounded-full bg-white text-black text-center font-semibold w-full mt-2">Contact Us</a>
+        </div>
+    </nav>
+
+    <section class="relative min-h-screen flex items-center justify-center pt-20">
+        <video 
+            autoplay 
+            loop 
+            muted 
+            playsinline 
+            class="absolute top-0 left-0 w-full h-full object-cover z-[-2]">
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-abstract-video-background-1240-large.mp4" type="video/mp4">
+        </video>
+
+        <div class="relative z-10 max-w-5xl mx-auto px-6 text-center">
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6 leading-tight">
+                Crafting Digital <br/> <span class="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">Masterpieces</span>
+            </h1>
+            <p class="text-lg md:text-2xl text-gray-300 mb-12 max-w-2xl mx-auto font-light">
+                We engineer premium web, mobile, and desktop applications for brands that demand perfection.
+            </p>
+            <a href="#contact" class="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-white text-black font-semibold text-lg hover:bg-gray-200 transition-all group">
+                Start a Project
+                <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+            </a>
+        </div>
+    </section>
+
+    <section id="services" class="relative py-32 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="mb-16 md:mb-24">
+                <h2 class="text-3xl md:text-5xl font-bold mb-4">Our Expertise</h2>
+                <p class="text-gray-400 text-lg max-w-xl">Bespoke software solutions engineered with cutting-edge technology and uncompromising quality.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="glass glass-hover rounded-3xl p-8 transition-all duration-300 cursor-pointer">
+                    <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center mb-8 border border-white/5">
+                        <i data-lucide="globe" class="w-7 h-7 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Web Apps</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">High-performance, scalable web platforms built for the modern enterprise.</p>
+                </div>
+
+                <div class="glass glass-hover rounded-3xl p-8 transition-all duration-300 cursor-pointer">
+                    <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center mb-8 border border-white/5">
+                        <i data-lucide="smartphone" class="w-7 h-7 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Mobile Apps</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Native and cross-platform mobile experiences that captivate users.</p>
+                </div>
+
+                <div class="glass glass-hover rounded-3xl p-8 transition-all duration-300 cursor-pointer">
+                    <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center mb-8 border border-white/5">
+                        <i data-lucide="monitor" class="w-7 h-7 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Desktop Apps</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Robust desktop software designed for power, speed, and reliability.</p>
+                </div>
+
+                <div class="glass glass-hover rounded-3xl p-8 transition-all duration-300 cursor-pointer">
+                    <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center mb-8 border border-white/5">
+                        <i data-lucide="cloud" class="w-7 h-7 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Cloud Infrastructure</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Secure, distributed cloud architectures that scale with your business.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="work" class="py-32 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 mb-16 md:mb-24 flex justify-between items-end">
+            <div>
+                <h2 class="text-3xl md:text-5xl font-bold mb-4">Selected Work</h2>
+                <p class="text-gray-400 text-lg max-w-xl">A glimpse into the digital realities we've brought to life.</p>
+            </div>
+            <div class="hidden md:flex gap-4">
+                <div class="w-12 h-12 rounded-full glass flex items-center justify-center border border-white/10">
+                    <i data-lucide="arrow-left" class="w-5 h-5 text-gray-400"></i>
+                </div>
+                <div class="w-12 h-12 rounded-full glass flex items-center justify-center border border-white/10">
+                    <i data-lucide="arrow-right" class="w-5 h-5 text-white"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-6 px-6 pb-12 w-full">
+            <div class="snap-center shrink-0 w-[85vw] md:w-[600px]">
+                <div class="glass rounded-3xl aspect-video mb-6 flex items-center justify-center border border-white/10 overflow-hidden relative group cursor-pointer">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-gray-900 to-gray-800 opacity-50 group-hover:opacity-30 transition-opacity"></div>
+                    <i data-lucide="folder-kanban" class="w-16 h-16 text-white/50 group-hover:scale-110 transition-transform duration-500 z-10"></i>
+                </div>
+                <h3 class="text-2xl font-semibold mb-2">Nexus FinTech Platform</h3>
+                <p class="text-gray-400">Web App & Cloud Architecture</p>
+            </div>
+
+            <div class="snap-center shrink-0 w-[85vw] md:w-[600px]">
+                <div class="glass rounded-3xl aspect-video mb-6 flex items-center justify-center border border-white/10 overflow-hidden relative group cursor-pointer">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-zinc-900 to-stone-800 opacity-50 group-hover:opacity-30 transition-opacity"></div>
+                    <i data-lucide="layout-dashboard" class="w-16 h-16 text-white/50 group-hover:scale-110 transition-transform duration-500 z-10"></i>
+                </div>
+                <h3 class="text-2xl font-semibold mb-2">Aura Health iOS</h3>
+                <p class="text-gray-400">Native Mobile Application</p>
+            </div>
+
+            <div class="snap-center shrink-0 w-[85vw] md:w-[600px]">
+                <div class="glass rounded-3xl aspect-video mb-6 flex items-center justify-center border border-white/10 overflow-hidden relative group cursor-pointer">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-slate-900 to-gray-900 opacity-50 group-hover:opacity-30 transition-opacity"></div>
+                    <i data-lucide="layers" class="w-16 h-16 text-white/50 group-hover:scale-110 transition-transform duration-500 z-10"></i>
+                </div>
+                <h3 class="text-2xl font-semibold mb-2">Vanguard CRM</h3>
+                <p class="text-gray-400">Desktop Electron App</p>
+            </div>
+            
+            <div class="snap-center shrink-0 w-[10vw] md:w-[100px]"></div>
+        </div>
+    </section>
+
+    <section id="clients" class="py-24 px-6 border-y border-white/5 glass relative z-10">
+        <div class="max-w-7xl mx-auto text-center">
+            <p class="text-sm font-semibold tracking-widest uppercase text-gray-500 mb-12">Trusted by Industry Leaders</p>
+            <div class="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-60">
+                <i data-lucide="building-2" class="w-10 h-10 md:w-12 md:h-12 hover:opacity-100 transition-opacity cursor-pointer text-white"></i>
+                <i data-lucide="factory" class="w-10 h-10 md:w-12 md:h-12 hover:opacity-100 transition-opacity cursor-pointer text-white"></i>
+                <i data-lucide="landmark" class="w-10 h-10 md:w-12 md:h-12 hover:opacity-100 transition-opacity cursor-pointer text-white"></i>
+                <i data-lucide="gem" class="w-10 h-10 md:w-12 md:h-12 hover:opacity-100 transition-opacity cursor-pointer text-white"></i>
+                <i data-lucide="store" class="w-10 h-10 md:w-12 md:h-12 hover:opacity-100 transition-opacity cursor-pointer text-white"></i>
+            </div>
+        </div>
+    </section>
+
+    <footer class="pt-32 pb-12 px-6 relative z-10">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-24">
+                <div class="col-span-1 md:col-span-2">
+                    <a href="#" class="flex items-center gap-2 text-white mb-6">
+                        <i data-lucide="code-2" class="w-8 h-8"></i>
+                        <span class="text-xl font-bold tracking-widest uppercase">Icii Digital</span>
+                    </a>
+                    <p class="text-gray-400 max-w-sm mb-8 leading-relaxed">
+                        Shaping the future of digital interactions through uncompromising design and elite engineering.
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-white/10 transition-colors">
+                            <i data-lucide="github" class="w-4 h-4 text-white"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-white/10 transition-colors">
+                            <i data-lucide="linkedin" class="w-4 h-4 text-white"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-white/10 transition-colors">
+                            <i data-lucide="twitter" class="w-4 h-4 text-white"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-white/10 transition-colors">
+                            <i data-lucide="dribbble" class="w-4 h-4 text-white"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="font-semibold mb-6">Company</h4>
+                    <ul class="space-y-4 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Careers</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">News</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-semibold mb-6">Legal</h4>
+                    <ul class="space-y-4 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/10 gap-6">
+                <p class="text-gray-500 text-sm">© 2026 Icii Digital. All rights reserved.</p>
+                <div class="flex items-center gap-2 text-gray-400 cursor-pointer hover:text-white transition-colors glass px-4 py-2 rounded-full border border-white/5">
+                    <i data-lucide="languages" class="w-4 h-4"></i>
+                    <span class="text-sm font-medium">English</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+        const closeIcon = document.getElementById('close-icon');
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            mobileMenu.classList.toggle('flex');
+            menuIcon.classList.toggle('hidden');
+            closeIcon.classList.toggle('hidden');
+        });
+
+        const mobileLinks = mobileMenu.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                mobileMenu.classList.remove('flex');
+                menuIcon.classList.remove('hidden');
+                closeIcon.classList.add('hidden');
+            });
+        });
+    </script>
+</body>
+</html>
