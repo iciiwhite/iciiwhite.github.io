@@ -5,14 +5,27 @@
         <title>Icii • Code outlives its creators • Icii writes what endures</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, usee-scalable=no">
         <script src="src/tailwindcss.js"></script>
+        <style>
+            @font-face {
+  font-family: 'MonaSans';
+  src: url('res/fonts/Mona_Sans.woff') format('woff');
+}
+           @font-face {
+  font-family: 'Qurova';
+  src: url('res/fonts/Qurova.otf') format('opentype');
+}           @font-face {
+  font-family: 'MonaSans_Regular';
+  src: url('res/fonts/MonaSans_Regular.woff') format('woff');
+}
+        </style>
     </head>
-    <body>
+    <body style="font-family:'MonaSans_Regular', Sans;">
         <nav class="bg-white shadow-sm relative z-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-16">
                     <div class="flex items-center space-x-2">
                         <img class="w-8 h-8 bg-none" src="res/drawables/logo.png"/>
-                        <span class="text-xl font-bold text-black">Digital</span>
+                        <span class="text-xl font-normal text-black" style="font-family:'Qurova', Sans;">Digital</span>
                     </div>
 
                     <div class="hidden md:flex items-center space-x-1">
@@ -215,7 +228,7 @@
                     <div class="flex flex-col md:flex-row items-center gap-12 md:gap-16">
                         
                         <div class="md:w-1/2 text-left">
-                            <h1 class="text-4xl sm:text-5xl md:text-6xl text-white leading-tight">
+                            <h1 class="text-4xl sm:text-5xl md:text-6xl text-white leading-tight" style="font-family:'MonaSans',sans;">
                                 Transforming Complexity into<br>
                                 <span class="font-bold">Sustainable Advantage</span>
                             </h1>
