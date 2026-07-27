@@ -1,0 +1,20 @@
+Options -MultiViews
+
+<If "-f '%{DOCUMENT_ROOT}/404.html'">
+    ErrorDocument 404 /404.html
+</If>
+<Else>
+    ErrorDocument 404 https://blackjim.infy.click/404.php
+</Else>
+
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.+)$ $1.html [L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.+)$ $1.php [L]
