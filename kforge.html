@@ -1,0 +1,1718 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kotlin Forge</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="https://unpkg.com/ace-builds@1.36.2/src-noconflict/ace.js"></script>
+<script src="https://unpkg.com/ace-builds@1.36.2/src-noconflict/ext-language_tools.js"></script>
+<script src="https://unpkg.com/ace-builds@1.36.2/src-noconflict/ext-searchbox.js"></script>
+<script src="https://unpkg.com/ace-builds@1.36.2/src-noconflict/theme-textmate.js"></script>
+<script src="https://unpkg.com/ace-builds@1.36.2/src-noconflict/theme-tomorrow_night.js"></script>
+<script src="https://unpkg.com/ace-builds@1.36.2/src-noconflict/theme-dawn.js"></script>
+<script src="https://unpkg.com/ace-builds@1.36.2/src-noconflict/mode-kotlin.js"></script>
+<script src="https://unpkg.com/ace-builds@1.36.2/src-noconflict/mode-java.js"></script>
+<script src="https://unpkg.com/ace-builds@1.36.2/src-noconflict/mode-xml.js"></script>
+<script src="https://unpkg.com/ace-builds@1.36.2/src-noconflict/mode-groovy.js"></script>
+<script src="https://unpkg.com/ace-builds@1.36.2/src-noconflict/mode-javascript.js"></script>
+<script src="https://unpkg.com/ace-builds@1.36.2/src-noconflict/mode-json.js"></script>
+<script src="https://unpkg.com/ace-builds@1.36.2/src-noconflict/mode-yaml.js"></script>
+<script src="https://unpkg.com/ace-builds@1.36.2/src-noconflict/mode-markdown.js"></script>
+<script src="https://unpkg.com/ace-builds@1.36.2/src-noconflict/mode-html.js"></script>
+<script src="https://unpkg.com/ace-builds@1.36.2/src-noconflict/mode-css.js"></script>
+<script src="https://unpkg.com/ace-builds@1.36.2/src-noconflict/mode-properties.js"></script>
+<script src="https://unpkg.com/ace-builds@1.36.2/src-noconflict/mode-sh.js"></script>
+<style>
+:root {
+  --bg: #f5f6fb;
+  --surface: #ffffff;
+  --surface2: #f1f3f9;
+  --border: #e3e6ef;
+  --text: #0f172a;
+  --muted: #6b7280;
+  --accent: #4f46e5;
+  --accent-soft: #eceefe;
+  --accent-text: #ffffff;
+  --danger: #dc2626;
+  --success: #16a34a;
+  --warning: #d97706;
+  --shadow: 0 1px 2px rgba(16,24,40,.06), 0 2px 6px rgba(16,24,40,.08);
+  color-scheme: light;
+}
+[data-theme="dark"] {
+  --bg: #0a0f1e;
+  --surface: #111a2e;
+  --surface2: #172138;
+  --border: #23304d;
+  --text: #e6ebf5;
+  --muted: #90a0bd;
+  --accent: #818cf8;
+  --accent-soft: #1c2542;
+  --accent-text: #0a0f1e;
+  --danger: #f87171;
+  --success: #4ade80;
+  --warning: #fbbf24;
+  --shadow: 0 1px 2px rgba(0,0,0,.5), 0 2px 8px rgba(0,0,0,.35);
+  color-scheme: dark;
+}
+[data-theme="eyecare"] {
+  --bg: #f1e7d3;
+  --surface: #fbf5e6;
+  --surface2: #f3e9d4;
+  --border: #ded0af;
+  --text: #463a25;
+  --muted: #857450;
+  --accent: #a2662f;
+  --accent-soft: #eee0c3;
+  --accent-text: #fffaf0;
+  --danger: #b3421f;
+  --success: #4f7a34;
+  --warning: #a87211;
+  --shadow: 0 1px 2px rgba(90,70,40,.14), 0 2px 6px rgba(90,70,40,.10);
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+button { cursor: pointer; font-family: inherit; border: none; background: none; color: inherit; }
+button:disabled { cursor: not-allowed; }
+input, textarea { font-family: inherit; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; border: 2px solid transparent; background-clip: content-box; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted); background-clip: content-box; }
+.kf-input {
+  width: 100%;
+  height: 42px;
+  border-radius: 10px;
+  padding: 0 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  outline: none;
+  font-size: 13px;
+  transition: border-color .15s;
+}
+.kf-input:focus { border-color: var(--accent); }
+.kf-input::placeholder { color: var(--muted); }
+.kf-switch {
+  width: 44px; height: 24px; border-radius: 999px;
+  background: var(--border); position: relative;
+  transition: background .2s; flex-shrink: 0;
+}
+.kf-switch[data-on="true"] { background: var(--accent); }
+.kf-switch::after {
+  content: ''; position: absolute; top: 3px; left: 3px;
+  width: 18px; height: 18px; border-radius: 999px;
+  background: #ffffff; transition: transform .2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,.25);
+}
+.kf-switch[data-on="true"]::after { transform: translateX(20px); }
+.kf-icon-btn {
+  width: 32px; height: 32px; border-radius: 9px;
+  display: grid; place-items: center;
+  color: var(--muted);
+  transition: background .15s, color .15s;
+}
+.kf-icon-btn:hover { background: var(--surface2); color: var(--text); }
+.kf-spin { animation: kfspin 1s linear infinite; }
+@keyframes kfspin { to { transform: rotate(360deg); } }
+#editorHost { position: relative; }
+.ace_editor { background: transparent !important; }
+</style>
+</head>
+<body>
+
+<div id="authScreen" class="min-h-screen w-full flex items-center justify-center p-6">
+  <div class="fixed top-5 right-5 js-theme-switch"></div>
+  <div class="w-full max-w-md rounded-2xl p-8" style="background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow);">
+    <div class="flex items-center gap-3 mb-8">
+      <div class="w-12 h-12 rounded-2xl grid place-items-center shrink-0" style="background: var(--accent); color: var(--accent-text);">
+        <i data-lucide="flame" class="w-6 h-6"></i>
+      </div>
+      <div class="min-w-0">
+        <h1 class="text-2xl font-bold tracking-tight leading-none">Kotlin Forge</h1>
+        <p class="text-xs mt-1.5" style="color: var(--muted);">Compile Android apps from the browser</p>
+      </div>
+    </div>
+
+    <label class="block text-xs font-semibold mb-2 tracking-wide uppercase" style="color: var(--muted);">Access Token</label>
+    <div class="flex items-center gap-2 rounded-xl px-3 h-11" style="background: var(--surface2); border: 1px solid var(--border);">
+      <i data-lucide="key-round" class="w-4 h-4 shrink-0" style="color: var(--muted);"></i>
+      <input id="tokenInput" type="password" spellcheck="false" autocomplete="off" placeholder="ghp_xxxxxxxxxxxxxxxx"
+        class="flex-1 min-w-0 bg-transparent outline-none text-sm" style="color: var(--text);">
+      <button id="toggleToken" type="button" class="shrink-0 w-7 h-7 grid place-items-center rounded-md" style="color: var(--muted);">
+        <i data-lucide="eye" class="w-4 h-4"></i>
+      </button>
+    </div>
+
+    <div id="authError" class="hidden mt-3 text-xs rounded-lg px-3 py-2.5 leading-relaxed" style="background: var(--surface2); border: 1px solid var(--danger); color: var(--danger);"></div>
+
+    <button id="connectBtn" class="w-full h-11 rounded-xl mt-5 font-semibold text-sm flex items-center justify-center gap-2 transition-opacity" style="background: var(--accent); color: var(--accent-text);">
+      <i data-lucide="plug-zap" class="w-4 h-4"></i>
+      <span id="connectLabel">Connect</span>
+    </button>
+
+    <div class="mt-6 pt-5 space-y-3" style="border-top: 1px solid var(--border);">
+      <div class="flex items-start gap-2.5">
+        <i data-lucide="shield-check" class="w-3.5 h-3.5 mt-0.5 shrink-0" style="color: var(--success);"></i>
+        <p class="text-[11px] leading-relaxed" style="color: var(--muted);">The token is stored only in this browser's local storage and is sent only to api.github.com.</p>
+      </div>
+      <div class="flex items-start gap-2.5">
+        <i data-lucide="key-square" class="w-3.5 h-3.5 mt-0.5 shrink-0" style="color: var(--muted);"></i>
+        <p class="text-[11px] leading-relaxed" style="color: var(--muted);">Required scopes: repo and workflow.</p>
+      </div>
+      <button id="createTokenBtn" class="w-full h-9 rounded-lg text-[11px] font-semibold flex items-center justify-center gap-2" style="background: var(--surface2); color: var(--text);">
+        <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+        Create a token on GitHub
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="appScreen" class="hidden h-screen flex-col overflow-hidden">
+  <header class="h-14 shrink-0 flex items-center gap-3 px-4" style="border-bottom: 1px solid var(--border); background: var(--surface);">
+    <div class="flex items-center gap-2.5 shrink-0">
+      <div class="w-8 h-8 rounded-lg grid place-items-center" style="background: var(--accent); color: var(--accent-text);">
+        <i data-lucide="flame" class="w-4 h-4"></i>
+      </div>
+      <span class="font-bold text-sm tracking-tight">Kotlin Forge</span>
+    </div>
+    <div class="flex-1 min-w-0"></div>
+    <div class="js-theme-switch shrink-0"></div>
+    <div class="flex items-center gap-2 rounded-xl pl-1 pr-3 h-9 shrink-0" style="background: var(--surface2);">
+      <img id="userAvatar" class="w-7 h-7 rounded-lg object-cover" alt="" src="">
+      <span id="userName" class="text-[11px] font-semibold max-w-[120px] truncate"></span>
+    </div>
+    <button data-action="sign-out" class="kf-icon-btn shrink-0" title="Disconnect">
+      <i data-lucide="log-out" class="w-4 h-4"></i>
+    </button>
+  </header>
+
+  <div class="flex flex-1 min-h-0">
+    <aside class="w-[300px] shrink-0 flex flex-col min-h-0" style="border-right: 1px solid var(--border); background: var(--surface);">
+      <div class="p-3 space-y-2.5 shrink-0">
+        <button data-action="new-project" class="w-full h-10 rounded-xl text-xs font-bold flex items-center justify-center gap-2" style="background: var(--accent); color: var(--accent-text);">
+          <i data-lucide="plus" class="w-4 h-4"></i>
+          New App Project
+        </button>
+        <div class="flex items-center gap-2 rounded-xl px-3 h-10" style="background: var(--surface2); border: 1px solid var(--border);">
+          <i data-lucide="search" class="w-3.5 h-3.5 shrink-0" style="color: var(--muted);"></i>
+          <input id="projectSearch" placeholder="Search app projects" spellcheck="false"
+            class="flex-1 min-w-0 bg-transparent outline-none text-xs" style="color: var(--text);">
+        </div>
+      </div>
+      <div class="px-3 pb-2 flex items-center justify-between shrink-0">
+        <span class="text-[10px] font-bold uppercase tracking-widest" style="color: var(--muted);">App Projects</span>
+        <button data-action="refresh-projects" class="kf-icon-btn" style="width: 26px; height: 26px;" title="Refresh">
+          <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+      <div id="projectList" class="flex-1 min-h-0 overflow-y-auto px-2 pb-3 space-y-1"></div>
+    </aside>
+
+    <main id="mainArea" class="flex-1 min-w-0 flex flex-col min-h-0" style="background: var(--bg);"></main>
+  </div>
+</div>
+
+<div id="modalRoot"></div>
+<div id="toastRoot" class="fixed bottom-5 right-5 z-[60] flex flex-col gap-2 items-end pointer-events-none"></div>
+
+<script>
+const TOKEN_KEY = 'kotlinforge.token';
+const THEME_KEY = 'kotlinforge.theme';
+
+const state = {
+  token: '',
+  user: null,
+  projects: [],
+  project: null,
+  branch: 'main',
+  tree: [],
+  expanded: new Set(),
+  openPath: null,
+  openSha: null,
+  dirty: false,
+  suppressChange: false,
+  tab: 'files',
+  runs: [],
+  releases: [],
+  artifacts: {},
+  expandedRun: null,
+  privateToggle: false,
+  theme: 'light'
+};
+
+let editor = null;
+
+const ACE_THEMES = {
+  light: 'ace/theme/textmate',
+  dark: 'ace/theme/tomorrow_night',
+  eyecare: 'ace/theme/dawn'
+};
+
+const MODE_MAP = {
+  kt: 'ace/mode/kotlin',
+  kts: 'ace/mode/kotlin',
+  java: 'ace/mode/java',
+  xml: 'ace/mode/xml',
+  gradle: 'ace/mode/groovy',
+  groovy: 'ace/mode/groovy',
+  js: 'ace/mode/javascript',
+  json: 'ace/mode/json',
+  yml: 'ace/mode/yaml',
+  yaml: 'ace/mode/yaml',
+  md: 'ace/mode/markdown',
+  html: 'ace/mode/html',
+  htm: 'ace/mode/html',
+  css: 'ace/mode/css',
+  properties: 'ace/mode/properties',
+  pro: 'ace/mode/properties',
+  sh: 'ace/mode/sh',
+  txt: 'ace/mode/text'
+};
+
+const ICON_MAP = {
+  kt: 'file-code',
+  kts: 'file-cog',
+  java: 'file-code',
+  xml: 'file-code',
+  gradle: 'file-cog',
+  json: 'file-json',
+  yml: 'file-cog',
+  yaml: 'file-cog',
+  md: 'file-text',
+  properties: 'file-text',
+  pro: 'file-text',
+  sh: 'file-terminal'
+};
+
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+const extOf = (p) => {
+  if (!p) return '';
+  const base = p.split('/').pop();
+  const i = base.lastIndexOf('.');
+  return i === -1 ? '' : base.slice(i + 1).toLowerCase();
+};
+
+const modeFor = (p) => MODE_MAP[extOf(p)] || 'ace/mode/text';
+const iconFor = (p) => ICON_MAP[extOf(p)] || 'file';
+
+function b64ToUtf8(b64) {
+  const clean = String(b64 || '').replace(/\s/g, '');
+  const bin = atob(clean);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return new TextDecoder('utf-8').decode(bytes);
+}
+
+function utf8ToB64(str) {
+  const bytes = new TextEncoder().encode(str);
+  let bin = '';
+  const chunk = 8192;
+  for (let i = 0; i < bytes.length; i += chunk) {
+    bin += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
+  }
+  return btoa(bin);
+}
+
+function slugPackage(name) {
+  let base = String(name || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  if (!base || !/^[a-z]/.test(base)) base = 'app' + base;
+  return 'com.example.' + base;
+}
+
+function repoSlug(name) {
+  let s = String(name || '').trim().replace(/\s+/g, '-').replace(/[^A-Za-z0-9._-]/g, '');
+  s = s.replace(/^[.-]+/, '').replace(/[.-]+$/, '');
+  return s || 'android-app';
+}
+
+function timeAgo(iso) {
+  if (!iso) return '';
+  const d = new Date(iso).getTime();
+  const diff = Math.max(0, Date.now() - d);
+  const m = Math.floor(diff / 60000);
+  if (m < 1) return 'just now';
+  if (m < 60) return m + 'm ago';
+  const h = Math.floor(m / 60);
+  if (h < 24) return h + 'h ago';
+  const days = Math.floor(h / 24);
+  if (days < 30) return days + 'd ago';
+  const mo = Math.floor(days / 30);
+  if (mo < 12) return mo + 'mo ago';
+  return Math.floor(mo / 12) + 'y ago';
+}
+
+function fmtDate(iso) {
+  if (!iso) return '';
+  try {
+    return new Date(iso).toLocaleString(undefined, { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  } catch (e) {
+    return '';
+  }
+}
+
+function refreshIcons() {
+  try { lucide.createIcons(); } catch (e) {}
+}
+
+function toast(message, kind) {
+  const root = document.getElementById('toastRoot');
+  const color = kind === 'error' ? 'var(--danger)' : kind === 'success' ? 'var(--success)' : 'var(--accent)';
+  const id = 'toast-' + Math.random().toString(36).slice(2);
+  const node = document.createElement('div');
+  node.id = id;
+  node.className = 'rounded-xl px-4 py-3 text-xs font-medium flex items-start gap-2.5 pointer-events-auto';
+  node.style.cssText = 'background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow); max-width: 380px;';
+  node.innerHTML = '<span style="width:6px;height:6px;border-radius:999px;flex-shrink:0;margin-top:5px;background:' + color + '"></span><span style="flex:1;line-height:1.5">' + esc(message) + '</span>';
+  root.appendChild(node);
+  setTimeout(() => { const el = document.getElementById(id); if (el) el.remove(); }, 4200);
+}
+
+async function api(path, method, body) {
+  const headers = {
+    'Authorization': 'Bearer ' + state.token,
+    'Accept': 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28'
+  };
+  const opts = { method: method || 'GET', headers };
+  if (body !== undefined && body !== null) {
+    headers['Content-Type'] = 'application/json';
+    opts.body = JSON.stringify(body);
+  }
+  const res = await fetch('https://api.github.com' + path, opts);
+  if (!res.ok) {
+    let msg = res.status + ' ' + res.statusText;
+    try {
+      const data = await res.json();
+      if (data && data.message) msg = data.message;
+      if (data && data.errors && data.errors.length) {
+        const extra = data.errors.map(e => e.message || e.code || '').filter(Boolean).join(', ');
+        if (extra) msg += ' (' + extra + ')';
+      }
+    } catch (e) {}
+    const err = new Error(msg);
+    err.status = res.status;
+    throw err;
+  }
+  if (res.status === 204) return null;
+  const text = await res.text();
+  if (!text) return null;
+  try { return JSON.parse(text); } catch (e) { return null; }
+}
+
+function projectRef() {
+  if (!state.project) return { owner: '', name: '' };
+  return { owner: state.project.owner.login, name: state.project.name };
+}
+
+function setTheme(theme, silent) {
+  state.theme = theme;
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem(THEME_KEY, theme);
+  if (editor) {
+    editor.setTheme(ACE_THEMES[theme] || ACE_THEMES.light);
+  }
+  document.querySelectorAll('.js-theme-switch').forEach(renderThemeSwitchInto);
+  if (!silent) refreshIcons();
+}
+
+function renderThemeSwitchInto(host) {
+  const options = [
+    { id: 'light', icon: 'sun', label: 'Light' },
+    { id: 'dark', icon: 'moon', label: 'Dark' },
+    { id: 'eyecare', icon: 'eye', label: 'Eye care' }
+  ];
+  let html = '<div class="flex items-center gap-0.5 p-1 rounded-xl" style="background: var(--surface2); border: 1px solid var(--border);">';
+  options.forEach(o => {
+    const active = state.theme === o.id;
+    html += '<button data-action="set-theme" data-theme="' + o.id + '" title="' + o.label + '" class="grid place-items-center rounded-lg transition-colors" style="width:28px;height:28px;background:' + (active ? 'var(--surface)' : 'transparent') + ';color:' + (active ? 'var(--accent)' : 'var(--muted)') + ';box-shadow:' + (active ? 'var(--shadow)' : 'none') + ';">';
+    html += '<i data-lucide="' + o.icon + '" style="width:14px;height:14px"></i>';
+    html += '</button>';
+  });
+  html += '</div>';
+  host.innerHTML = html;
+}
+
+function showAuth() {
+  document.getElementById('authScreen').classList.remove('hidden');
+  document.getElementById('appScreen').classList.add('hidden');
+  document.getElementById('appScreen').classList.remove('flex');
+  document.getElementById('tokenInput').value = state.token || '';
+  refreshIcons();
+}
+
+function showApp() {
+  document.getElementById('authScreen').classList.add('hidden');
+  document.getElementById('appScreen').classList.remove('hidden');
+  document.getElementById('appScreen').classList.add('flex');
+  document.getElementById('userName').textContent = state.user ? state.user.login : '';
+  const avatar = document.getElementById('userAvatar');
+  if (state.user && state.user.avatar_url) {
+    avatar.src = state.user.avatar_url;
+    avatar.style.display = '';
+  } else {
+    avatar.style.display = 'none';
+  }
+  renderThemeSwitchInto(document.querySelector('#appScreen .js-theme-switch'));
+  refreshIcons();
+}
+
+function setAuthError(message) {
+  const box = document.getElementById('authError');
+  if (!message) {
+    box.classList.add('hidden');
+    box.textContent = '';
+    return;
+  }
+  box.textContent = message;
+  box.classList.remove('hidden');
+}
+
+async function connect() {
+  const input = document.getElementById('tokenInput');
+  const token = input.value.trim();
+  if (!token) {
+    setAuthError('Enter a personal access token to continue.');
+    return;
+  }
+  const btn = document.getElementById('connectBtn');
+  const label = document.getElementById('connectLabel');
+  btn.disabled = true;
+  label.textContent = 'Connecting';
+  setAuthError('');
+  state.token = token;
+  try {
+    const user = await api('/user');
+    state.user = user;
+    localStorage.setItem(TOKEN_KEY, token);
+    showApp();
+    await loadProjects();
+  } catch (e) {
+    state.token = '';
+    localStorage.removeItem(TOKEN_KEY);
+    setAuthError('Could not connect: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    label.textContent = 'Connect';
+  }
+}
+
+function signOut() {
+  state.token = '';
+  state.user = null;
+  state.projects = [];
+  state.project = null;
+  localStorage.removeItem(TOKEN_KEY);
+  if (editor) { editor.destroy(); editor = null; }
+  document.getElementById('mainArea').innerHTML = '';
+  document.getElementById('projectList').innerHTML = '';
+  showAuth();
+  toast('Disconnected. Your token was removed from this browser.', 'success');
+}
+
+async function loadProjects() {
+  const host = document.getElementById('projectList');
+  host.innerHTML = '<div class="flex items-center justify-center py-8"><i data-lucide="loader-2" class="kf-spin" style="width:18px;height:18px;color:var(--muted)"></i></div>';
+  refreshIcons();
+  try {
+    const repos = await api('/user/repos?per_page=100&sort=updated&affiliation=owner,collaborator');
+    state.projects = (repos || []).filter(r => !r.archived);
+    renderProjects();
+  } catch (e) {
+    host.innerHTML = '<div class="text-center py-8 px-4 text-[11px] leading-relaxed" style="color:var(--danger)">' + esc(e.message) + '</div>';
+  }
+}
+
+function renderProjects() {
+  const host = document.getElementById('projectList');
+  const q = (document.getElementById('projectSearch').value || '').toLowerCase();
+  const list = state.projects.filter(p =>
+    p.name.toLowerCase().includes(q) || String(p.description || '').toLowerCase().includes(q)
+  );
+  if (!list.length) {
+    host.innerHTML = '<div class="text-center py-10 px-4 text-[11px] leading-relaxed" style="color:var(--muted)">' +
+      (state.projects.length ? 'No app projects match your search.' : 'No app projects yet. Create one to start building.') +
+      '</div>';
+    return;
+  }
+  let html = '';
+  list.forEach(p => {
+    const active = state.project && state.project.id === p.id;
+    html += '<button data-action="open-project" data-repo="' + esc(p.name) + '" class="w-full text-left rounded-xl px-3 py-2.5 transition-colors" style="border:1px solid ' + (active ? 'var(--accent)' : 'transparent') + ';background:' + (active ? 'var(--accent-soft)' : 'transparent') + ';">';
+    html += '<div class="flex items-center gap-2 min-w-0">';
+    html += '<i data-lucide="' + (p.private ? 'lock' : 'box') + '" style="width:13px;height:13px;flex-shrink:0;color:var(--muted)"></i>';
+    html += '<span class="text-xs font-semibold truncate" style="color:var(--text)">' + esc(p.name) + '</span>';
+    html += '</div>';
+    html += '<div class="text-[10px] mt-1 truncate" style="color:var(--muted)">' + esc(p.description || 'Android app project') + '</div>';
+    html += '<div class="text-[10px] mt-1" style="color:var(--muted);opacity:.75">Updated ' + esc(timeAgo(p.updated_at)) + '</div>';
+    html += '</button>';
+  });
+  host.innerHTML = html;
+  refreshIcons();
+}
+
+function emptyMain() {
+  return '<div class="flex-1 flex items-center justify-center p-8">' +
+    '<div class="text-center max-w-sm">' +
+    '<div class="w-16 h-16 rounded-2xl grid place-items-center mx-auto mb-5" style="background:var(--surface);border:1px solid var(--border)">' +
+    '<i data-lucide="hammer" style="width:26px;height:26px;color:var(--muted)"></i></div>' +
+    '<h2 class="text-base font-bold mb-2">Select an App Project</h2>' +
+    '<p class="text-xs leading-relaxed" style="color:var(--muted)">Pick a project from the sidebar to browse its files, edit Kotlin code, and compile an APK in the cloud.</p>' +
+    '<button data-action="new-project" class="mt-6 h-10 px-5 rounded-xl text-xs font-bold inline-flex items-center gap-2" style="background:var(--accent);color:var(--accent-text)">' +
+    '<i data-lucide="plus" style="width:15px;height:15px"></i>New App Project</button>' +
+    '</div></div>';
+}
+
+function mainShell() {
+  const p = state.project;
+  const tabs = [
+    { id: 'files', label: 'Files', icon: 'folder-tree' },
+    { id: 'builds', label: 'Builds', icon: 'hammer' },
+    { id: 'releases', label: 'Releases', icon: 'tag' },
+    { id: 'settings', label: 'Settings', icon: 'settings' }
+  ];
+  let html = '';
+  html += '<div class="shrink-0 px-5 pt-4 pb-3" style="border-bottom:1px solid var(--border);background:var(--surface)">';
+  html += '<div class="flex items-start gap-3">';
+  html += '<div class="w-10 h-10 rounded-xl grid place-items-center shrink-0" style="background:var(--accent-soft);color:var(--accent)">';
+  html += '<i data-lucide="' + (p.private ? 'lock' : 'box') + '" style="width:18px;height:18px"></i></div>';
+  html += '<div class="flex-1 min-w-0">';
+  html += '<div class="flex items-center gap-2">';
+  html += '<h1 class="text-base font-bold truncate">' + esc(p.name) + '</h1>';
+  html += '<span class="text-[10px] font-bold px-2 py-0.5 rounded-md shrink-0" style="background:var(--surface2);color:var(--muted)">' + (p.private ? 'PRIVATE' : 'PUBLIC') + '</span>';
+  html += '</div>';
+  html += '<p class="text-[11px] mt-0.5 truncate" style="color:var(--muted)">' + esc(p.description || 'Android app project') + '</p>';
+  html += '</div>';
+  html += '<div class="flex items-center gap-2 shrink-0">';
+  html += '<button data-action="run-build" class="h-9 px-3.5 rounded-xl text-[11px] font-bold flex items-center gap-2" style="background:var(--accent);color:var(--accent-text)">';
+  html += '<i data-lucide="play" style="width:14px;height:14px"></i>Compile APK</button>';
+  html += '<button data-action="open-on-github" class="kf-icon-btn" title="Open on GitHub"><i data-lucide="external-link" style="width:15px;height:15px"></i></button>';
+  html += '</div></div>';
+  html += '<div class="flex items-center gap-1 mt-4">';
+  tabs.forEach(t => {
+    const active = state.tab === t.id;
+    html += '<button data-action="set-tab" data-tab="' + t.id + '" class="h-8 px-3.5 rounded-lg text-[11px] font-bold flex items-center gap-1.5 transition-colors" style="background:' + (active ? 'var(--accent-soft)' : 'transparent') + ';color:' + (active ? 'var(--accent)' : 'var(--muted)') + '">';
+    html += '<i data-lucide="' + t.icon + '" style="width:13px;height:13px"></i>' + t.label + '</button>';
+  });
+  html += '</div></div>';
+
+  html += '<div id="panelFiles" class="flex-1 min-h-0 ' + (state.tab === 'files' ? 'flex' : 'hidden') + '">';
+  html += '<div id="fileTreePane" class="w-[250px] shrink-0 flex flex-col min-h-0" style="border-right:1px solid var(--border);background:var(--surface)"></div>';
+  html += '<div class="flex-1 min-w-0 flex flex-col min-h-0">';
+  html += '<div id="editorToolbar" class="h-11 shrink-0 flex items-center gap-2 px-3" style="border-bottom:1px solid var(--border);background:var(--surface)"></div>';
+  html += '<div id="editorHost" class="flex-1 min-h-0"></div>';
+  html += '</div></div>';
+
+  html += '<div id="panelBuilds" class="flex-1 min-h-0 overflow-y-auto ' + (state.tab === 'builds' ? 'block' : 'hidden') + '"></div>';
+  html += '<div id="panelReleases" class="flex-1 min-h-0 overflow-y-auto ' + (state.tab === 'releases' ? 'block' : 'hidden') + '"></div>';
+  html += '<div id="panelSettings" class="flex-1 min-h-0 overflow-y-auto ' + (state.tab === 'settings' ? 'block' : 'hidden') + '"></div>';
+
+  return html;
+}
+
+function renderMain() {
+  const host = document.getElementById('mainArea');
+  if (!state.project) {
+    host.innerHTML = emptyMain();
+    refreshIcons();
+    return;
+  }
+  if (editor) { editor.destroy(); editor = null; }
+  host.innerHTML = mainShell();
+  refreshIcons();
+  initEditor();
+  renderTree();
+  renderEditorToolbar();
+  renderPanel('builds');
+  renderPanel('releases');
+  renderPanel('settings');
+  if (state.tab === 'builds') loadRuns();
+  if (state.tab === 'releases') loadReleases();
+}
+
+function initEditor() {
+  const host = document.getElementById('editorHost');
+  if (!host) return;
+  host.innerHTML = '';
+  try {
+    ace.config.set('basePath', 'https://unpkg.com/ace-builds@1.36.2/src-noconflict/');
+  } catch (e) {}
+  editor = ace.edit(host);
+  editor.setOptions({
+    fontSize: '13px',
+    showPrintMargin: false,
+    useWorker: false,
+    tabSize: 4,
+    wrap: true,
+    enableBasicAutocompletion: true,
+    enableSnippets: true,
+    enableLiveAutocompletion: false,
+    highlightActiveLine: true
+  });
+  editor.setTheme(ACE_THEMES[state.theme] || ACE_THEMES.light);
+  editor.session.setMode('ace/mode/text');
+  editor.session.setValue('');
+  editor.setReadOnly(true);
+  editor.session.on('change', () => {
+    if (state.suppressChange) return;
+    if (!state.openPath) return;
+    if (!state.dirty) {
+      state.dirty = true;
+      renderEditorToolbar();
+    }
+  });
+  setTimeout(() => editor.resize(), 50);
+}
+
+function setEditorContent(text, path) {
+  if (!editor) return;
+  state.suppressChange = true;
+  editor.setReadOnly(false);
+  editor.session.setValue(text);
+  editor.session.setMode(modeFor(path));
+  editor.clearSelection();
+  editor.moveCursorTo(0, 0);
+  editor.scrollToLine(0, false, false);
+  state.suppressChange = false;
+  state.dirty = false;
+  renderEditorToolbar();
+}
+
+function renderEditorToolbar() {
+  const host = document.getElementById('editorToolbar');
+  if (!host) return;
+  const path = state.openPath;
+  let html = '<div class="flex items-center gap-2 min-w-0 flex-1">';
+  html += '<i data-lucide="' + iconFor(path) + '" style="width:14px;height:14px;flex-shrink:0;color:var(--muted)"></i>';
+  html += '<span class="text-[11px] font-semibold truncate" style="color:' + (path ? 'var(--text)' : 'var(--muted)') + '">' + esc(path || 'No file open') + '</span>';
+  if (state.dirty) {
+    html += '<span style="width:6px;height:6px;border-radius:999px;flex-shrink:0;background:var(--warning)"></span>';
+  }
+  html += '</div>';
+  if (path) {
+    html += '<button data-action="delete-file" class="kf-icon-btn" title="Delete file" style="color:var(--danger)"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button>';
+  }
+  html += '<button data-action="save-file" class="h-8 px-3.5 rounded-lg text-[11px] font-bold flex items-center gap-1.5" style="background:var(--accent);color:var(--accent-text);opacity:' + (path ? '1' : '.4') + '" ' + (path ? '' : 'disabled') + '>';
+  html += '<i data-lucide="save" style="width:13px;height:13px"></i>Save</button>';
+  host.innerHTML = html;
+  refreshIcons();
+}
+
+function buildTree(files) {
+  const root = { name: '', path: '', type: 'tree', children: {} };
+  files.forEach(item => {
+    const parts = item.path.split('/');
+    let node = root;
+    parts.forEach((part, i) => {
+      const isLeaf = i === parts.length - 1;
+      if (!node.children[part]) {
+        node.children[part] = {
+          name: part,
+          path: parts.slice(0, i + 1).join('/'),
+          type: isLeaf ? 'blob' : 'tree',
+          children: {}
+        };
+      }
+      node = node.children[part];
+    });
+  });
+  return root;
+}
+
+function renderTree() {
+  const host = document.getElementById('fileTreePane');
+  if (!host) return;
+  let html = '';
+  html += '<div class="h-11 shrink-0 flex items-center gap-0.5 px-2" style="border-bottom:1px solid var(--border)">';
+  html += '<span class="text-[10px] font-bold uppercase tracking-widest flex-1 pl-1.5" style="color:var(--muted)">Files</span>';
+  html += '<button data-action="new-file" class="kf-icon-btn" style="width:26px;height:26px" title="New file"><i data-lucide="file-plus" style="width:13px;height:13px"></i></button>';
+  html += '<button data-action="refresh-tree" class="kf-icon-btn" style="width:26px;height:26px" title="Refresh"><i data-lucide="refresh-cw" style="width:13px;height:13px"></i></button>';
+  html += '</div>';
+  html += '<div class="flex-1 min-h-0 overflow-y-auto py-1.5 px-1.5" id="treeBody"></div>';
+  host.innerHTML = html;
+  const body = document.getElementById('treeBody');
+  const root = buildTree(state.tree);
+  if (!state.tree.length) {
+    body.innerHTML = '<div class="text-center py-8 px-3 text-[11px] leading-relaxed" style="color:var(--muted)">No files found. Push a template or create a file.</div>';
+  } else {
+    renderTreeNodes(body, root, 0);
+  }
+  refreshIcons();
+}
+
+function renderTreeNodes(container, node, depth) {
+  const names = Object.keys(node.children).sort((a, b) => {
+    const A = node.children[a], B = node.children[b];
+    if (A.type !== B.type) return A.type === 'tree' ? -1 : 1;
+    return a.localeCompare(b);
+  });
+  names.forEach(name => {
+    const child = node.children[name];
+    const isFolder = child.type === 'tree';
+    const open = state.expanded.has(child.path);
+    const active = state.openPath === child.path;
+    const row = document.createElement('div');
+    row.className = 'kf-tree-row';
+    row.innerHTML =
+      '<button data-action="tree-click" data-path="' + esc(child.path) + '" data-type="' + child.type + '" ' +
+      'class="w-full flex items-center gap-1.5 rounded-lg pr-2 text-left transition-colors" ' +
+      'style="height:28px;padding-left:' + (6 + depth * 12) + 'px;background:' + (active ? 'var(--accent-soft)' : 'transparent') + ';color:' + (active ? 'var(--accent)' : 'var(--text)') + '">' +
+      (isFolder
+        ? '<i data-lucide="' + (open ? 'chevron-down' : 'chevron-right') + '" style="width:12px;height:12px;flex-shrink:0;color:var(--muted)"></i>'
+        : '<span style="width:12px;flex-shrink:0"></span>') +
+      '<i data-lucide="' + (isFolder ? (open ? 'folder-open' : 'folder') : iconFor(child.path)) + '" style="width:13px;height:13px;flex-shrink:0;color:' + (isFolder ? 'var(--accent)' : 'var(--muted)') + '"></i>' +
+      '<span class="text-[11px] font-medium truncate">' + esc(child.name) + '</span>' +
+      '</button>';
+    container.appendChild(row);
+    if (isFolder && open) {
+      renderTreeNodes(container, child, depth + 1);
+    }
+  });
+}
+
+async function loadTree() {
+  const { owner, name } = projectRef();
+  try {
+    const data = await api('/repos/' + owner + '/' + name + '/git/trees/' + state.branch + '?recursive=1');
+    state.tree = (data && data.tree ? data.tree : []).filter(t => t.type === 'blob');
+    renderTree();
+  } catch (e) {
+    toast('Could not load files: ' + e.message, 'error');
+  }
+}
+
+async function openFile(path) {
+  const { owner, name } = projectRef();
+  try {
+    const data = await api('/repos/' + owner + '/' + name + '/contents/' + encodeURIComponent(path).replace(/%2F/g, '/') + '?ref=' + state.branch);
+    if (!data || !data.content) {
+      toast('This file could not be read.', 'error');
+      return;
+    }
+    state.openPath = path;
+    state.openSha = data.sha;
+    setEditorContent(b64ToUtf8(data.content), path);
+    renderTree();
+  } catch (e) {
+    toast('Could not open file: ' + e.message, 'error');
+  }
+}
+
+async function saveFile() {
+  if (!state.openPath || !editor) return;
+  const { owner, name } = projectRef();
+  const content = editor.getValue();
+  const body = {
+    message: 'Update ' + state.openPath,
+    content: utf8ToB64(content),
+    branch: state.branch
+  };
+  if (state.openSha) body.sha = state.openSha;
+  try {
+    const data = await api('/repos/' + owner + '/' + name + '/contents/' + encodeURIComponent(state.openPath).replace(/%2F/g, '/'), 'PUT', body);
+    if (data && data.content) state.openSha = data.content.sha;
+    state.dirty = false;
+    renderEditorToolbar();
+    toast('Saved ' + state.openPath, 'success');
+  } catch (e) {
+    toast('Save failed: ' + e.message, 'error');
+  }
+}
+
+async function createFile(path, content) {
+  const { owner, name } = projectRef();
+  try {
+    await api('/repos/' + owner + '/' + name + '/contents/' + encodeURIComponent(path).replace(/%2F/g, '/'), 'PUT', {
+      message: 'Create ' + path,
+      content: utf8ToB64(content || ''),
+      branch: state.branch
+    });
+    toast('Created ' + path, 'success');
+    await loadTree();
+    await openFile(path);
+  } catch (e) {
+    toast('Could not create file: ' + e.message, 'error');
+  }
+}
+
+async function deleteFile() {
+  if (!state.openPath || !state.openSha) return;
+  const path = state.openPath;
+  const { owner, name } = projectRef();
+  openModal({
+    title: 'Delete file',
+    icon: 'trash-2',
+    danger: true,
+    confirmLabel: 'Delete',
+    body: '<p class="text-xs leading-relaxed" style="color:var(--muted)">This permanently removes <span style="color:var(--text);font-weight:600">' + esc(path) + '</span> from the project.</p>',
+    onConfirm: async () => {
+      try {
+        await api('/repos/' + owner + '/' + name + '/contents/' + encodeURIComponent(path).replace(/%2F/g, '/'), 'DELETE', {
+          message: 'Delete ' + path,
+          sha: state.openSha,
+          branch: state.branch
+        });
+        state.openPath = null;
+        state.openSha = null;
+        state.dirty = false;
+        if (editor) {
+          state.suppressChange = true;
+          editor.session.setValue('');
+          editor.setReadOnly(true);
+          state.suppressChange = false;
+        }
+        renderEditorToolbar();
+        await loadTree();
+        toast('Deleted ' + path, 'success');
+      } catch (e) {
+        toast('Delete failed: ' + e.message, 'error');
+        return false;
+      }
+    }
+  });
+}
+
+async function pushFiles(files, message) {
+  const { owner, name } = projectRef();
+  const ref = await api('/repos/' + owner + '/' + name + '/git/ref/heads/' + state.branch);
+  const baseSha = ref.object.sha;
+  const baseCommit = await api('/repos/' + owner + '/' + name + '/git/commits/' + baseSha);
+  const baseTree = baseCommit.tree.sha;
+
+  const blobs = [];
+  for (const f of files) {
+    const blob = await api('/repos/' + owner + '/' + name + '/git/blobs', 'POST', {
+      content: f.content,
+      encoding: 'utf-8'
+    });
+    blobs.push(blob.sha);
+  }
+
+  const tree = await api('/repos/' + owner + '/' + name + '/git/trees', 'POST', {
+    base_tree: baseTree,
+    tree: files.map((f, i) => ({ path: f.path, mode: '100644', type: 'blob', sha: blobs[i] }))
+  });
+
+  const commit = await api('/repos/' + owner + '/' + name + '/git/commits', 'POST', {
+    message: message,
+    tree: tree.sha,
+    parents: [baseSha]
+  });
+
+  await api('/repos/' + owner + '/' + name + '/git/refs/heads/' + state.branch, 'PATCH', { sha: commit.sha });
+}
+
+function templateFiles(appName, pkg) {
+  const pkgPath = 'app/src/main/java/' + pkg.split('.').join('/');
+  const workflow = [
+    'name: Android Build',
+    '',
+    'on:',
+    '  workflow_dispatch:',
+    '    inputs:',
+    '      version:',
+    '        description: Version tag for release',
+    '        required: false',
+    '        default: ""',
+    '  push:',
+    '    branches:',
+    '      - main',
+    '      - master',
+    '',
+    'permissions:',
+    '  contents: write',
+    '',
+    'jobs:',
+    '  build:',
+    '    runs-on: ubuntu-latest',
+    '    steps:',
+    '      - name: Checkout',
+    '        uses: actions/checkout@v4',
+    '',
+    '      - name: Set up JDK 17',
+    '        uses: actions/setup-java@v4',
+    '        with:',
+    '          distribution: temurin',
+    '          java-version: "17"',
+    '',
+    '      - name: Set up Android SDK',
+    '        uses: android-actions/setup-android@v3',
+    '',
+    '      - name: Set up Gradle',
+    '        uses: gradle/actions/setup-gradle@v4',
+    '        with:',
+    '          gradle-version: "8.7"',
+    '',
+    '      - name: Build debug APK',
+    '        run: gradle assembleDebug --no-daemon --stacktrace',
+    '',
+    '      - name: Upload APK artifact',
+    '        uses: actions/upload-artifact@v4',
+    '        with:',
+    '          name: app-debug',
+    '          path: app/build/outputs/apk/debug/*.apk',
+    '          if-no-files-found: error',
+    '',
+    '      - name: Publish release',
+    '        if: github.event_name == \'workflow_dispatch\' && github.event.inputs.version != \'\'',
+    '        uses: softprops/action-gh-release@v2',
+    '        with:',
+    '          tag_name: v\${{ github.event.inputs.version }}',
+    '          name: v\${{ github.event.inputs.version }}',
+    '          files: app/build/outputs/apk/debug/*.apk',
+    ''
+  ].join('\n');
+
+  return [
+    { path: '.gitignore', content: '*.iml\n.gradle\n/local.properties\n/.idea\n.DS_Store\n/build\n/captures\n.externalNativeBuild\n.cxx\nlocal.properties\n' },
+    { path: 'settings.gradle.kts', content: 'pluginManagement {\n    repositories {\n        google()\n        mavenCentral()\n        gradlePluginPortal()\n    }\n}\n\ndependencyResolutionManagement {\n    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)\n    repositories {\n        google()\n        mavenCentral()\n    }\n}\n\nrootProject.name = "' + appName + '"\ninclude(":app")\n' },
+    { path: 'build.gradle.kts', content: 'plugins {\n    id("com.android.application") version "8.5.2" apply false\n    id("org.jetbrains.kotlin.android") version "2.0.20" apply false\n}\n' },
+    { path: 'gradle.properties', content: 'org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8\nandroid.useAndroidX=true\nandroid.nonTransitiveRClass=true\nkotlin.code.style=official\n' },
+    { path: 'app/build.gradle.kts', content: 'plugins {\n    id("com.android.application")\n    id("org.jetbrains.kotlin.android")\n}\n\nandroid {\n    namespace = "' + pkg + '"\n    compileSdk = 34\n\n    defaultConfig {\n        applicationId = "' + pkg + '"\n        minSdk = 24\n        targetSdk = 34\n        versionCode = 1\n        versionName = "1.0"\n    }\n\n    buildTypes {\n        release {\n            isMinifyEnabled = false\n        }\n    }\n\n    compileOptions {\n        sourceCompatibility = JavaVersion.VERSION_17\n        targetCompatibility = JavaVersion.VERSION_17\n    }\n\n    kotlinOptions {\n        jvmTarget = "17"\n    }\n}\n\ndependencies {\n    implementation("androidx.core:core-ktx:1.13.1")\n    implementation("androidx.appcompat:appcompat:1.7.0")\n    implementation("com.google.android.material:material:1.12.0")\n}\n' },
+    { path: 'app/proguard-rules.pro', content: '# Add project specific ProGuard rules here.\n' },
+    { path: 'app/src/main/AndroidManifest.xml', content: '<?xml version="1.0" encoding="utf-8"?>\n<manifest xmlns:android="http://schemas.android.com/apk/res/android">\n\n    <application\n        android:allowBackup="true"\n        android:label="@string/app_name"\n        android:supportsRtl="true"\n        android:theme="@style/Theme.App">\n        <activity\n            android:name=".MainActivity"\n            android:exported="true">\n            <intent-filter>\n                <action android:name="android.intent.action.MAIN" />\n                <category android:name="android.intent.category.LAUNCHER" />\n            </intent-filter>\n        </activity>\n    </application>\n\n</manifest>\n' },
+    { path: pkgPath + '/MainActivity.kt', content: 'package ' + pkg + '\n\nimport android.os.Bundle\nimport android.view.Gravity\nimport android.widget.TextView\nimport androidx.appcompat.app.AppCompatActivity\n\nclass MainActivity : AppCompatActivity() {\n    override fun onCreate(savedInstanceState: Bundle?) {\n        super.onCreate(savedInstanceState)\n        val view = TextView(this)\n        view.text = "Hello from ' + appName + '"\n        view.textSize = 20f\n        view.gravity = Gravity.CENTER\n        setContentView(view)\n    }\n}\n' },
+    { path: 'app/src/main/res/values/strings.xml', content: '<resources>\n    <string name="app_name">' + appName + '</string>\n</resources>\n' },
+    { path: 'app/src/main/res/values/colors.xml', content: '<resources>\n    <color name="primary">#4F46E5</color>\n    <color name="primary_dark">#3730A3</color>\n</resources>\n' },
+    { path: 'app/src/main/res/values/themes.xml', content: '<resources>\n    <style name="Theme.App" parent="Theme.MaterialComponents.DayNight.NoActionBar">\n        <item name="colorPrimary">@color/primary</item>\n        <item name="colorPrimaryDark">@color/primary_dark</item>\n    </style>\n</resources>\n' },
+    { path: '.github/workflows/android.yml', content: workflow },
+    { path: 'README.md', content: '# ' + appName + '\n\nKotlin Android app project generated with Kotlin Forge.\n\nThe workflow in .github/workflows/android.yml compiles a debug APK on every push and can publish a release when triggered with a version number.\n' }
+  ];
+}
+
+function openModal(opts) {
+  const root = document.getElementById('modalRoot');
+  const width = opts.width || '520px';
+  let html = '<div class="fixed inset-0 z-50 flex items-center justify-center p-4" style="background:rgba(3,7,18,.55)" data-modal-backdrop>';
+  html += '<div class="w-full rounded-2xl overflow-hidden" style="max-width:' + width + ';background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow)">';
+  html += '<div class="flex items-center gap-3 px-5 h-14" style="border-bottom:1px solid var(--border)">';
+  html += '<i data-lucide="' + (opts.icon || 'settings') + '" style="width:16px;height:16px;color:var(--muted)"></i>';
+  html += '<span class="font-bold text-sm flex-1">' + esc(opts.title) + '</span>';
+  html += '<button data-action="close-modal" class="kf-icon-btn"><i data-lucide="x" style="width:15px;height:15px"></i></button>';
+  html += '</div>';
+  html += '<div class="p-5">' + opts.body + '</div>';
+  html += '<div class="flex items-center justify-end gap-2 px-5 py-4" style="border-top:1px solid var(--border)">';
+  html += '<button data-action="close-modal" class="h-9 px-4 rounded-lg text-[11px] font-bold" style="background:var(--surface2);color:var(--text)">Cancel</button>';
+  html += '<button id="modalConfirm" class="h-9 px-4 rounded-lg text-[11px] font-bold" style="background:' + (opts.danger ? 'var(--danger)' : 'var(--accent)') + ';color:#ffffff">' + esc(opts.confirmLabel || 'Confirm') + '</button>';
+  html += '</div></div></div>';
+  root.innerHTML = html;
+  refreshIcons();
+  const confirm = document.getElementById('modalConfirm');
+  confirm.onclick = async () => {
+    if (opts.onConfirm) {
+      confirm.disabled = true;
+      confirm.style.opacity = '.6';
+      let result;
+      try {
+        result = await opts.onConfirm();
+      } catch (e) {
+        result = false;
+      }
+      confirm.disabled = false;
+      confirm.style.opacity = '1';
+      if (result === false) return;
+    }
+    closeModal();
+  };
+  if (opts.onMount) opts.onMount(root);
+}
+
+function closeModal() {
+  document.getElementById('modalRoot').innerHTML = '';
+}
+
+function newProjectModal() {
+  openModal({
+    title: 'New App Project',
+    icon: 'plus',
+    confirmLabel: 'Create Project',
+    body:
+      '<div class="space-y-4">' +
+      '<div><label class="block text-[10px] font-bold uppercase tracking-widest mb-2" style="color:var(--muted)">App Name</label>' +
+      '<input id="npName" class="kf-input" placeholder="My Android App" spellcheck="false"></div>' +
+      '<div><label class="block text-[10px] font-bold uppercase tracking-widest mb-2" style="color:var(--muted)">Description</label>' +
+      '<input id="npDesc" class="kf-input" placeholder="Short description" spellcheck="false"></div>' +
+      '<div><label class="block text-[10px] font-bold uppercase tracking-widest mb-2" style="color:var(--muted)">Package Name</label>' +
+      '<input id="npPkg" class="kf-input" placeholder="com.example.myapp" spellcheck="false"></div>' +
+      '<div class="flex items-center gap-3 rounded-xl p-3" style="background:var(--surface2);border:1px solid var(--border)">' +
+      '<button id="npPrivate" class="kf-switch" data-on="false" type="button"></button>' +
+      '<div class="flex-1 min-w-0"><div class="text-[11px] font-bold">Private project</div>' +
+      '<div class="text-[10px] mt-0.5 leading-relaxed" style="color:var(--muted)">Public projects give you direct APK download links without signing in.</div></div>' +
+      '</div>' +
+      '<div class="rounded-xl p-3" style="background:var(--accent-soft)">' +
+      '<div class="flex items-start gap-2.5">' +
+      '<i data-lucide="sparkles" style="width:14px;height:14px;flex-shrink:0;margin-top:2px;color:var(--accent)"></i>' +
+      '<p class="text-[10px] leading-relaxed" style="color:var(--text)">A complete Kotlin + Gradle Android project and a cloud build workflow will be generated automatically.</p>' +
+      '</div></div></div>',
+    onMount: (root) => {
+      const nameInput = root.querySelector('#npName');
+      const pkgInput = root.querySelector('#npPkg');
+      const priv = root.querySelector('#npPrivate');
+      let pkgEdited = false;
+      nameInput.addEventListener('input', () => {
+        if (!pkgEdited) pkgInput.value = slugPackage(nameInput.value);
+      });
+      pkgInput.addEventListener('input', () => { pkgEdited = true; });
+      priv.addEventListener('click', () => {
+        const on = priv.getAttribute('data-on') === 'true';
+        priv.setAttribute('data-on', on ? 'false' : 'true');
+      });
+      setTimeout(() => nameInput.focus(), 60);
+    },
+    onConfirm: async () => {
+      const nameEl = document.getElementById('npName');
+      const descEl = document.getElementById('npDesc');
+      const pkgEl = document.getElementById('npPkg');
+      const privEl = document.getElementById('npPrivate');
+      const displayName = (nameEl.value || '').trim() || 'My Android App';
+      const slug = repoSlug(displayName);
+      const description = (descEl.value || '').trim() || 'Android app project';
+      let pkg = (pkgEl.value || '').trim();
+      if (!/^[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)+$/.test(pkg)) pkg = slugPackage(displayName);
+      const isPrivate = privEl.getAttribute('data-on') === 'true';
+      try {
+        const repo = await api('/user/repos', 'POST', {
+          name: slug,
+          description: description,
+          private: isPrivate,
+          auto_init: true,
+          has_issues: true,
+          has_wiki: false,
+          has_projects: false
+        });
+        state.projects.unshift(repo);
+        state.project = repo;
+        state.branch = repo.default_branch || 'main';
+        renderProjects();
+        renderMain();
+        toast('Creating project files', 'info');
+        await pushFiles(templateFiles(displayName, pkg), 'Initialize Android project');
+        await loadTree();
+        toast('Project created. The first build starts automatically.', 'success');
+        loadRuns();
+      } catch (e) {
+        toast('Could not create project: ' + e.message, 'error');
+        return false;
+      }
+    }
+  });
+}
+
+function newFileModal() {
+  openModal({
+    title: 'New File',
+    icon: 'file-plus',
+    confirmLabel: 'Create File',
+    body:
+      '<div class="space-y-4">' +
+      '<div><label class="block text-[10px] font-bold uppercase tracking-widest mb-2" style="color:var(--muted)">File Path</label>' +
+      '<input id="nfPath" class="kf-input" placeholder="app/src/main/java/com/example/app/Utils.kt" spellcheck="false"></div>' +
+      '<p class="text-[10px] leading-relaxed" style="color:var(--muted)">Use forward slashes to place the file inside folders. Missing folders are created automatically.</p>' +
+      '</div>',
+    onMount: (root) => {
+      setTimeout(() => root.querySelector('#nfPath').focus(), 60);
+    },
+    onConfirm: async () => {
+      const path = (document.getElementById('nfPath').value || '').trim().replace(/^\/+/, '');
+      if (!path) {
+        toast('Enter a file path.', 'error');
+        return false;
+      }
+      await createFile(path, '');
+    }
+  });
+}
+
+function publishReleaseModal() {
+  openModal({
+    title: 'Publish Release',
+    icon: 'tag',
+    confirmLabel: 'Start Release Build',
+    body:
+      '<div class="space-y-4">' +
+      '<div><label class="block text-[10px] font-bold uppercase tracking-widest mb-2" style="color:var(--muted)">Version</label>' +
+      '<input id="prVersion" class="kf-input" placeholder="1.0.0" spellcheck="false"></div>' +
+      '<div class="rounded-xl p-3" style="background:var(--surface2)">' +
+      '<div class="flex items-start gap-2.5">' +
+      '<i data-lucide="info" style="width:14px;height:14px;flex-shrink:0;margin-top:2px;color:var(--muted)"></i>' +
+      '<p class="text-[10px] leading-relaxed" style="color:var(--muted)">A build starts immediately. When it finishes, the APK is attached to a release tagged v' + '<span id="prPreview">1.0.0</span>' + '. Public projects give a permanent download link.</p>' +
+      '</div></div></div>',
+    onMount: (root) => {
+      const input = root.querySelector('#prVersion');
+      const preview = root.querySelector('#prPreview');
+      input.addEventListener('input', () => { preview.textContent = input.value || '1.0.0'; });
+      setTimeout(() => input.focus(), 60);
+    },
+    onConfirm: async () => {
+      const version = (document.getElementById('prVersion').value || '').trim();
+      if (!version) {
+        toast('Enter a version number.', 'error');
+        return false;
+      }
+      await dispatchBuild(version);
+    }
+  });
+}
+
+function settingsPanel() {
+  const p = state.project;
+  let html = '<div class="p-6 max-w-2xl space-y-5">';
+
+  html += '<div class="rounded-2xl p-5" style="background:var(--surface);border:1px solid var(--border)">';
+  html += '<div class="text-xs font-bold mb-4">Project Details</div>';
+  html += '<div class="space-y-4">';
+  html += '<div><label class="block text-[10px] font-bold uppercase tracking-widest mb-2" style="color:var(--muted)">Description</label>';
+  html += '<input id="stDesc" class="kf-input" value="' + esc(p.description || '') + '" spellcheck="false"></div>';
+  html += '<div class="flex items-center gap-3 rounded-xl p-3" style="background:var(--surface2);border:1px solid var(--border)">';
+  html += '<button data-action="toggle-private" class="kf-switch" data-on="' + (p.private ? 'true' : 'false') + '" type="button"></button>';
+  html += '<div class="flex-1 min-w-0"><div class="text-[11px] font-bold">Private project</div>';
+  html += '<div class="text-[10px] mt-0.5 leading-relaxed" style="color:var(--muted)">Public projects allow APK downloads without authentication.</div></div>';
+  html += '</div>';
+  html += '<div class="flex items-center gap-2">';
+  html += '<button data-action="save-settings" class="h-9 px-4 rounded-lg text-[11px] font-bold flex items-center gap-2" style="background:var(--accent);color:var(--accent-text)"><i data-lucide="save" style="width:13px;height:13px"></i>Save Changes</button>';
+  html += '</div></div></div>';
+
+  html += '<div class="rounded-2xl p-5" style="background:var(--surface);border:1px solid var(--border)">';
+  html += '<div class="text-xs font-bold mb-4">Build Configuration</div>';
+  html += '<div class="space-y-3">';
+  html += '<button data-action="edit-workflow" class="w-full flex items-center gap-3 rounded-xl p-3 text-left" style="background:var(--surface2);border:1px solid var(--border)">';
+  html += '<i data-lucide="file-cog" style="width:16px;height:16px;color:var(--accent)"></i>';
+  html += '<div class="flex-1 min-w-0"><div class="text-[11px] font-bold">Edit build workflow</div>';
+  html += '<div class="text-[10px] mt-0.5" style="color:var(--muted)">.github/workflows/android.yml</div></div>';
+  html += '<i data-lucide="chevron-right" style="width:14px;height:14px;color:var(--muted)"></i></button>';
+  html += '<button data-action="edit-gradle" class="w-full flex items-center gap-3 rounded-xl p-3 text-left" style="background:var(--surface2);border:1px solid var(--border)">';
+  html += '<i data-lucide="file-code" style="width:16px;height:16px;color:var(--accent)"></i>';
+  html += '<div class="flex-1 min-w-0"><div class="text-[11px] font-bold">Edit app module Gradle</div>';
+  html += '<div class="text-[10px] mt-0.5" style="color:var(--muted)">app/build.gradle.kts</div></div>';
+  html += '<i data-lucide="chevron-right" style="width:14px;height:14px;color:var(--muted)"></i></button>';
+  html += '<button data-action="edit-manifest" class="w-full flex items-center gap-3 rounded-xl p-3 text-left" style="background:var(--surface2);border:1px solid var(--border)">';
+  html += '<i data-lucide="file-code" style="width:16px;height:16px;color:var(--accent)"></i>';
+  html += '<div class="flex-1 min-w-0"><div class="text-[11px] font-bold">Edit Android Manifest</div>';
+  html += '<div class="text-[10px] mt-0.5" style="color:var(--muted)">app/src/main/AndroidManifest.xml</div></div>';
+  html += '<i data-lucide="chevron-right" style="width:14px;height:14px;color:var(--muted)"></i></button>';
+  html += '</div></div>';
+
+  html += '<div class="rounded-2xl p-5" style="background:var(--surface);border:1px solid var(--border)">';
+  html += '<div class="text-xs font-bold mb-4">Project Information</div>';
+  html += '<div class="space-y-2.5">';
+  html += '<div class="flex items-center justify-between"><span class="text-[11px]" style="color:var(--muted)">Owner</span><span class="text-[11px] font-semibold">' + esc(p.owner.login) + '</span></div>';
+  html += '<div class="flex items-center justify-between"><span class="text-[11px]" style="color:var(--muted)">Default branch</span><span class="text-[11px] font-semibold">' + esc(p.default_branch || 'main') + '</span></div>';
+  html += '<div class="flex items-center justify-between"><span class="text-[11px]" style="color:var(--muted)">Created</span><span class="text-[11px] font-semibold">' + esc(fmtDate(p.created_at)) + '</span></div>';
+  html += '<div class="flex items-center justify-between"><span class="text-[11px]" style="color:var(--muted)">Last update</span><span class="text-[11px] font-semibold">' + esc(fmtDate(p.updated_at)) + '</span></div>';
+  html += '</div></div>';
+
+  html += '<div class="rounded-2xl p-5" style="background:var(--surface);border:1px solid var(--danger)">';
+  html += '<div class="text-xs font-bold mb-2" style="color:var(--danger)">Danger Zone</div>';
+  html += '<p class="text-[10px] leading-relaxed mb-4" style="color:var(--muted)">Deleting this app project removes the repository, all source files, build history and releases. This cannot be undone.</p>';
+  html += '<button data-action="delete-project" class="h-9 px-4 rounded-lg text-[11px] font-bold" style="background:var(--danger);color:#ffffff">Delete App Project</button>';
+  html += '</div>';
+
+  html += '</div>';
+  return html;
+}
+
+function renderPanel(name) {
+  const host = document.getElementById('panel' + name.charAt(0).toUpperCase() + name.slice(1));
+  if (!host) return;
+  if (name === 'builds') {
+    if (!host.dataset.rendered) {
+      host.innerHTML = '<div id="buildsBody"></div>';
+      host.dataset.rendered = '1';
+    }
+    renderBuildsBody();
+  } else if (name === 'releases') {
+    if (!host.dataset.rendered) {
+      host.innerHTML = '<div id="releasesBody"></div>';
+      host.dataset.rendered = '1';
+    }
+    renderReleasesBody();
+  } else if (name === 'settings') {
+    host.innerHTML = settingsPanel();
+    refreshIcons();
+  }
+}
+
+function renderBuildsBody() {
+  const host = document.getElementById('buildsBody');
+  if (!host) return;
+  let html = '<div class="p-6 max-w-3xl">';
+  html += '<div class="flex items-center gap-3 mb-5">';
+  html += '<div class="flex-1"><div class="text-sm font-bold">Build History</div>';
+  html += '<div class="text-[10px] mt-0.5" style="color:var(--muted)">Cloud builds run on GitHub Actions</div></div>';
+  html += '<button data-action="refresh-runs" class="kf-icon-btn" title="Refresh"><i data-lucide="refresh-cw" style="width:15px;height:15px"></i></button>';
+  html += '<button data-action="run-build" class="h-9 px-4 rounded-lg text-[11px] font-bold flex items-center gap-2" style="background:var(--accent);color:var(--accent-text)"><i data-lucide="play" style="width:13px;height:13px"></i>Compile APK</button>';
+  html += '</div>';
+
+  if (!state.runs.length) {
+    html += '<div class="rounded-2xl p-10 text-center" style="background:var(--surface);border:1px solid var(--border)">';
+    html += '<i data-lucide="hammer" style="width:28px;height:28px;color:var(--muted)"></i>';
+    html += '<div class="text-xs font-bold mt-4">No builds yet</div>';
+    html += '<p class="text-[10px] mt-2 leading-relaxed" style="color:var(--muted)">Start a compile to produce a debug APK.</p></div>';
+  } else {
+    state.runs.forEach(run => {
+      const status = run.status;
+      const conclusion = run.conclusion;
+      let color = 'var(--muted)';
+      let icon = 'clock';
+      let label = status;
+      if (status === 'completed') {
+        if (conclusion === 'success') { color = 'var(--success)'; icon = 'circle-check'; label = 'Success'; }
+        else if (conclusion === 'failure') { color = 'var(--danger)'; icon = 'circle-x'; label = 'Failed'; }
+        else if (conclusion === 'cancelled') { color = 'var(--warning)'; icon = 'circle-slash'; label = 'Cancelled'; }
+        else { color = 'var(--muted)'; icon = 'circle-dot'; label = conclusion || 'Completed'; }
+      } else if (status === 'in_progress') { color = 'var(--accent)'; icon = 'loader-2'; label = 'Running'; }
+      else if (status === 'queued') { color = 'var(--warning)'; icon = 'clock'; label = 'Queued'; }
+
+      html += '<div class="rounded-2xl mb-3 overflow-hidden" style="background:var(--surface);border:1px solid var(--border)">';
+      html += '<div class="p-4 flex items-center gap-3">';
+      html += '<div class="w-9 h-9 rounded-xl grid place-items-center shrink-0" style="background:var(--surface2)">';
+      html += '<i data-lucide="' + icon + '" class="' + (status === 'in_progress' ? 'kf-spin' : '') + '" style="width:16px;height:16px;color:' + color + '"></i></div>';
+      html += '<div class="flex-1 min-w-0">';
+      html += '<div class="flex items-center gap-2">';
+      html += '<span class="text-[11px] font-bold truncate">' + esc(run.name || 'Android Build') + '</span>';
+      html += '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background:var(--surface2);color:' + color + '">' + esc(label) + '</span>';
+      html += '</div>';
+      html += '<div class="text-[10px] mt-0.5" style="color:var(--muted)">#' + run.run_number + ' · ' + esc(run.head_branch || '') + ' · ' + esc(timeAgo(run.created_at)) + '</div>';
+      html += '</div>';
+      html += '<div class="flex items-center gap-1.5 shrink-0">';
+      html += '<button data-action="toggle-artifacts" data-run="' + run.id + '" class="h-8 px-3 rounded-lg text-[10px] font-bold flex items-center gap-1.5" style="background:var(--surface2);color:var(--text)">';
+      html += '<i data-lucide="package" style="width:12px;height:12px"></i>APK</button>';
+      html += '<button data-action="open-run" data-run="' + run.id + '" class="kf-icon-btn" title="Open on GitHub"><i data-lucide="external-link" style="width:14px;height:14px"></i></button>';
+      html += '</div></div>';
+
+      if (state.expandedRun === run.id) {
+        const arts = state.artifacts[run.id];
+        html += '<div class="px-4 pb-4">';
+        if (!arts) {
+          html += '<div class="text-[10px] py-3 text-center" style="color:var(--muted)">Loading artifacts</div>';
+        } else if (!arts.length) {
+          html += '<div class="text-[10px] py-3 text-center" style="color:var(--muted)">No artifacts were produced by this build.</div>';
+        } else {
+          arts.forEach(a => {
+            html += '<div class="flex items-center gap-3 rounded-xl px-3 py-2.5 mb-2" style="background:var(--surface2)">';
+            html += '<i data-lucide="package" style="width:14px;height:14px;color:var(--accent)"></i>';
+            html += '<div class="flex-1 min-w-0"><div class="text-[11px] font-semibold truncate">' + esc(a.name) + '</div>';
+            html += '<div class="text-[10px]" style="color:var(--muted)">' + (a.size_in_bytes ? (a.size_in_bytes / 1024 / 1024).toFixed(2) + ' MB' : '') + '</div></div>';
+            html += '<button data-action="download-artifact" data-artifact="' + a.id + '" class="h-8 px-3 rounded-lg text-[10px] font-bold flex items-center gap-1.5" style="background:var(--accent);color:var(--accent-text)">';
+            html += '<i data-lucide="download" style="width:12px;height:12px"></i>Download</button>';
+            html += '</div>';
+          });
+        }
+        html += '</div>';
+      }
+      html += '</div>';
+    });
+  }
+  html += '</div>';
+  host.innerHTML = html;
+  refreshIcons();
+}
+
+function renderReleasesBody() {
+  const host = document.getElementById('releasesBody');
+  if (!host) return;
+  let html = '<div class="p-6 max-w-3xl">';
+  html += '<div class="flex items-center gap-3 mb-5">';
+  html += '<div class="flex-1"><div class="text-sm font-bold">Releases</div>';
+  html += '<div class="text-[10px] mt-0.5" style="color:var(--muted)">Versioned APK downloads</div></div>';
+  html += '<button data-action="refresh-releases" class="kf-icon-btn" title="Refresh"><i data-lucide="refresh-cw" style="width:15px;height:15px"></i></button>';
+  html += '<button data-action="publish-release" class="h-9 px-4 rounded-lg text-[11px] font-bold flex items-center gap-2" style="background:var(--accent);color:var(--accent-text)"><i data-lucide="tag" style="width:13px;height:13px"></i>Publish Release</button>';
+  html += '</div>';
+
+  if (!state.releases.length) {
+    html += '<div class="rounded-2xl p-10 text-center" style="background:var(--surface);border:1px solid var(--border)">';
+    html += '<i data-lucide="tag" style="width:28px;height:28px;color:var(--muted)"></i>';
+    html += '<div class="text-xs font-bold mt-4">No releases yet</div>';
+    html += '<p class="text-[10px] mt-2 leading-relaxed" style="color:var(--muted)">Publish a release to attach a permanent APK download link.</p></div>';
+  } else {
+    state.releases.forEach(rel => {
+      html += '<div class="rounded-2xl mb-3 p-4" style="background:var(--surface);border:1px solid var(--border)">';
+      html += '<div class="flex items-center gap-3">';
+      html += '<div class="w-9 h-9 rounded-xl grid place-items-center shrink-0" style="background:var(--accent-soft)">';
+      html += '<i data-lucide="tag" style="width:16px;height:16px;color:var(--accent)"></i></div>';
+      html += '<div class="flex-1 min-w-0">';
+      html += '<div class="text-[11px] font-bold truncate">' + esc(rel.name || rel.tag_name) + '</div>';
+      html += '<div class="text-[10px] mt-0.5" style="color:var(--muted)">' + esc(rel.tag_name) + ' · ' + esc(timeAgo(rel.published_at || rel.created_at)) + '</div>';
+      html += '</div></div>';
+      if (rel.assets && rel.assets.length) {
+        html += '<div class="mt-3 space-y-2">';
+        rel.assets.forEach(asset => {
+          html += '<div class="flex items-center gap-3 rounded-xl px-3 py-2.5" style="background:var(--surface2)">';
+          html += '<i data-lucide="package" style="width:14px;height:14px;color:var(--success)"></i>';
+          html += '<div class="flex-1 min-w-0"><div class="text-[11px] font-semibold truncate">' + esc(asset.name) + '</div>';
+          html += '<div class="text-[10px]" style="color:var(--muted)">' + (asset.size ? (asset.size / 1024 / 1024).toFixed(2) + ' MB' : '') + ' · ' + asset.download_count + ' downloads</div></div>';
+          html += '<a href="' + esc(asset.browser_download_url) + '" target="_blank" rel="noopener" class="h-8 px-3 rounded-lg text-[10px] font-bold flex items-center gap-1.5" style="background:var(--accent);color:var(--accent-text);text-decoration:none">';
+          html += '<i data-lucide="download" style="width:12px;height:12px"></i>Download</a>';
+          html += '</div>';
+        });
+        html += '</div>';
+      } else {
+        html += '<div class="mt-3 text-[10px]" style="color:var(--muted)">No APK assets attached to this release.</div>';
+      }
+      html += '</div>';
+    });
+  }
+  html += '</div>';
+  host.innerHTML = html;
+  refreshIcons();
+}
+
+async function loadRuns() {
+  if (!state.project) return;
+  const { owner, name } = projectRef();
+  try {
+    const data = await api('/repos/' + owner + '/' + name + '/actions/runs?per_page=20');
+    state.runs = (data && data.workflow_runs ? data.workflow_runs : []);
+    renderBuildsBody();
+  } catch (e) {
+    const host = document.getElementById('buildsBody');
+    if (host) {
+      host.innerHTML = '<div class="p-6 max-w-3xl"><div class="rounded-2xl p-6 text-center" style="background:var(--surface);border:1px solid var(--border)"><div class="text-[11px] leading-relaxed" style="color:var(--danger)">' + esc(e.message) + '</div></div></div>';
+    }
+  }
+}
+
+async function loadReleases() {
+  if (!state.project) return;
+  const { owner, name } = projectRef();
+  try {
+    const data = await api('/repos/' + owner + '/' + name + '/releases?per_page=30');
+    state.releases = data || [];
+    renderReleasesBody();
+  } catch (e) {
+    const host = document.getElementById('releasesBody');
+    if (host) {
+      host.innerHTML = '<div class="p-6 max-w-3xl"><div class="rounded-2xl p-6 text-center" style="background:var(--surface);border:1px solid var(--border)"><div class="text-[11px] leading-relaxed" style="color:var(--danger)">' + esc(e.message) + '</div></div></div>';
+    }
+  }
+}
+
+async function loadArtifacts(runId) {
+  const { owner, name } = projectRef();
+  try {
+    const data = await api('/repos/' + owner + '/' + name + '/actions/runs/' + runId + '/artifacts');
+    state.artifacts[runId] = (data && data.artifacts ? data.artifacts : []);
+  } catch (e) {
+    state.artifacts[runId] = [];
+    toast('Could not load artifacts: ' + e.message, 'error');
+  }
+  renderBuildsBody();
+}
+
+async function dispatchBuild(version) {
+  if (!state.project) return;
+  const { owner, name } = projectRef();
+  try {
+    await api('/repos/' + owner + '/' + name + '/actions/workflows/android.yml/dispatches', 'POST', {
+      ref: state.branch,
+      inputs: { version: version || '' }
+    });
+    toast(version ? 'Release build started for v' + version : 'Build started', 'success');
+    state.tab = 'builds';
+    switchTab('builds');
+    setTimeout(loadRuns, 3500);
+    setTimeout(loadRuns, 12000);
+  } catch (e) {
+    if (e.status === 404) {
+      toast('The build workflow file was not found in this project.', 'error');
+    } else if (e.status === 422) {
+      toast('The workflow could not be started. Check that the token has the workflow scope.', 'error');
+    } else {
+      toast('Could not start build: ' + e.message, 'error');
+    }
+  }
+}
+
+async function downloadArtifact(artifactId) {
+  const { owner, name } = projectRef();
+  try {
+    const res = await fetch('https://api.github.com/repos/' + owner + '/' + name + '/actions/artifacts/' + artifactId + '/zip', {
+      headers: { 'Authorization': 'Bearer ' + state.token },
+      redirect: 'follow'
+    });
+    if (!res.ok) throw new Error(res.status + ' ' + res.statusText);
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = name + '-apk.zip';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 8000);
+    toast('Artifact downloaded', 'success');
+  } catch (e) {
+    toast('Download blocked by the browser. Open the run on GitHub instead, or publish a release.', 'error');
+  }
+}
+
+async function openProject(name) {
+  const repo = state.projects.find(p => p.name === name);
+  if (!repo) return;
+  state.project = repo;
+  state.branch = repo.default_branch || 'main';
+  state.tree = [];
+  state.expanded = new Set();
+  state.openPath = null;
+  state.openSha = null;
+  state.dirty = false;
+  state.runs = [];
+  state.releases = [];
+  state.artifacts = {};
+  state.expandedRun = null;
+  state.tab = 'files';
+  renderProjects();
+  renderMain();
+  await loadTree();
+  try {
+    const data = await api('/repos/' + repo.owner.login + '/' + repo.name + '/contents/README.md?ref=' + state.branch);
+    if (data && data.content) {
+      state.openPath = 'README.md';
+      state.openSha = data.sha;
+      setEditorContent(b64ToUtf8(data.content), 'README.md');
+      renderTree();
+    }
+  } catch (e) {}
+}
+
+function switchTab(tab) {
+  state.tab = tab;
+  const panels = { files: 'panelFiles', builds: 'panelBuilds', releases: 'panelReleases', settings: 'panelSettings' };
+  Object.keys(panels).forEach(key => {
+    const el = document.getElementById(panels[key]);
+    if (!el) return;
+    if (key === 'files') {
+      el.classList.toggle('hidden', key !== tab);
+      el.classList.toggle('flex', key === tab);
+    } else {
+      el.classList.toggle('hidden', key !== tab);
+    }
+  });
+  document.querySelectorAll('[data-action="set-tab"]').forEach(btn => {
+    const active = btn.getAttribute('data-tab') === tab;
+    btn.style.background = active ? 'var(--accent-soft)' : 'transparent';
+    btn.style.color = active ? 'var(--accent)' : 'var(--muted)';
+  });
+  if (tab === 'files' && editor) setTimeout(() => editor.resize(), 30);
+  if (tab === 'builds') {
+    renderPanel('builds');
+    loadRuns();
+  }
+  if (tab === 'releases') {
+    renderPanel('releases');
+    loadReleases();
+  }
+  if (tab === 'settings') renderPanel('settings');
+}
+
+async function saveSettings() {
+  const p = state.project;
+  const desc = document.getElementById('stDesc');
+  const priv = document.querySelector('[data-action="toggle-private"]');
+  const body = {};
+  if (desc) body.description = desc.value.trim();
+  if (priv) body.private = priv.getAttribute('data-on') === 'true';
+  try {
+    const updated = await api('/repos/' + p.owner.login + '/' + p.name, 'PATCH', body);
+    const idx = state.projects.findIndex(x => x.id === p.id);
+    if (idx >= 0) state.projects[idx] = updated;
+    state.project = updated;
+    renderProjects();
+    renderMain();
+    toast('Project settings saved', 'success');
+  } catch (e) {
+    toast('Could not save settings: ' + e.message, 'error');
+  }
+}
+
+function deleteProjectModal() {
+  const p = state.project;
+  openModal({
+    title: 'Delete App Project',
+    icon: 'alert-triangle',
+    danger: true,
+    confirmLabel: 'Delete Permanently',
+    body:
+      '<p class="text-xs leading-relaxed mb-3" style="color:var(--muted)">This will permanently delete the repository <span style="color:var(--text);font-weight:600">' + esc(p.owner.login + '/' + p.name) + '</span> along with all source files, build history and releases.</p>' +
+      '<input id="dpConfirm" class="kf-input" placeholder="Type the project name to confirm" spellcheck="false">',
+    onMount: (root) => {
+      setTimeout(() => root.querySelector('#dpConfirm').focus(), 60);
+    },
+    onConfirm: async () => {
+      const value = (document.getElementById('dpConfirm').value || '').trim();
+      if (value !== p.name) {
+        toast('Project name does not match.', 'error');
+        return false;
+      }
+      try {
+        await api('/repos/' + p.owner.login + '/' + p.name, 'DELETE');
+        state.projects = state.projects.filter(x => x.id !== p.id);
+        state.project = null;
+        if (editor) { editor.destroy(); editor = null; }
+        document.getElementById('mainArea').innerHTML = '';
+        renderProjects();
+        renderMain();
+        toast('App project deleted', 'success');
+      } catch (e) {
+        toast('Could not delete project: ' + e.message, 'error');
+        return false;
+      }
+    }
+  });
+}
+
+document.addEventListener('click', async (ev) => {
+  const btn = ev.target.closest('[data-action]');
+  if (!btn) {
+    if (ev.target.hasAttribute && ev.target.hasAttribute('data-modal-backdrop')) closeModal();
+    return;
+  }
+  const action = btn.getAttribute('data-action');
+
+  if (action === 'set-theme') { setTheme(btn.getAttribute('data-theme')); return; }
+  if (action === 'sign-out') { signOut(); return; }
+  if (action === 'close-modal') { closeModal(); return; }
+
+  if (action === 'new-project') { newProjectModal(); return; }
+  if (action === 'refresh-projects') { await loadProjects(); return; }
+  if (action === 'open-project') { await openProject(btn.getAttribute('data-repo')); return; }
+
+  if (action === 'set-tab') { switchTab(btn.getAttribute('data-tab')); return; }
+  if (action === 'run-build') { await dispatchBuild(''); return; }
+  if (action === 'open-on-github') {
+    const p = state.project;
+    if (p) window.open('https://github.com/' + p.owner.login + '/' + p.name, '_blank', 'noopener');
+    return;
+  }
+  if (action === 'refresh-tree') { await loadTree(); return; }
+  if (action === 'new-file') { newFileModal(); return; }
+  if (action === 'save-file') { await saveFile(); return; }
+  if (action === 'delete-file') { deleteFile(); return; }
+
+  if (action === 'tree-click') {
+    const path = btn.getAttribute('data-path');
+    const type = btn.getAttribute('data-type');
+    if (type === 'tree') {
+      if (state.expanded.has(path)) state.expanded.delete(path);
+      else state.expanded.add(path);
+      renderTree();
+    } else {
+      await openFile(path);
+    }
+    return;
+  }
+
+  if (action === 'refresh-runs') { await loadRuns(); return; }
+  if (action === 'toggle-artifacts') {
+    const runId = Number(btn.getAttribute('data-run'));
+    if (state.expandedRun === runId) {
+      state.expandedRun = null;
+      renderBuildsBody();
+    } else {
+      state.expandedRun = runId;
+      renderBuildsBody();
+      if (!state.artifacts[runId]) await loadArtifacts(runId);
+    }
+    return;
+  }
+  if (action === 'download-artifact') { await downloadArtifact(Number(btn.getAttribute('data-artifact'))); return; }
+  if (action === 'open-run') {
+    const p = state.project;
+    if (p) window.open('https://github.com/' + p.owner.login + '/' + p.name + '/actions/runs/' + btn.getAttribute('data-run'), '_blank', 'noopener');
+    return;
+  }
+
+  if (action === 'refresh-releases') { await loadReleases(); return; }
+  if (action === 'publish-release') { publishReleaseModal(); return; }
+
+  if (action === 'save-settings') { await saveSettings(); return; }
+  if (action === 'toggle-private') {
+    const on = btn.getAttribute('data-on') === 'true';
+    btn.setAttribute('data-on', on ? 'false' : 'true');
+    return;
+  }
+  if (action === 'delete-project') { deleteProjectModal(); return; }
+  if (action === 'edit-workflow') { await openFile('.github/workflows/android.yml'); switchTab('files'); return; }
+  if (action === 'edit-gradle') { await openFile('app/build.gradle.kts'); switchTab('files'); return; }
+  if (action === 'edit-manifest') { await openFile('app/src/main/AndroidManifest.xml'); switchTab('files'); return; }
+});
+
+document.addEventListener('keydown', (ev) => {
+  if (ev.key === 'Escape') {
+    if (document.getElementById('modalRoot').innerHTML) closeModal();
+    return;
+  }
+  const mod = ev.ctrlKey || ev.metaKey;
+  if (mod && ev.key.toLowerCase() === 's') {
+    if (state.project && state.openPath) {
+      ev.preventDefault();
+      saveFile();
+    }
+  }
+});
+
+document.getElementById('toggleToken').addEventListener('click', () => {
+  const input = document.getElementById('tokenInput');
+  const isPassword = input.type === 'password';
+  input.type = isPassword ? 'text' : 'password';
+  const btn = document.getElementById('toggleToken');
+  btn.innerHTML = '<i data-lucide="' + (isPassword ? 'eye-off' : 'eye') + '" style="width:16px;height:16px"></i>';
+  refreshIcons();
+});
+
+document.getElementById('connectBtn').addEventListener('click', connect);
+
+document.getElementById('tokenInput').addEventListener('keydown', (ev) => {
+  if (ev.key === 'Enter') connect();
+});
+
+document.getElementById('createTokenBtn').addEventListener('click', () => {
+  window.open('https://github.com/settings/tokens/new?scopes=repo,workflow&description=Kotlin%20Forge', '_blank', 'noopener');
+});
+
+document.getElementById('projectSearch').addEventListener('input', renderProjects);
+
+window.addEventListener('beforeunload', (ev) => {
+  if (state.dirty) {
+    ev.preventDefault();
+    ev.returnValue = '';
+  }
+});
+
+async function boot() {
+  const savedTheme = localStorage.getItem(THEME_KEY) || 'light';
+  setTheme(savedTheme, true);
+  refreshIcons();
+  state.token = localStorage.getItem(TOKEN_KEY) || '';
+  if (state.token) {
+    document.getElementById('tokenInput').value = state.token;
+    try {
+      state.user = await api('/user');
+      showApp();
+      await loadProjects();
+      return;
+    } catch (e) {
+      state.token = '';
+      localStorage.removeItem(TOKEN_KEY);
+      setAuthError('Your saved token is no longer valid. Enter a new one.');
+    }
+  }
+  showAuth();
+}
+
+boot();
+</script>
+</body>
+</html>
