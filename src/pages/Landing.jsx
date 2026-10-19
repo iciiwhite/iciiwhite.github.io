@@ -16,7 +16,7 @@ import {
   LinkedinLogo,
   MapPin,
   Moon,
-  Quote,
+  Quotes,
   ShieldCheck,
   Sparkle,
   Sun,
@@ -393,7 +393,7 @@ function Testimonial() {
     <section className="py-16 sm:py-24">
       <div className="mx-auto max-w-4xl px-4 sm:px-6">
         <div data-reveal className="liquid relative rounded-[1.75rem] p-7 sm:p-10">
-          <Quote
+          <Quotes
             size={42}
             weight="duotone"
             className="absolute -top-2 left-6 text-[var(--accent)]/40 sm:left-8"
