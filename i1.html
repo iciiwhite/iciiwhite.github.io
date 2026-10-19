@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mugenyi Icii - Your Dreams Matter</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        luxe: ['Luxe Uno', 'Cinzel', 'Playfair Display', 'serif'],
+                        velocity: ['Velocity', 'Inter', 'SF Pro Display', 'sans-serif'],
+                    },
+                    colors: {
+                        darkBg: '#050505',
+                        lightBg: '#f8f9fa',
+                        glassDark: 'rgba(20, 20, 20, 0.4)',
+                        glassLight: 'rgba(255, 255, 255, 0.4)',
+                        borderDark: 'rgba(255, 255, 255, 0.08)',
+                        borderLight: 'rgba(0, 0, 0, 0.08)',
+                    },
+                    animation: {
+                        'float': 'float 20s ease-in-out infinite',
+                        'float-delayed': 'float 24s ease-in-out infinite 12s',
+                        'pulse-slow': 'pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
+                            '33%': { transform: 'translate(5%, 10%) scale(1.05)' },
+                            '66%': { transform: 'translate(-5%, 5%) scale(0.95)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Font Definitions */
+        @font-face {
+            font-family: 'Luxe Uno';
+            src: url('uno.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Velocity';
+            src: url('velocity.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        /* Core Overrides */
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+            transition: background-color 0.5s ease;
+        }
+
+        /* Next-Gen Cinematic Noise Overlay */
+        .noise-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+        .dark .noise-overlay { opacity: 0.04; }
+
+        /* Next-Gen Glassmorphism Utility */
+        .glass-panel {
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .dark .glass-panel {
+            background: linear-gradient(135deg, rgba(25,25,25,0.6) 0%, rgba(10,10,10,0.8) 100%);
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+
+        html:not(.dark) .glass-panel {
+            background: linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(240,240,240,0.8) 100%);
+            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.5);
+        }
+
+        /* 3D Tilt Wrapper */
+        .tilt-wrapper {
+            perspective: 1000px;
+            transform-style: preserve-3d;
+        }
+        .tilt-element {
+            transform: translateZ(0);
+            transition: transform 0.1s ease-out;
+            will-change: transform;
+        }
+
+        /* Glow effects */
+        .monochrome-glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.85; /* Increased intensity for stronger light/dark blob effect */
+            z-index: -1;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+        }
+        .dark .monochrome-glow { background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%); } /* Brighter light blob */
+        html:not(.dark) .monochrome-glow { background: radial-gradient(circle, rgba(0,0,0,0.4) 0%, transparent 70%); } /* Pronounced black blob */
+
+        /* First Field Background Image */
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            /* Premium abstract fluid/architectural monochrome image */
+            background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.1;
+            z-index: -1;
+            pointer-events: none;
+            /* Fades out seamlessly into the background below */
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%);
+            -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%);
+            transition: opacity 0.5s ease;
+            filter: grayscale(100%);
+        }
+        .dark .hero-bg {
+            opacity: 0.3; /* More visible in dark mode */
+        }
+
+        /* Reveal Animations */
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        html:not(.dark) ::-webkit-scrollbar-thumb { background: #ccc; }
+    </style>
+    
+    <script>
+        if (localStorage.getItem('theme') === 'light' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+            document.documentElement.classList.remove('dark');
+        } else {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+</head>
+<body class="bg-lightBg dark:bg-darkBg text-neutral-900 dark:text-neutral-100 font-velocity antialiased selection:bg-neutral-800 selection:text-white dark:selection:bg-white dark:selection:text-black">
+
+    <!-- Texture Overlay & Dynamic Background Nodes -->
+    <div class="noise-overlay"></div>
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-[-1]">
+        <div class="monochrome-glow w-[800px] h-[800px] top-[-20%] left-[-10%] animate-float"></div>
+        <div class="monochrome-glow w-[600px] h-[600px] bottom-[-10%] right-[-10%] animate-float-delayed"></div>
+        <div class="monochrome-glow w-[400px] h-[400px] top-[40%] left-[40%] animate-pulse-slow"></div>
+    </div>
+
+    <nav class="fixed top-0 w-full z-40 px-6 py-6 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto glass-panel rounded-2xl px-6 py-4 flex justify-between items-center relative">
+            
+            <!-- Logo -->
+            <a href="index.html" class="group relative z-10">
+                <h1 class="font-luxe text-2xl font-bold tracking-tighter uppercase relative">
+                    <span class="relative z-10">M. Icii</span>
+                    <span class="absolute left-0 bottom-0 w-0 h-[2px] bg-black dark:bg-white transition-all duration-500 group-hover:w-full"></span>
+                </h1>
+            </a>
+
+            <!-- Desktop Links -->
+            <div class="hidden md:flex items-center space-x-10">
+                <a href="index.html" class="text-sm font-medium tracking-wide hover:opacity-50 transition-opacity">Architect</a>
+                <a href="about.html" class="text-sm font-medium tracking-wide hover:opacity-50 transition-opacity">About</a>
+                <a href="projects.html" class="text-sm font-medium tracking-wide hover:opacity-50 transition-opacity">Work</a>
+                <a href="blog.html" class="text-sm font-medium tracking-wide hover:opacity-50 transition-opacity">Insights</a>
+                <a href="contact.html" class="text-sm font-medium tracking-wide hover:opacity-50 transition-opacity">Contact</a>
+            </div>
+
+            <!-- Controls (Theme + Mobile Menu) -->
+            <div class="flex items-center space-x-6 relative z-10">
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors focus:outline-none" aria-label="Toggle Theme">
+                    <!-- Sun Icon (Hidden in Dark Mode) -->
+                    <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    <!-- Moon Icon (Hidden in Light Mode) -->
+                    <svg id="theme-toggle-dark-icon" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                </button>
+
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Mobile Menu Dropdown -->
+            <div id="mobile-menu" class="absolute top-full left-0 w-full mt-4 glass-panel rounded-2xl opacity-0 invisible translate-y-[-10px] transition-all duration-300 flex flex-col p-6 space-y-4 md:hidden z-30">
+                <a href="index.html" class="text-lg font-luxe hover:opacity-50 transition-opacity">Architect</a>
+                <div class="h-px w-full bg-black/5 dark:bg-white/10"></div>
+                <a href="about.html" class="text-lg font-luxe hover:opacity-50 transition-opacity">About</a>
+                <div class="h-px w-full bg-black/5 dark:bg-white/10"></div>
+                <a href="projects.html" class="text-lg font-luxe hover:opacity-50 transition-opacity">Work</a>
+                <div class="h-px w-full bg-black/5 dark:bg-white/10"></div>
+                <a href="blog.html" class="text-lg font-luxe hover:opacity-50 transition-opacity">Insights</a>
+                <div class="h-px w-full bg-black/5 dark:bg-white/10"></div>
+                <a href="contact.html" class="text-lg font-luxe hover:opacity-50 transition-opacity">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 pt-32 pb-20">
+        <!-- Abstract Background Image for First Field -->
+        <div class="hero-bg"></div>
+
+        <div class="max-w-5xl w-full text-center tilt-wrapper relative z-10">
+            <div class="tilt-element inline-block mb-6 px-4 py-1.5 rounded-full border border-neutral-300 dark:border-neutral-700 bg-white/5 backdrop-blur-md reveal">
+                <p class="text-xs font-semibold tracking-[0.2em] uppercase text-neutral-600 dark:text-neutral-400">
+                    Your Dreams Matter
+                </p>
+            </div>
+            
+            <h1 class="font-luxe text-6xl sm:text-7xl md:text-8xl lg:text-[140px] font-bold leading-[0.9] tracking-tighter mb-8 reveal" style="transition-delay: 100ms;">
+                Mugenyi Icii
+            </h1>
+            
+            <p class="font-velocity text-lg sm:text-xl md:text-2xl text-neutral-600 dark:text-neutral-400 max-w-3xl mx-auto leading-relaxed mb-12 reveal" style="transition-delay: 200ms;">
+                Engineering the architecture of tomorrow. Bridging the abyss between low-level Operating System kernels, high-stakes Red Teaming, Kotlin Multiplatform ecosystems, and pixel-perfect Visual Identity.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6 reveal" style="transition-delay: 300ms;">
+                <a href="contact.html" class="group relative px-8 py-4 bg-neutral-900 dark:bg-white text-white dark:text-black rounded-full overflow-hidden transition-transform hover:scale-105">
+                    <div class="absolute inset-0 bg-white/20 dark:bg-black/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
+                    <span class="relative font-medium tracking-wide flex items-center">
+                        Initiate Dialogue
+                        <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                    </span>
+                </a>
+                <a href="projects.html" class="px-8 py-4 rounded-full border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors font-medium tracking-wide">
+                    Examine Archives
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <section class="py-32 px-6 relative z-10">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div class="reveal">
+                    <h2 class="font-luxe text-4xl sm:text-5xl md:text-6xl tracking-tight mb-8">
+                        Beyond<br/>Conventional<br/>Boundaries.
+                    </h2>
+                </div>
+                <div class="reveal font-velocity text-lg text-neutral-600 dark:text-neutral-400 space-y-6">
+                    <p>
+                        I do not simply write code; I architect ecosystems. My expertise spans the absolute foundation of computational theory—Operating System development—to the defensive fortifications required in modern Red Teaming and cyber warfare.
+                    </p>
+                    <p>
+                        Coupled with mastery in Kotlin Multiplatform and elite Graphic Design, I ensure that performance never compromises aesthetics. The result is a rigorous, unyielding approach to engineering that guarantees your vision is executed with military precision and gallery-quality elegance.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-32 px-6 relative z-10 bg-black/[0.02] dark:bg-white/[0.01]">
+        <div class="max-w-7xl mx-auto">
+            <h3 class="font-luxe text-3xl md:text-5xl tracking-tighter mb-16 text-center reveal">Domains of Absolute Mastery</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 tilt-wrapper">
+                
+                <!-- OS Dev -->
+                <div class="glass-panel p-10 rounded-3xl tilt-element reveal group" style="transition-delay: 100ms;">
+                    <div class="mb-6 p-4 rounded-2xl bg-neutral-200/50 dark:bg-neutral-800/50 inline-block">
+                        <svg class="w-8 h-8 text-neutral-800 dark:text-neutral-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                        </svg>
+                    </div>
+                    <h4 class="font-luxe text-2xl mb-4 group-hover:tracking-wide transition-all duration-300">OS Architecture</h4>
+                    <p class="font-velocity text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                        Deep-level kernel programming, memory management, and process scheduling. Building computing foundations from bare metal upward.
+                    </p>
+                </div>
+
+                <!-- Red Teaming -->
+                <div class="glass-panel p-10 rounded-3xl tilt-element reveal group" style="transition-delay: 200ms;">
+                    <div class="mb-6 p-4 rounded-2xl bg-neutral-200/50 dark:bg-neutral-800/50 inline-block">
+                        <svg class="w-8 h-8 text-neutral-800 dark:text-neutral-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                    </div>
+                    <h4 class="font-luxe text-2xl mb-4 group-hover:tracking-wide transition-all duration-300">Red Teaming</h4>
+                    <p class="font-velocity text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                        Advanced adversarial simulation, vulnerability exploitation, and fortified systems engineering. Anticipating the threat before it materializes.
+                    </p>
+                </div>
+
+                <!-- Kotlin Multiplatform -->
+                <div class="glass-panel p-10 rounded-3xl tilt-element reveal group" style="transition-delay: 300ms;">
+                    <div class="mb-6 p-4 rounded-2xl bg-neutral-200/50 dark:bg-neutral-800/50 inline-block">
+                        <svg class="w-8 h-8 text-neutral-800 dark:text-neutral-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <h4 class="font-luxe text-2xl mb-4 group-hover:tracking-wide transition-all duration-300">KMP Ecosystems</h4>
+                    <p class="font-velocity text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                        Seamless cross-platform architecture using Kotlin Multiplatform. Write once, deploy with native performance across iOS, Android, Desktop, and Web.
+                    </p>
+                </div>
+
+                <!-- Full Stack -->
+                <div class="glass-panel p-10 rounded-3xl tilt-element reveal group" style="transition-delay: 400ms;">
+                    <div class="mb-6 p-4 rounded-2xl bg-neutral-200/50 dark:bg-neutral-800/50 inline-block">
+                        <svg class="w-8 h-8 text-neutral-800 dark:text-neutral-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                        </svg>
+                    </div>
+                    <h4 class="font-luxe text-2xl mb-4 group-hover:tracking-wide transition-all duration-300">Full Stack Dev</h4>
+                    <p class="font-velocity text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                        End-to-end web architecture. Orchestrating robust backends and hyper-responsive, interactive frontends using modern frameworks and Vanilla JS mastery.
+                    </p>
+                </div>
+
+                <!-- Graphic Design -->
+                <div class="glass-panel p-10 rounded-3xl tilt-element reveal group lg:col-span-2" style="transition-delay: 500ms;">
+                    <div class="mb-6 p-4 rounded-2xl bg-neutral-200/50 dark:bg-neutral-800/50 inline-block">
+                        <svg class="w-8 h-8 text-neutral-800 dark:text-neutral-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                        </svg>
+                    </div>
+                    <h4 class="font-luxe text-2xl mb-4 group-hover:tracking-wide transition-all duration-300">Visual Identity & Graphics</h4>
+                    <p class="font-velocity text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed max-w-2xl">
+                        Design is not just what it looks like; it's how it communicates. Delivering bespoke graphic design, brand identity, and UI/UX layouts that command authority and transcend current trends. The aesthetic is always intentional, structured, and inherently premium.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-12 px-6 border-t border-neutral-200 dark:border-neutral-800 relative z-10">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-6 md:mb-0 text-center md:text-left">
+                <h5 class="font-luxe text-xl font-bold tracking-tighter uppercase">Mugenyi Icii</h5>
+                <p class="text-xs text-neutral-500 dark:text-neutral-400 mt-2 font-velocity tracking-widest uppercase">Your Dreams Matter.</p>
+            </div>
+            
+            <div class="flex space-x-6 text-sm font-velocity">
+                <a href="projects.html" class="hover:text-black dark:hover:text-white text-neutral-500 transition-colors">Work</a>
+                <a href="about.html" class="hover:text-black dark:hover:text-white text-neutral-500 transition-colors">About</a>
+                <a href="contact.html" class="hover:text-black dark:hover:text-white text-neutral-500 transition-colors">Contact</a>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto mt-12 text-center text-xs text-neutral-600 dark:text-neutral-500 font-velocity">
+            &copy; <span id="year"></span> Mugenyi Icii. All rights reserved. Next-Gen Architecture.
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set current year
+            document.getElementById('year').textContent = new Date().getFullYear();
+
+            // --- Theme Toggle Logic ---
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const darkIcon = document.getElementById('theme-toggle-dark-icon');
+            const lightIcon = document.getElementById('theme-toggle-light-icon');
+
+            function updateIcons() {
+                if (document.documentElement.classList.contains('dark')) {
+                    darkIcon.classList.add('hidden');
+                    lightIcon.classList.remove('hidden');
+                } else {
+                    lightIcon.classList.add('hidden');
+                    darkIcon.classList.remove('hidden');
+                }
+            }
+
+            // Init icons based on inline script execution in head
+            updateIcons();
+
+            themeToggleBtn.addEventListener('click', () => {
+                document.documentElement.classList.toggle('dark');
+                if (document.documentElement.classList.contains('dark')) {
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    localStorage.setItem('theme', 'light');
+                }
+                updateIcons();
+            });
+
+            // --- Mobile Menu Logic ---
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            let isMenuOpen = false;
+
+            mobileMenuBtn.addEventListener('click', () => {
+                isMenuOpen = !isMenuOpen;
+                if (isMenuOpen) {
+                    mobileMenu.classList.remove('opacity-0', 'invisible', 'translate-y-[-10px]');
+                    mobileMenu.classList.add('opacity-100', 'visible', 'translate-y-0');
+                } else {
+                    mobileMenu.classList.add('opacity-0', 'invisible', 'translate-y-[-10px]');
+                    mobileMenu.classList.remove('opacity-100', 'visible', 'translate-y-0');
+                }
+            });
+
+            // --- Scroll Reveal Animation ---
+            const revealElements = document.querySelectorAll('.reveal');
+            
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target); // Run once
+                    }
+                });
+            }, {
+                root: null,
+                threshold: 0.1,
+                rootMargin: "0px 0px -50px 0px"
+            });
+
+            revealElements.forEach(el => revealObserver.observe(el));
+
+            // --- 3D Hover Tilt Effect (Desktop Only) ---
+            if (window.matchMedia("(min-width: 768px)").matches) {
+                const tiltWrappers = document.querySelectorAll('.tilt-wrapper');
+                
+                tiltWrappers.forEach(wrapper => {
+                    const elements = wrapper.querySelectorAll('.tilt-element');
+                    
+                    wrapper.addEventListener('mousemove', (e) => {
+                        const rect = wrapper.getBoundingClientRect();
+                        const x = e.clientX - rect.left; // x position within the element
+                        const y = e.clientY - rect.top;  // y position within the element
+                        
+                        const centerX = rect.width / 2;
+                        const centerY = rect.height / 2;
+                        
+                        const rotateX = ((y - centerY) / centerY) * -5; // Max 5 deg tilt
+                        const rotateY = ((x - centerX) / centerX) * 5;
+
+                        elements.forEach(el => {
+                            el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                        });
+                    });
+
+                    wrapper.addEventListener('mouseleave', () => {
+                        elements.forEach(el => {
+                            el.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                        });
+                    });
+                });
+            }
+
+            // --- Navbar Scroll Effect ---
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('py-4');
+                    navbar.classList.remove('py-6');
+                } else {
+                    navbar.classList.add('py-6');
+                    navbar.classList.remove('py-4');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
