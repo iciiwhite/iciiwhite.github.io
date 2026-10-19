@@ -1,0 +1,16 @@
+import { Link } from 'react-router-dom'
+
+export default function Expertise() {
+  return (
+    <div className="shell flex min-h-screen flex-col items-center justify-center px-4 text-center">
+      <div className="text-[10px] uppercase tracking-[0.28em] text-[var(--fg-3)]">Expertise</div>
+      <h1 className="text-display mt-4 text-[clamp(2rem,6vw,4rem)]">Coming next.</h1>
+      <p className="mt-4 max-w-md text-sm text-[var(--fg-2)]">
+        Deep dives on web, mobile, desktop, and security land after sign-off.
+      </p>
+      <Link to="/" className="btn btn-primary mt-8">
+        Back to landing
+      </Link>
+    </div>
+  )
+}

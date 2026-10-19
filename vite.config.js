@@ -7,6 +7,7 @@ export default defineConfig({
   build: {
     target: 'es2019',
     cssCodeSplit: true,
-    sourcemap: false
+    sourcemap: false,
+    assetsInlineLimit: 4096
   }
 })

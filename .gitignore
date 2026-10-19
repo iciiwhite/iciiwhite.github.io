@@ -3,7 +3,5 @@ dist
 dist-ssr
 *.local
 .DS_Store
-.vscode/*
-!.vscode/extensions.json
 .env
 .env.*

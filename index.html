@@ -1,21 +1,31 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#05060a" />
-    <meta name="description" content="Mugenyi Icii — Web, Mobile & Desktop App Developer and Security Researcher at BeduSec. Premium, secure software built end to end." />
+    <meta name="theme-color" content="#fafaf7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#05060a" media="(prefers-color-scheme: dark)" />
+    <meta name="description" content="Mugenyi Icii — Web, mobile, and desktop developer, and Security Researcher at BeduSec." />
     <meta property="og:title" content="Mugenyi Icii — Developer & Security Researcher" />
-    <meta property="og:description" content="Premium web, mobile, and desktop apps. Security research at BeduSec." />
+    <meta property="og:description" content="Premium products across web, mobile, and desktop — engineered to last, hardened by default." />
     <meta property="og:type" content="website" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://images.unsplash.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"
       rel="stylesheet"
     />
     <title>Mugenyi Icii — Developer & Security Researcher</title>
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem('theme') || 'light';
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
